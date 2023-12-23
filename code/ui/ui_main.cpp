@@ -562,12 +562,12 @@ static cvarTable_t cvarTable[] =
 
 	{&ui_SFXSabers, "cg_SFXSabers", "5", nullptr, CVAR_ARCHIVE},
 	{&ui_SFXSabersGlowSize, "cg_SFXSabersGlowSize", "1.0", nullptr, CVAR_ARCHIVE},
-	{&ui_SFXSabersCoreSize, "cg_SFXSabersCoreSize", "1.0", nullptr, CVAR_ARCHIVE},
+	{&ui_SFXSabersCoreSize, "cg_SFXSabersCoreSize", "0.5", nullptr, CVAR_ARCHIVE},
 
 	{&ui_SFXSabersGlowSizeBF2, "cg_SFXSabersGlowSizeBF2", "1.0", nullptr, CVAR_ARCHIVE},
-	{&ui_SFXSabersCoreSizeBF2, "cg_SFXSabersCoreSizeBF2", "0.8", nullptr, CVAR_ARCHIVE},
+	{&ui_SFXSabersCoreSizeBF2, "cg_SFXSabersCoreSizeBF2", "0.5", nullptr, CVAR_ARCHIVE},
 	{&ui_SFXSabersGlowSizeSFX, "cg_SFXSabersGlowSizeSFX", "1.0", nullptr, CVAR_ARCHIVE},
-	{&ui_SFXSabersCoreSizeSFX, "cg_SFXSabersCoreSizeSFX", "1.0", nullptr, CVAR_ARCHIVE},
+	{&ui_SFXSabersCoreSizeSFX, "cg_SFXSabersCoreSizeSFX", "0.5", nullptr, CVAR_ARCHIVE},
 	{&ui_SFXSabersGlowSizeEP1, "cg_SFXSabersGlowSizeEP1", "1.0", nullptr, CVAR_ARCHIVE},
 	{&ui_SFXSabersCoreSizeEP1, "cg_SFXSabersCoreSizeEP1", "1.0", nullptr, CVAR_ARCHIVE},
 	{&ui_SFXSabersGlowSizeEP2, "cg_SFXSabersGlowSizeEP2", "1.0", nullptr, CVAR_ARCHIVE},
