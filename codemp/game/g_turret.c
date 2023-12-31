@@ -32,12 +32,12 @@ void ObjectDie(gentity_t* self, gentity_t* attacker);
 void TurretPain(gentity_t* self, gentity_t* attacker, int damage)
 //------------------------------------------------------------------------------------------------------------
 {
-	if (self->target_ent)
+	if (self->targetEnt)
 	{
-		self->target_ent->health = self->health;
-		if (self->target_ent->maxHealth)
+		self->targetEnt->health = self->health;
+		if (self->targetEnt->maxHealth)
 		{
-			G_ScaleNetHealth(self->target_ent);
+			G_ScaleNetHealth(self->targetEnt);
 		}
 	}
 
@@ -54,23 +54,23 @@ void TurretPain(gentity_t* self, gentity_t* attacker, int damage)
 }
 
 //------------------------------------------------------------------------------------------------------------
-void TurretBasePain(const gentity_t* self, gentity_t* attacker, const int damage)
+static void TurretBasePain(const gentity_t* self, gentity_t* attacker, const int damage)
 //------------------------------------------------------------------------------------------------------------
 {
-	if (self->target_ent)
+	if (self->targetEnt)
 	{
-		self->target_ent->health = self->health;
-		if (self->target_ent->maxHealth)
+		self->targetEnt->health = self->health;
+		if (self->targetEnt->maxHealth)
 		{
-			G_ScaleNetHealth(self->target_ent);
+			G_ScaleNetHealth(self->targetEnt);
 		}
 
-		TurretPain(self->target_ent, attacker, damage);
+		TurretPain(self->targetEnt, attacker, damage);
 	}
 }
 
 //------------------------------------------------------------------------------------------------------------
-void auto_turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int meansOfDeath)
+static void auto_turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int meansOfDeath)
 //------------------------------------------------------------------------------------------------------------
 {
 	vec3_t forward = { 0, 0, 1 }, pos;
@@ -110,9 +110,9 @@ void auto_turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker,
 		// switch to damage model if we should
 		self->s.modelIndex = self->s.model_index2;
 
-		if (self->target_ent && self->target_ent->s.model_index2)
+		if (self->targetEnt && self->targetEnt->s.model_index2)
 		{
-			self->target_ent->s.modelIndex = self->target_ent->s.model_index2;
+			self->targetEnt->s.modelIndex = self->targetEnt->s.model_index2;
 		}
 
 		VectorCopy(self->r.currentAngles, self->s.apos.trBase);
@@ -130,18 +130,18 @@ void auto_turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker,
 }
 
 //------------------------------------------------------------------------------------------------------------
-void bottom_die(const gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const int damage,
+static void bottom_die(const gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const int damage,
 	const int meansOfDeath)
 	//------------------------------------------------------------------------------------------------------------
 {
-	if (self->target_ent && self->target_ent->health > 0)
+	if (self->targetEnt && self->targetEnt->health > 0)
 	{
-		self->target_ent->health = self->health;
-		if (self->target_ent->maxHealth)
+		self->targetEnt->health = self->health;
+		if (self->targetEnt->maxHealth)
 		{
-			G_ScaleNetHealth(self->target_ent);
+			G_ScaleNetHealth(self->targetEnt);
 		}
-		auto_turret_die(self->target_ent, inflictor, attacker, damage, meansOfDeath);
+		auto_turret_die(self->targetEnt, inflictor, attacker, damage, meansOfDeath);
 	}
 }
 
@@ -881,8 +881,8 @@ qboolean turret_base_spawn_top(gentity_t* base)
 	top->s.shouldtarget = qtrue;
 
 	//link them to each other
-	base->target_ent = top;
-	top->target_ent = base;
+	base->targetEnt = top;
+	top->targetEnt = base;
 
 	//top->s.owner = MAX_CLIENTS; //not owned by any client
 

@@ -12352,7 +12352,7 @@ rest:
 	return qfalse; // continue with the rest of the weapon code
 }
 
-static int PM_ItemUsable(const playerState_t* ps, int forced_use)
+static int PM_ItemUsable(const playerState_t* ps, int forcedUse)
 {
 	vec3_t fwd, fwdorg, dest;
 	vec3_t yawonly;
@@ -12377,18 +12377,51 @@ static int PM_ItemUsable(const playerState_t* ps, int forced_use)
 		return 0;
 	}
 
-	if (!forced_use)
+	if (!forcedUse)
 	{
-		forced_use = bg_itemlist[ps->stats[STAT_HOLDABLE_ITEM]].giTag;
+		forcedUse = bg_itemlist[ps->stats[STAT_HOLDABLE_ITEM]].giTag;
 	}
 
-	if (!BG_IsItemSelectable(forced_use))
+	if (!BG_IsItemSelectable(forcedUse))
 	{
 		return 0;
 	}
 
-	switch (forced_use)
+	switch (forcedUse)
 	{
+	case HI_SEEKER:
+		if (ps->eFlags & EF_SEEKERDRONE)
+		{
+			PM_AddEventWithParm(EV_ITEMUSEFAIL, SEEKER_ALREADYDEPLOYED);
+			return 0;
+		}
+		return 1;
+	case HI_SHIELD:
+		mins[0] = -8;
+		mins[1] = -8;
+		mins[2] = 0;
+
+		maxs[0] = 8;
+		maxs[1] = 8;
+		maxs[2] = 8;
+
+		AngleVectors(ps->viewangles, fwd, NULL, NULL);
+		fwd[2] = 0;
+		VectorMA(ps->origin, 64, fwd, dest);
+		pm->trace(&tr, ps->origin, mins, maxs, dest, ps->clientNum, MASK_SHOT);
+		if (tr.fraction > 0.9 && !tr.startsolid && !tr.allsolid)
+		{
+			vec3_t pos;
+			VectorCopy(tr.endpos, pos);
+			VectorSet(dest, pos[0], pos[1], pos[2] - 4096);
+			pm->trace(&tr, pos, mins, maxs, dest, ps->clientNum, MASK_SOLID);
+			if (!tr.startsolid && !tr.allsolid)
+			{
+				return 1;
+			}
+		}
+		PM_AddEventWithParm(EV_ITEMUSEFAIL, SHIELD_NOROOM);
+		return 0;
 	case HI_MEDPAC:
 	case HI_MEDPAC_BIG:
 		if (ps->stats[STAT_HEALTH] >= ps->stats[STAT_MAX_HEALTH])
@@ -12402,13 +12435,7 @@ static int PM_ItemUsable(const playerState_t* ps, int forced_use)
 		}
 
 		return 1;
-	case HI_SEEKER:
-		if (ps->eFlags & EF_SEEKERDRONE)
-		{
-			PM_AddEventWithParm(EV_ITEMUSEFAIL, SEEKER_ALREADYDEPLOYED);
-			return 0;
-		}
-
+	case HI_BINOCULARS:
 		return 1;
 	case HI_SENTRY_GUN:
 		if (ps->fd.sentryDeployed)
@@ -12443,33 +12470,7 @@ static int PM_ItemUsable(const playerState_t* ps, int forced_use)
 		}
 
 		return 1;
-	case HI_SHIELD:
-		mins[0] = -8;
-		mins[1] = -8;
-		mins[2] = 0;
-
-		maxs[0] = 8;
-		maxs[1] = 8;
-		maxs[2] = 8;
-
-		AngleVectors(ps->viewangles, fwd, NULL, NULL);
-		fwd[2] = 0;
-		VectorMA(ps->origin, 64, fwd, dest);
-		pm->trace(&tr, ps->origin, mins, maxs, dest, ps->clientNum, MASK_SHOT);
-		if (tr.fraction > 0.9 && !tr.startsolid && !tr.allsolid)
-		{
-			vec3_t pos;
-			VectorCopy(tr.endpos, pos);
-			VectorSet(dest, pos[0], pos[1], pos[2] - 4096);
-			pm->trace(&tr, pos, mins, maxs, dest, ps->clientNum, MASK_SOLID);
-			if (!tr.startsolid && !tr.allsolid)
-			{
-				return 1;
-			}
-		}
-		PM_AddEventWithParm(EV_ITEMUSEFAIL, SHIELD_NOROOM);
-		return 0;
-	case HI_JETPACK: //check for stuff here?
+	case HI_JETPACK: //done dont show
 		return 1;
 	case HI_HEALTHDISP:
 		return 1;
@@ -12491,17 +12492,13 @@ static int PM_ItemUsable(const playerState_t* ps, int forced_use)
 			return 0;
 		}
 		return 1;
-	case HI_EOPIE:
-		return 1;
-	case HI_TAUNTAUN:
-		return 1;
 	case HI_SWOOP:
 		return 1;
 	case HI_DROIDEKA:
 		return 1;
-	case HI_RANCOR:
+	case HI_SPHERESHIELD: //check for stuff here?
 		return 1;
-	case HI_GRAPPLE:
+	case HI_GRAPPLE://done dont show
 		return 1;
 	default:
 		return 1;
@@ -13566,15 +13563,25 @@ static void PM_Weapon(void)
 				pm->ps->pm_flags |= PMF_USE_ITEM_HELD;
 				return;
 			}
+			// These things never get used up or run out
 			if (pm->ps->stats[STAT_HOLDABLE_ITEMS] & 1 << bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag)
 			{
-				if (bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_BINOCULARS &&
-					bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_JETPACK &&
+				if (//bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_SEEKER &&
+					//bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_SHIELD &&
+					//bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_MEDPAC &&
+					//bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_MEDPAC_BIG &&
+					bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_BINOCULARS &&
+					//bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_SENTRY_GUN &&
+					bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_JETPACK &&    //done dont show
 					bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_HEALTHDISP &&
 					bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_AMMODISP &&
-					bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_CLOAK &&
 					bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_EWEB &&
-					bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_SEEKER)
+					bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_CLOAK &&
+					bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_FLAMETHROWER &&
+					//bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_SWOOP &&
+					//bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_DROIDEKA &&
+					bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_SPHERESHIELD &&     //done dont show
+					bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_GRAPPLE)
 				{
 					//never use up the binoculars or jetpack or dispensers or cloak or ...
 					pm->ps->stats[STAT_HOLDABLE_ITEMS] -= 1 << bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag;
@@ -13588,12 +13595,22 @@ static void PM_Weapon(void)
 			pm->ps->pm_flags |= PMF_USE_ITEM_HELD;
 			PM_AddEvent(EV_USE_ITEM0 + bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag);
 
-			if (bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_BINOCULARS &&
-				bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_JETPACK &&
+			if (//bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_SEEKER &&
+				//bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_SHIELD &&
+				//bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_MEDPAC &&
+				//bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_MEDPAC_BIG &&
+				bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_BINOCULARS &&
+				//bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_SENTRY_GUN &&
+				bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_JETPACK &&    //done dont show
 				bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_HEALTHDISP &&
 				bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_AMMODISP &&
+				bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_EWEB &&
 				bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_CLOAK &&
-				bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_EWEB)
+				bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_FLAMETHROWER &&
+				//bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_SWOOP &&
+				//bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_DROIDEKA &&
+				bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_SPHERESHIELD &&     //done dont show
+				bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag != HI_GRAPPLE)
 			{
 				pm->ps->stats[STAT_HOLDABLE_ITEM] = 0;
 				BG_CycleInven(pm->ps, 1);

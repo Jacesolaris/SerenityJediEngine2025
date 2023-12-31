@@ -908,8 +908,8 @@ void CG_KeyEvent(const int key, const qboolean down)
 		return;
 	}
 
-	if (cg.predicted_player_state.pm_type == PM_NORMAL || cg.predicted_player_state.pm_type == PM_JETPACK || cg.
-		predicted_player_state.pm_type == PM_NORMAL || cg.predicted_player_state.pm_type == PM_SPECTATOR && cg.showScores ==
+	if (cg.predictedPlayerState.pm_type == PM_NORMAL || cg.predictedPlayerState.pm_type == PM_JETPACK || cg.
+		predictedPlayerState.pm_type == PM_NORMAL || cg.predictedPlayerState.pm_type == PM_SPECTATOR && cg.showScores ==
 		qfalse)
 	{
 		CG_EventHandling(CGAME_EVENT_NONE);

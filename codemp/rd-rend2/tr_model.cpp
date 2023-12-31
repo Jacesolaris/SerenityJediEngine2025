@@ -300,12 +300,12 @@ qhandle_t RE_RegisterModel(const char* name) {
 	char		altName[MAX_QPATH];
 
 	if (!name || !name[0]) {
-		ri->Printf(PRINT_ALL, "RE_RegisterModel: NULL name\n");
+		ri->Printf(PRINT_WARNING, "RE_RegisterModel: NULL name\n");
 		return 0;
 	}
 
 	if (strlen(name) >= MAX_QPATH) {
-		ri->Printf(PRINT_ALL, "Model name exceeds MAX_QPATH\n");
+		ri->Printf(PRINT_DEVELOPER, "Model name exceeds MAX_QPATH\n");
 		return 0;
 	}
 

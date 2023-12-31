@@ -2597,7 +2597,7 @@ gentity_t* fire_grapple(gentity_t* self, vec3_t start, vec3_t dir)
 	hook->methodOfDeath = MOD_ELECTROCUTE;
 	hook->clipmask = MASK_SHOT;
 	hook->parent = self;
-	hook->target_ent = nullptr;
+	hook->targetEnt = nullptr;
 	hook->s.pos.trType = TR_LINEAR;
 	hook->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;
 	hook->s.otherentity_num = self->s.number;
@@ -2625,7 +2625,7 @@ gentity_t* fire_stun(gentity_t* self, vec3_t start, vec3_t dir)
 	stun->methodOfDeath = MOD_ELECTROCUTE;
 	stun->clipmask = MASK_SHOT;
 	stun->parent = self;
-	stun->target_ent = nullptr;
+	stun->targetEnt = nullptr;
 	stun->s.pos.trType = TR_LINEAR;
 	stun->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;
 	stun->s.otherentity_num = self->s.number;

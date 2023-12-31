@@ -69,7 +69,7 @@ extern void ForceRage(gentity_t* self);
 extern void ForceProtect(gentity_t* self);
 extern void ForceAbsorb(gentity_t* self);
 extern int WP_MissileBlockForBlock(int saber_block);
-extern qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit_loc, vec3_t point, vec3_t dir,
+extern qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surfName, int* hit_loc, vec3_t point, vec3_t dir,
 	vec3_t blade_dir, int mod);
 extern qboolean WP_ForcePowerUsable(const gentity_t* self, forcePowers_t forcePower);
 extern qboolean WP_ForcePowerAvailable(const gentity_t* self, forcePowers_t forcePower, int overrideAmt);
@@ -1979,7 +1979,33 @@ void Jedi_Decloak(gentity_t* self)
 	}
 }
 
-void Jedi_CheckCloak(void)
+void Sphereshield_On(gentity_t* self)
+{//cloak this entity
+	if (self && self->client)
+	{
+		if (!self->client->ps.powerups[PW_SPHERESHIELDED])
+		{//cloak
+			self->client->ps.powerups[PW_SPHERESHIELDED] = Q3_INFINITE;
+			G_SoundOnEnt(self, CHAN_ITEM, "sound/barrier/barrier_on.mp3");
+			NPC_SetAnim(self, SETANIM_TORSO, BOTH_FLAMETHROWER, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		}
+	}
+}
+
+void Sphereshield_Off(gentity_t* self)
+{//decloak this entity
+	if (self && self->client)
+	{
+		if (self->client->ps.powerups[PW_SPHERESHIELDED])
+		{//Uncloak
+			self->client->ps.powerups[PW_SPHERESHIELDED] = 0;
+			G_SoundOnEnt(self, CHAN_ITEM, "sound/barrier/barrier_off.mp3");
+			NPC_SetAnim(self, SETANIM_TORSO, BOTH_FLAMETHROWER, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		}
+	}
+}
+
+static void Jedi_CheckCloak(void)
 {
 	if (NPCS.NPC
 		&& NPCS.NPC->client

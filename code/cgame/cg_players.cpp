@@ -5151,11 +5151,11 @@ static void CG_VehicleEffects(centity_t* cent)
 		return;
 	}
 
-	if (cent->currentState.clientNum == cg.predicted_player_state.m_iVehicleNum //my vehicle
+	if (cent->currentState.clientNum == cg.predictedPlayerState.m_iVehicleNum //my vehicle
 		&& cent->currentState.eFlags2 & EF2_HYPERSPACE) //hyperspacing
 	{
 		//in hyperspace!
-		if (cg.predicted_player_state.hyperSpaceTime && cg.time - cg.predicted_player_state.hyperSpaceTime <
+		if (cg.predictedPlayerState.hyperSpaceTime && cg.time - cg.predictedPlayerState.hyperSpaceTime <
 			HYPERSPACE_TIME)
 		{
 			if (!cg_lastHyperSpaceEffectTime || cg.time - cg_lastHyperSpaceEffectTime > HYPERSPACE_TIME + 500)
@@ -5169,21 +5169,21 @@ static void CG_VehicleEffects(centity_t* cent)
 	}
 
 	//FLYBY sound
-	if (cent->currentState.clientNum != cg.predicted_player_state.m_iVehicleNum
+	if (cent->currentState.clientNum != cg.predictedPlayerState.m_iVehicleNum
 		&& (p_veh_npc->m_pVehicleInfo->soundFlyBy || p_veh_npc->m_pVehicleInfo->soundFlyBy2))
 	{
 		//not my vehicle
-		if (cent->currentState.speed && cg.predicted_player_state.speed + cent->currentState.speed > 500)
+		if (cent->currentState.speed && cg.predictedPlayerState.speed + cent->currentState.speed > 500)
 		{
 			//he's moving and between the two of us, we're moving fast
 			vec3_t diff;
-			VectorSubtract(cent->lerpOrigin, cg.predicted_player_state.origin, diff);
+			VectorSubtract(cent->lerpOrigin, cg.predictedPlayerState.origin, diff);
 			if (VectorLength(diff) < 2048)
 			{
 				//close
 				vec3_t my_fwd, their_fwd;
-				AngleVectors(cg.predicted_player_state.viewangles, my_fwd, nullptr, nullptr);
-				VectorScale(my_fwd, cg.predicted_player_state.speed, my_fwd);
+				AngleVectors(cg.predictedPlayerState.viewangles, my_fwd, nullptr, nullptr);
+				VectorScale(my_fwd, cg.predictedPlayerState.speed, my_fwd);
 				AngleVectors(cent->lerpAngles, their_fwd, nullptr, nullptr);
 				VectorScale(their_fwd, cent->currentState.speed, their_fwd);
 				if (lastFlyBySound[cent->currentState.clientNum] + FLYBYSOUNDTIME < cg.time)
@@ -5335,7 +5335,7 @@ static void CG_DrawPlayerSphere(const centity_t* cent, vec3_t origin, const floa
 
 	cgi_R_AddRefEntityToScene(&ent);
 
-	if (!cg.renderingThirdPerson && cent->currentState.number == cg.predicted_player_state.clientNum)
+	if (!cg.renderingThirdPerson && cent->currentState.number == cg.predictedPlayerState.clientNum)
 	{ //don't do the rest then
 		return;
 	}
@@ -5665,7 +5665,7 @@ extern vmCvar_t cg_thirdPersonAlpha;
 
 void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent)
 {
-	qboolean doing_dash_action = cg.predicted_player_state.communicatingflags & 1 << DASHING ? qtrue : qfalse;
+	qboolean doing_dash_action = cg.predictedPlayerState.communicatingflags & 1 << DASHING ? qtrue : qfalse;
 	refEntity_t legs;
 
 	if (!cent)
@@ -16463,7 +16463,7 @@ void CG_Player(centity_t* cent)
 	//FIXME: for debug, allow to draw a cone of the NPC's FOV...
 	if (cent->currentState.number == 0 && (cg.renderingThirdPerson || cg_trueguns.integer && !cg.zoomMode))
 	{
-		playerState_t* ps = &cg.predicted_player_state;
+		playerState_t* ps = &cg.predictedPlayerState;
 
 		if (ps->weaponstate == WEAPON_CHARGING_ALT && ps->weapon == WP_BRYAR_PISTOL
 			|| ps->weaponstate == WEAPON_CHARGING_ALT && ps->weapon == WP_BLASTER_PISTOL

@@ -406,7 +406,24 @@ static void Svcmd_CenterSay_f(void)
 	{//just fire off the text without editting it for line breaks.
 		trap->SendServerCommand(-1, va("cp \"%s\n\"", ConcatArgs(1)));
 	}
+	else
+	{//since someone is running basejka, we need to add line breaks to make up for the
+		//50 chars per line limit of basejka's cp code.
+		char temp[1024];  //MAX_STRINGED_SV_STRING
+		char output[1024];
 
+		//copy the print text.
+		strcpy(temp, ConcatArgs(1));
+
+		TextWrapCenterPrint(temp, output);
+
+		trap->SendServerCommand(-1, va("cp \"%s\n\"", output));
+	}
+
+	//also duplicate the message in the chat buffer and in the game log. (so the admin can follow admin<->player
+	//conversations
+	trap->SendServerCommand(-1, va("print \"server: %s\n\"", ConcatArgs(1)));
+	G_LogPrintf("server: %s\n", ConcatArgs(1));
 	return;
 }
 

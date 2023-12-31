@@ -91,7 +91,7 @@ qboolean G_InventorySelectable(const int index, const gentity_t* other)
 extern qboolean INV_GoodieKeyGive(const gentity_t* target);
 extern qboolean INV_SecurityKeyGive(const gentity_t* target, const char* keyname);
 
-int Pickup_Holdable(const gentity_t* ent, const gentity_t* other)
+static int Pickup_Holdable(const gentity_t* ent, const gentity_t* other)
 {
 	other->client->ps.stats[STAT_ITEMS] |= 1 << ent->item->giTag;
 
@@ -200,7 +200,7 @@ void Add_Ammo(const gentity_t* ent, const int weapon, const int count)
 }
 
 //-------------------------------------------------------
-int Pickup_Ammo(const gentity_t* ent, const gentity_t* other)
+static int Pickup_Ammo(const gentity_t* ent, const gentity_t* other)
 {
 	int quantity;
 
@@ -241,7 +241,7 @@ void Add_Batteries(gentity_t* ent, int* count)
 }
 
 //-------------------------------------------------------
-int Pickup_Battery(const gentity_t* ent, gentity_t* other)
+static int Pickup_Battery(const gentity_t* ent, gentity_t* other)
 {
 	int quantity;
 
@@ -262,7 +262,7 @@ int Pickup_Battery(const gentity_t* ent, gentity_t* other)
 
 //======================================================================
 
-void G_CopySaberItemValues(const gentity_t* pickUpSaber, gentity_t* oldSaber)
+static void G_CopySaberItemValues(const gentity_t* pickUpSaber, gentity_t* oldSaber)
 {
 	if (oldSaber && pickUpSaber)
 	{
@@ -325,7 +325,7 @@ gentity_t* G_DropSaberItem(const char* saberType, const saber_colors_t saberColo
 
 extern void G_SetSabersFromCVars(gentity_t* ent);
 
-qboolean Pickup_Saber(gentity_t* self, qboolean hadSaber, gentity_t* pickUpSaber)
+static qboolean Pickup_Saber(gentity_t* self, qboolean hadSaber, gentity_t* pickUpSaber)
 {
 	//NOTE: loopAnim = saberSolo, alt_fire = saberLeftHand, NPC_type = saberType, NPC_targetname = saberColor
 	qboolean foundIt = qfalse;
@@ -507,7 +507,7 @@ qboolean Pickup_Saber(gentity_t* self, qboolean hadSaber, gentity_t* pickUpSaber
 
 extern void CG_ChangeWeapon(int num);
 
-int Pickup_Weapon(gentity_t* ent, gentity_t* other)
+static int Pickup_Weapon(gentity_t* ent, gentity_t* other)
 {
 	int quantity;
 	qboolean hadWeapon = qfalse;
@@ -614,7 +614,7 @@ int ITM_AddHealth(gentity_t* ent, const int count)
 	return qtrue;
 }
 
-int Pickup_Health(const gentity_t* ent, gentity_t* other)
+static int Pickup_Health(const gentity_t* ent, gentity_t* other)
 {
 	int quantity;
 
@@ -660,7 +660,7 @@ int ITM_AddArmor(const gentity_t* ent, const int count)
 	return qtrue;
 }
 
-int Pickup_Armor(const gentity_t* ent, const gentity_t* other)
+static int Pickup_Armor(const gentity_t* ent, const gentity_t* other)
 {
 	// make sure that the shield effect is on
 	other->client->ps.powerups[PW_BATTLESUIT] = Q3_INFINITE;
@@ -676,7 +676,7 @@ int Pickup_Armor(const gentity_t* ent, const gentity_t* other)
 
 //======================================================================
 
-int Pickup_Holocron(const gentity_t* ent, const gentity_t* other)
+static int Pickup_Holocron(const gentity_t* ent, const gentity_t* other)
 {
 	const int forcePower = ent->item->giTag;
 	const int forceLevel = ent->count;
@@ -1524,7 +1524,7 @@ G_BounceItem
 
 ================
 */
-void G_BounceItem(gentity_t* ent, trace_t* trace)
+static void G_BounceItem(gentity_t* ent, trace_t* trace)
 {
 	vec3_t velocity;
 	qboolean droppedSaber = qtrue;
@@ -1607,7 +1607,7 @@ G_RunItem
 ================
 */
 
-void G_RemoveWeaponEffect(gentity_t* ent)
+static void G_RemoveWeaponEffect(gentity_t* ent)
 {
 	if (ent->TimeOfWeaponDrop > level.time)
 	{
@@ -1981,7 +1981,7 @@ static qhandle_t shieldDeactivateSound = 0;
 static qhandle_t DekashieldActivateSound = 0;
 static qhandle_t DekashieldDeactivateSound = 0;
 
-qboolean he_has_gun(const gentity_t* ent)
+static qboolean he_has_gun(const gentity_t* ent)
 {
 	switch (ent->s.weapon)
 	{
@@ -2106,7 +2106,7 @@ void TurnBarrierOff(gentity_t* ent)
 	}
 }
 
-void TurnBarrierON(gentity_t* ent)
+static void TurnBarrierON(gentity_t* ent)
 {
 	static qboolean registered = qfalse;
 
@@ -2127,7 +2127,7 @@ void TurnBarrierON(gentity_t* ent)
 }
 
 void barrier_update(gentity_t* ent);
-void PlaceBarrier(gentity_t* ent)
+static void PlaceBarrier(gentity_t* ent)
 {
 	static qboolean registered = qfalse;
 
@@ -2301,9 +2301,8 @@ void ItemUse_Barrier_with_saber(gentity_t* ent)
 	ent->client->BarrierToggleTime = level.time + BARRIER_TOGGLE_TIME;
 }
 
-extern void G_KnockOver(gentity_t* self, const gentity_t* attacker, const vec3_t push_dir, float strength,
-	qboolean break_saber_lock);
-void barrier_push_ent(gentity_t* ent, gentity_t* pushed, vec3_t smack_dir)
+extern void G_KnockOver(gentity_t* self, const gentity_t* attacker, const vec3_t push_dir, float strength,qboolean break_saber_lock);
+static void barrier_push_ent(gentity_t* ent, gentity_t* pushed, vec3_t smack_dir)
 {
 	G_Damage(pushed, ent, ent, smack_dir, ent->currentOrigin, (g_spskill->integer + 1) * Q_irand(5, 10), DAMAGE_EXTRA_KNOCKBACK, MOD_ELECTROCUTE);
 	//G_Throw(pushed, smack_dir, 10);
@@ -2319,7 +2318,7 @@ void barrier_push_ent(gentity_t* ent, gentity_t* pushed, vec3_t smack_dir)
 }
 
 constexpr auto DROIDEKA_SHIELD_SIZE = 75;
-void barrier_shield_push_radius_ents(gentity_t* ent)
+static void barrier_shield_push_radius_ents(gentity_t* ent)
 {
 	gentity_t* radius_ents[128];
 	constexpr float radius = DROIDEKA_SHIELD_SIZE;

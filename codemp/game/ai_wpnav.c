@@ -42,7 +42,7 @@ int nodenum; //so we can connect broken trails
 
 int gLevelFlags = 0;
 
-char* GetFlagStr(const int flags)
+static char* GetFlagStr(const int flags)
 {
 	char* flagstr = B_TempAlloc(128);
 	int i = 0;
@@ -2252,10 +2252,6 @@ static int LoadPathData(const char* filename)
 
 	trap->FS_Close(f);
 
-	/*if (level.gametype == GT_SIEGE)
-	{
-		CalculateSiegeGoals();
-	}*/
 	CalculateSiegeGoals();
 
 	CalculateWeightGoals();
@@ -2460,9 +2456,7 @@ static int SavePathData(const char* filename)
 
 	while (i < gWPNum)
 	{
-		//sprintf(fileString, "%s%i %i %f (%f %f %f) { ", fileString, gWPArray[i]->index, gWPArray[i]->flags, gWPArray[i]->weight, gWPArray[i]->origin[0], gWPArray[i]->origin[1], gWPArray[i]->origin[2]);
-		Com_sprintf(store_string, 4096, "%i %i %f (%f %f %f) { ", gWPArray[i]->index, gWPArray[i]->flags,
-			gWPArray[i]->weight, gWPArray[i]->origin[0], gWPArray[i]->origin[1], gWPArray[i]->origin[2]);
+		Com_sprintf(store_string, 4096, "%i %i %f (%f %f %f) { ", gWPArray[i]->index, gWPArray[i]->flags, gWPArray[i]->weight, gWPArray[i]->origin[0], gWPArray[i]->origin[1], gWPArray[i]->origin[2]);
 
 		n = 0;
 

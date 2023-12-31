@@ -58,6 +58,7 @@ extern int wp_player_must_dodge(const gentity_t* self, const gentity_t* shooter)
 extern qboolean WP_SaberBlockBolt(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 extern void g_missile_reflect_effect(const gentity_t* ent, vec3_t dir);
 extern void WP_ForcePowerDrain(playerState_t* ps, forcePowers_t force_power, int override_amt);
+extern void Sphereshield_Off(gentity_t* self);
 
 #define RUNNING_SPREAD			1.7f
 #define WALKING_SPREAD			1.4f
@@ -1809,6 +1810,11 @@ void DEMP2_AltRadiusDamage(gentity_t* ent)
 					Jedi_Decloak(gent);
 					gent->client->cloakToggleTime = level.time + Q_irand(3000, 10000);
 				}
+				if (gent->client->ps.powerups[PW_SPHERESHIELDED])
+				{//disable cloak temporarily
+					Sphereshield_Off(gent);
+					gent->client->cloakToggleTime = level.time + Q_irand(3000, 10000);
+				}
 			}
 		}
 	}
@@ -3366,7 +3372,7 @@ void charge_stick(gentity_t* self, gentity_t* other, trace_t* trace)
 		&& other->s.apos.trType == TR_STATIONARY)
 	{
 		//a perfectly still breakable brush, let us attach directly to it!
-		self->target_ent = other; //remember them when we blow up
+		self->targetEnt = other; //remember them when we blow up
 	}
 	else if (other
 		&& other->s.number < ENTITYNUM_WORLD
@@ -3477,10 +3483,10 @@ void DetPackBlow(gentity_t* self)
 	self->die = 0;
 	self->takedamage = qfalse;
 
-	if (self->target_ent)
+	if (self->targetEnt)
 	{
 		//we were attached to something, do *direct* damage to it!
-		G_Damage(self->target_ent, self, &g_entities[self->r.ownerNum], v, self->r.currentOrigin, self->damage, 0,
+		G_Damage(self->targetEnt, self, &g_entities[self->r.ownerNum], v, self->r.currentOrigin, self->damage, 0,
 			MOD_DET_PACK_SPLASH);
 	}
 	g_radius_damage(self->r.currentOrigin, self->parent, self->splashDamage, self->splashRadius, self, self,
@@ -3939,7 +3945,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 		VectorCopy(tr.endpos, start);
 		skip = tr.entityNum;
 		hit_dodged = qfalse;
-	}
+		}
 
 	// now go along the trail and make sight events
 	VectorSubtract(tr.endpos, muzzle, dir);

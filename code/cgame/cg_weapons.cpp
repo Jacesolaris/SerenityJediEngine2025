@@ -981,15 +981,15 @@ CG_RegisterItemVisuals
 The server says this item is used on this level
 =================
 */
-void CG_RegisterItemVisuals(const int item_num)
+void CG_RegisterItemVisuals(const int itemNum)
 {
-	itemInfo_t* itemInfo = &cg_items[item_num];
+	itemInfo_t* itemInfo = &cg_items[itemNum];
 	if (itemInfo->registered)
 	{
 		return;
 	}
 
-	const gitem_t* item = &bg_itemlist[item_num];
+	const gitem_t* item = &bg_itemlist[itemNum];
 
 	memset(itemInfo, 0, sizeof * itemInfo);
 	itemInfo->registered = qtrue;
@@ -1399,7 +1399,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 	weaponData_t* w_data;
 	centity_t* cent;
 	float fov_offset, lean_offset;
-	const qboolean doing_dash_action = cg.predicted_player_state.communicatingflags & 1 << DASHING ? qtrue : qfalse;
+	const qboolean doing_dash_action = cg.predictedPlayerState.communicatingflags & 1 << DASHING ? qtrue : qfalse;
 
 	if (cg.renderingThirdPerson && !cg_trueguns.integer && !cg.zoomMode && (ps->eFlags & EF2_DUAL_WEAPONS || ps->weapon == WP_DROIDEKA))
 	{
@@ -1986,7 +1986,7 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 	weaponData_t* wData;
 	centity_t* cent;
 	float fovOffset, leanOffset;
-	const qboolean doing_dash_action = cg.predicted_player_state.communicatingflags & 1 << DASHING ? qtrue : qfalse;
+	const qboolean doing_dash_action = cg.predictedPlayerState.communicatingflags & 1 << DASHING ? qtrue : qfalse;
 
 	// no gun if in third person view
 	if (cg.renderingThirdPerson)
@@ -2891,7 +2891,7 @@ void CG_DrawWeaponSelect()
 	}
 
 	// don't display if dead
-	if (cg.predicted_player_state.stats[STAT_HEALTH] <= 0)
+	if (cg.predictedPlayerState.stats[STAT_HEALTH] <= 0)
 	{
 		return;
 	}
@@ -3423,7 +3423,7 @@ void CG_NextWeapon_f()
 		return;
 	}
 
-	if (cg.predicted_player_state.ManualBlockingFlags & 1 << HOLDINGBLOCK)
+	if (cg.predictedPlayerState.ManualBlockingFlags & 1 << HOLDINGBLOCK)
 	{
 		return;
 	}
@@ -3658,7 +3658,7 @@ void CG_PrevWeapon_f()
 		return;
 	}
 
-	if (cg.predicted_player_state.ManualBlockingFlags & 1 << HOLDINGBLOCK)
+	if (cg.predictedPlayerState.ManualBlockingFlags & 1 << HOLDINGBLOCK)
 	{
 		return;
 	}
@@ -3788,7 +3788,7 @@ void CG_ChangeWeapon(const int num)
 		return;
 	}
 
-	if (cg.predicted_player_state.ManualBlockingFlags & 1 << HOLDINGBLOCK)
+	if (cg.predictedPlayerState.ManualBlockingFlags & 1 << HOLDINGBLOCK)
 	{
 		return;
 	}
@@ -3803,25 +3803,25 @@ void CG_ChangeWeapon(const int num)
 		return;
 	}
 
-	if (cg.predicted_player_state.eFlags & EF_FORCE_DRAINED)
+	if (cg.predictedPlayerState.eFlags & EF_FORCE_DRAINED)
 	{
 		// can't do any sort of weapon switching when being drained
 		return;
 	}
 
-	if (cg.predicted_player_state.eFlags & EF_FORCE_GRIPPED)
+	if (cg.predictedPlayerState.eFlags & EF_FORCE_GRIPPED)
 	{
 		// can't do any sort of weapon switching when being gripped
 		return;
 	}
 
-	if (cg.predicted_player_state.eFlags & EF_FORCE_GRABBED)
+	if (cg.predictedPlayerState.eFlags & EF_FORCE_GRABBED)
 	{
 		// can't do any sort of weapon switching when being gripped
 		return;
 	}
 
-	if (cg.predicted_player_state.eFlags & EF_LOCKED_TO_WEAPON)
+	if (cg.predictedPlayerState.eFlags & EF_LOCKED_TO_WEAPON)
 	{
 		// can't do any sort of weapon switching when in the emplaced gun
 		return;
@@ -3838,7 +3838,7 @@ void CG_ChangeWeapon(const int num)
 		return; // don't have the weapon
 	}
 
-	if (cg.predicted_player_state.pm_flags & PMF_STUCK_TO_WALL)
+	if (cg.predictedPlayerState.pm_flags & PMF_STUCK_TO_WALL)
 	{
 		return;
 	}
@@ -3952,11 +3952,11 @@ void CG_Weapon_f()
 		else if (num == cg.snap->ps.weapon)
 		{
 			//already have it up, let's try to toggle it
-			if (!in_camera && !(cg.predicted_player_state.ManualBlockingFlags & 1 << HOLDINGBLOCK))
+			if (!in_camera && !(cg.predictedPlayerState.ManualBlockingFlags & 1 << HOLDINGBLOCK))
 			{
 				//player can't activate/deactivate saber when in a cinematic
 				//can't toggle it if not holding it and not controlling it or dead
-				if (cg.predicted_player_state.stats[STAT_HEALTH] > 0
+				if (cg.predictedPlayerState.stats[STAT_HEALTH] > 0
 					&& (!cg_entities[0].gent->client->ps.saberInFlight ||
 						&g_entities[cg_entities[0].gent->client->ps.saberEntityNum] != nullptr &&
 						g_entities[cg_entities[0].gent->client->ps.saberEntityNum].s.pos.trType == TR_LINEAR))

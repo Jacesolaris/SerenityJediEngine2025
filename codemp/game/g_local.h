@@ -416,7 +416,7 @@ struct gentity_s
 	char* team;
 	char* targetShaderName;
 	char* targetShaderNewName;
-	gentity_t* target_ent;
+	gentity_t* targetEnt;
 
 	char* closetarget;
 	char* opentarget;
@@ -1117,6 +1117,11 @@ struct gclient_s
 	int cloneFired;
 	int BoltsFired;
 	int Dash_Count;
+
+	int VaderBreathTime;
+
+	int			sphereshieldToggleTime;
+	int			overloadToggleTime;
 };
 
 //animations
@@ -1408,7 +1413,7 @@ void BroadcastTeamChange(gclient_t* client, int old_team);
 void SetTeam(gentity_t* ent, const char* s);
 void Cmd_FollowCycle_f(gentity_t* ent, int dir);
 void Cmd_SaberAttackCycle_f(gentity_t* ent);
-int G_ItemUsable(const playerState_t* ps, int forced_use);
+int G_ItemUsable(const playerState_t* ps, int forcedUse);
 void Cmd_ToggleSaber_f(gentity_t* ent);
 void Cmd_EngageDuel_f(gentity_t* ent);
 
@@ -1424,9 +1429,11 @@ void Jetpack_Off(const gentity_t* ent);
 void Jetpack_On(gentity_t* ent);
 void ItemUse_Jetpack(gentity_t* ent);
 void ItemUse_UseCloak(gentity_t* ent);
-void ItemUse_UseDisp(const gentity_t* ent, int type);
+void ItemUse_UseSphereshield(gentity_t* ent);
+void ItemUse_UseDisp(gentity_t* ent, int type);
 void ItemUse_UseEWeb(gentity_t* ent);
 void G_PrecacheDispensers(void);
+void G_LoadDispensers(void);
 void ItemUse_FlameThrower(const gentity_t* ent);
 
 void ItemUse_Seeker(gentity_t* ent);
@@ -1434,6 +1441,7 @@ void ItemUse_MedPack(gentity_t* ent);
 void ItemUse_MedPack_Big(gentity_t* ent);
 
 void ItemUse_Decca(gentity_t* ent);
+void ItemUse_Swoop(gentity_t* ent);
 
 void G_CheckTeamItems(void);
 void G_RunItem(gentity_t* ent);

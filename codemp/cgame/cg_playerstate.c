@@ -333,7 +333,7 @@ void CG_CheckLocalSounds(const playerState_t* ps, const playerState_t* ops)
 	{
 		if (ps->stats[STAT_HEALTH] > 0)
 		{
-			CG_PainEvent(&cg_entities[cg.predicted_player_state.clientNum], ps->stats[STAT_HEALTH]);
+			CG_PainEvent(&cg_entities[cg.predictedPlayerState.clientNum], ps->stats[STAT_HEALTH]);
 		}
 	}
 

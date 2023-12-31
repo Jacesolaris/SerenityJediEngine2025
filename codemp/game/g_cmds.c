@@ -100,6 +100,7 @@ const gbuyable_t bg_buylist[] =
 	{"sentry", HI_SENTRY_GUN, IT_HOLDABLE, 1, 2, WC_DEPLOY}, // sentry
 	{"seeker", HI_SEEKER, IT_HOLDABLE, 1, 2, WC_DEPLOY}, // seeker drone
 	{"barrier", HI_SHIELD, IT_HOLDABLE, 1, 2, WC_DEPLOY}, // shield barrier
+	{"Sphereshield", HI_SPHERESHIELD, IT_HOLDABLE, 1, 2, WC_DEPLOY}, // shield barrier
 	// end of list marker
 	{NULL}
 };
@@ -3247,7 +3248,7 @@ void G_LeaveVehicle(gentity_t* ent, const qboolean con_check)
 	ent->client->ps.m_iVehicleNum = 0;
 }
 
-int G_ItemUsable(const playerState_t* ps, int forced_use)
+int G_ItemUsable(const playerState_t* ps, int forcedUse)
 {
 	vec3_t fwd, fwdorg, dest;
 	vec3_t yawonly;
@@ -3272,18 +3273,52 @@ int G_ItemUsable(const playerState_t* ps, int forced_use)
 		return 0;
 	}
 
-	if (!forced_use)
+	if (!forcedUse)
 	{
-		forced_use = bg_itemlist[ps->stats[STAT_HOLDABLE_ITEM]].giTag;
+		forcedUse = bg_itemlist[ps->stats[STAT_HOLDABLE_ITEM]].giTag;
 	}
 
-	if (!BG_IsItemSelectable(forced_use))
+	if (!BG_IsItemSelectable(forcedUse))
 	{
 		return 0;
 	}
 
-	switch (forced_use)
+	switch (forcedUse)
 	{
+	case HI_SEEKER:
+		if (ps->eFlags & EF_SEEKERDRONE)
+		{
+			G_AddEvent(&g_entities[ps->clientNum], EV_ITEMUSEFAIL, SEEKER_ALREADYDEPLOYED);
+			return 0;
+		}
+
+		return 1;
+	case HI_SHIELD:
+		mins[0] = -8;
+		mins[1] = -8;
+		mins[2] = 0;
+
+		maxs[0] = 8;
+		maxs[1] = 8;
+		maxs[2] = 8;
+
+		AngleVectors(ps->viewangles, fwd, NULL, NULL);
+		fwd[2] = 0;
+		VectorMA(ps->origin, 64, fwd, dest);
+		trap->Trace(&tr, ps->origin, mins, maxs, dest, ps->clientNum, MASK_SHOT, qfalse, 0, 0);
+		if (tr.fraction > 0.9 && !tr.startsolid && !tr.allsolid)
+		{
+			vec3_t pos;
+			VectorCopy(tr.endpos, pos);
+			VectorSet(dest, pos[0], pos[1], pos[2] - 4096);
+			trap->Trace(&tr, pos, mins, maxs, dest, ps->clientNum, MASK_SOLID, qfalse, 0, 0);
+			if (!tr.startsolid && !tr.allsolid)
+			{
+				return 1;
+			}
+		}
+		G_AddEvent(&g_entities[ps->clientNum], EV_ITEMUSEFAIL, SHIELD_NOROOM);
+		return 0;
 	case HI_MEDPAC:
 	case HI_MEDPAC_BIG:
 		if (ps->stats[STAT_HEALTH] >= ps->stats[STAT_MAX_HEALTH])
@@ -3297,13 +3332,7 @@ int G_ItemUsable(const playerState_t* ps, int forced_use)
 		}
 
 		return 1;
-	case HI_SEEKER:
-		if (ps->eFlags & EF_SEEKERDRONE)
-		{
-			G_AddEvent(&g_entities[ps->clientNum], EV_ITEMUSEFAIL, SEEKER_ALREADYDEPLOYED);
-			return 0;
-		}
-
+	case HI_BINOCULARS:
 		return 1;
 	case HI_SENTRY_GUN:
 		if (ps->fd.sentryDeployed)
@@ -3338,33 +3367,7 @@ int G_ItemUsable(const playerState_t* ps, int forced_use)
 		}
 
 		return 1;
-	case HI_SHIELD:
-		mins[0] = -8;
-		mins[1] = -8;
-		mins[2] = 0;
-
-		maxs[0] = 8;
-		maxs[1] = 8;
-		maxs[2] = 8;
-
-		AngleVectors(ps->viewangles, fwd, NULL, NULL);
-		fwd[2] = 0;
-		VectorMA(ps->origin, 64, fwd, dest);
-		trap->Trace(&tr, ps->origin, mins, maxs, dest, ps->clientNum, MASK_SHOT, qfalse, 0, 0);
-		if (tr.fraction > 0.9 && !tr.startsolid && !tr.allsolid)
-		{
-			vec3_t pos;
-			VectorCopy(tr.endpos, pos);
-			VectorSet(dest, pos[0], pos[1], pos[2] - 4096);
-			trap->Trace(&tr, pos, mins, maxs, dest, ps->clientNum, MASK_SOLID, qfalse, 0, 0);
-			if (!tr.startsolid && !tr.allsolid)
-			{
-				return 1;
-			}
-		}
-		G_AddEvent(&g_entities[ps->clientNum], EV_ITEMUSEFAIL, SHIELD_NOROOM);
-		return 0;
-	case HI_JETPACK: //do something?
+	case HI_JETPACK: //done dont show
 		return 1;
 	case HI_HEALTHDISP:
 		return 1;
@@ -3373,6 +3376,17 @@ int G_ItemUsable(const playerState_t* ps, int forced_use)
 	case HI_EWEB:
 		return 1;
 	case HI_CLOAK:
+		return 1;
+	case HI_FLAMETHROWER:
+		return 1;
+		return 1;
+	case HI_SWOOP:
+		return 1;
+	case HI_DROIDEKA:
+		return 1;
+	case HI_SPHERESHIELD:
+		return 1;
+	case HI_GRAPPLE: //done dont show
 		return 1;
 	default:
 		return 1;

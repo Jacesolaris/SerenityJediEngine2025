@@ -348,8 +348,8 @@ qboolean CG_DrawOldScoreboard(void)
 		return qfalse;
 	}
 
-	if (cg.showScores || cg.predicted_player_state.pm_type == PM_DEAD ||
-		cg.predicted_player_state.pm_type == PM_INTERMISSION)
+	if (cg.showScores || cg.predictedPlayerState.pm_type == PM_DEAD ||
+		cg.predictedPlayerState.pm_type == PM_INTERMISSION)
 	{
 		fade = 1.0;
 		fadeColor = colorWhite;
@@ -371,7 +371,7 @@ qboolean CG_DrawOldScoreboard(void)
 	// fragged by ... line
 	// or if in intermission and duel, prints the winner of the duel round
 	if ((cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL) && cgs.duelWinner != -1 &&
-		cg.predicted_player_state.pm_type == PM_INTERMISSION)
+		cg.predictedPlayerState.pm_type == PM_INTERMISSION)
 	{
 		s = va("%s^7 %s", cgs.clientinfo[cgs.duelWinner].name, CG_GetStringEdString("MP_INGAME", "DUEL_WINS"));
 
@@ -381,7 +381,7 @@ qboolean CG_DrawOldScoreboard(void)
 			ITEM_TEXTSTYLE_OUTLINED, FONT_MEDIUM);
 	}
 	else if ((cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL) && cgs.duelist1 != -1 && cgs.duelist2 != -1 &&
-		cg.predicted_player_state.pm_type == PM_INTERMISSION)
+		cg.predictedPlayerState.pm_type == PM_INTERMISSION)
 	{
 		if (cgs.gametype == GT_POWERDUEL && cgs.duelist3 != -1)
 		{

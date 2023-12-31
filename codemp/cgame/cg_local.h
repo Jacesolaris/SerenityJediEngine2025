@@ -525,6 +525,12 @@ typedef struct centity_s {
 	int				shieldRechargeTime;
 
 	int				muzzleOverheatTime;
+
+	int				unsphereshielding;
+	qboolean		sphereshielded;
+
+	int				unoverloading;
+	qboolean		overloaded;
 } centity_t;
 
 //======================================================================
@@ -858,7 +864,7 @@ typedef struct cg_s {
 
 	// prediction state
 	qboolean	hyperspace;				// true if prediction has hit a trigger_teleport
-	playerState_t	predicted_player_state;
+	playerState_t	predictedPlayerState;
 	playerState_t	predictedVehicleState;
 
 	//centity_t		predictedPlayerEntity;
@@ -2119,7 +2125,7 @@ void CG_Weapon_f(void);
 void CG_WeaponClean_f(void);
 
 void CG_RegisterWeapon(int weapon_num);
-void CG_RegisterItemVisuals(int item_num);
+void CG_RegisterItemVisuals(int itemNum);
 
 void CG_FireWeapon(centity_t* cent, const qboolean alt_fire);
 void cg_missile_hit_wall(int weapon, vec3_t origin, vec3_t dir, qboolean alt_fire, int charge);
@@ -2198,7 +2204,7 @@ void CG_ProcessSnapshots(void);
 // cg_info.c
 //
 void CG_LoadingString(const char* s);
-void CG_LoadingItem(int item_num);
+void CG_LoadingItem(int itemNum);
 void CG_LoadingClient(int clientNum);
 void CG_DrawInformation(void);
 

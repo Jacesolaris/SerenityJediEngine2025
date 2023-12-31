@@ -78,7 +78,7 @@ qboolean CG_NoUseableForce(void)
 			i != FP_LEVITATION)
 		{
 			//valid selectable power
-			if (cg.predicted_player_state.fd.forcePowersKnown & 1 << i)
+			if (cg.predictedPlayerState.fd.forcePowersKnown & 1 << i)
 			{
 				//we have it
 				return qfalse;
@@ -3123,7 +3123,7 @@ void CG_NextForcePower_f(void)
 		return;
 	}
 
-	if (cg.predicted_player_state.pm_type == PM_SPECTATOR)
+	if (cg.predictedPlayerState.pm_type == PM_SPECTATOR)
 	{
 		return;
 	}
@@ -3173,7 +3173,7 @@ void CG_PrevForcePower_f(void)
 		return;
 	}
 
-	if (cg.predicted_player_state.pm_type == PM_SPECTATOR)
+	if (cg.predictedPlayerState.pm_type == PM_SPECTATOR)
 	{
 		return;
 	}
@@ -3221,7 +3221,7 @@ void cg_next_inventory_f(void)
 		return;
 	}
 
-	if (cg.predicted_player_state.pm_type == PM_SPECTATOR)
+	if (cg.predictedPlayerState.pm_type == PM_SPECTATOR)
 	{
 		return;
 	}
@@ -3256,7 +3256,7 @@ void cg_prev_inventory_f(void)
 		return;
 	}
 
-	if (cg.predicted_player_state.pm_type == PM_SPECTATOR)
+	if (cg.predictedPlayerState.pm_type == PM_SPECTATOR)
 	{
 		return;
 	}

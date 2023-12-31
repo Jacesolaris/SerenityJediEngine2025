@@ -10417,6 +10417,14 @@ static int bot_use_inventory_item(bot_state_t* bs)
 			goto wantuseitem;
 		}
 	}
+	if (bs->cur_ps.stats[STAT_HOLDABLE_ITEMS] & 1 << HI_SPHERESHIELD)
+	{
+		if (bs->currentEnemy && bs->frame_Enemy_Vis)
+		{
+			bs->cur_ps.stats[STAT_HOLDABLE_ITEM] = BG_GetItemIndexByTag(HI_SPHERESHIELD, IT_HOLDABLE);
+			goto wantuseitem;
+		}
+	}
 	if (bs->cur_ps.stats[STAT_HOLDABLE_ITEMS] & 1 << HI_SENTRY_GUN)
 	{
 		if (bs->currentEnemy && bs->frame_Enemy_Vis)

@@ -580,10 +580,10 @@ void CG_ParseSiegeObjectiveStatus(const char* str)
 		i++;
 	}
 
-	if (cg.predicted_player_state.persistant[PERS_TEAM] != TEAM_SPECTATOR)
+	if (cg.predictedPlayerState.persistant[PERS_TEAM] != TEAM_SPECTATOR)
 	{
 		//update menu cvars
-		CG_SiegeBriefingDisplay(cg.predicted_player_state.persistant[PERS_TEAM], 1);
+		CG_SiegeBriefingDisplay(cg.predictedPlayerState.persistant[PERS_TEAM], 1);
 	}
 }
 
@@ -605,7 +605,7 @@ void CG_SiegeRoundOver(centity_t* ent, const int won)
 	}
 	else
 	{
-		ps = &cg.predicted_player_state;
+		ps = &cg.predictedPlayerState;
 	}
 
 	if (!ps)
@@ -907,7 +907,7 @@ void CG_SiegeObjectiveCompleted(centity_t* ent, const int won, const int objecti
 	}
 	else
 	{
-		ps = &cg.predicted_player_state;
+		ps = &cg.predictedPlayerState;
 	}
 
 	if (!ps)

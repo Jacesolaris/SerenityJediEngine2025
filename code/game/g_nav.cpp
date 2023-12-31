@@ -44,7 +44,7 @@ NPC_SetMoveGoal
 */
 
 void NPC_SetMoveGoal(const gentity_t* ent, vec3_t point, const int radius, const qboolean isNavGoal,
-	const int combatPoint, gentity_t* target_ent)
+	const int combatPoint, gentity_t* targetEnt)
 {
 	//Must be an NPC
 	if (ent->NPC == nullptr)
@@ -71,9 +71,9 @@ void NPC_SetMoveGoal(const gentity_t* ent, vec3_t point, const int radius, const
 	ent->NPC->tempGoal->target = nullptr;
 	ent->NPC->tempGoal->clipmask = ent->clipmask;
 	ent->NPC->tempGoal->svFlags &= ~SVF_NAVGOAL;
-	if (target_ent && target_ent->waypoint >= 0)
+	if (targetEnt && targetEnt->waypoint >= 0)
 	{
-		ent->NPC->tempGoal->waypoint = target_ent->waypoint;
+		ent->NPC->tempGoal->waypoint = targetEnt->waypoint;
 	}
 	else
 	{
@@ -88,7 +88,7 @@ void NPC_SetMoveGoal(const gentity_t* ent, vec3_t point, const int radius, const
 	}
 
 	ent->NPC->tempGoal->combatPoint = combatPoint;
-	ent->NPC->tempGoal->enemy = target_ent;
+	ent->NPC->tempGoal->enemy = targetEnt;
 
 	ent->NPC->goalEntity = ent->NPC->tempGoal;
 	ent->NPC->goalRadius = radius;

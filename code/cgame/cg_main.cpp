@@ -45,7 +45,7 @@ qboolean CG_ConsoleCommand();
 void CG_Shutdown();
 int CG_GetCameraPos(vec3_t camerapos);
 int CG_GetCameraAng(vec3_t cameraang);
-void UseItem(int item_num);
+void UseItem(int itemNum);
 const char* CG_DisplayBoxedText(int iBoxX, int iBoxY, int iBoxWidth, int iBoxHeight,
 	const char* psText, int iFontHandle, float fScale,
 	const vec4_t v4Color);
@@ -3759,7 +3759,7 @@ void cg_draw_inventory_select()
 	char text[1024] = { 0 };
 
 	// don't display if dead
-	if (cg.predicted_player_state.stats[STAT_HEALTH] <= 0 || cg.snap->ps.viewEntity > 0 && cg.snap->ps.viewEntity <
+	if (cg.predictedPlayerState.stats[STAT_HEALTH] <= 0 || cg.snap->ps.viewEntity > 0 && cg.snap->ps.viewEntity <
 		ENTITYNUM_WORLD)
 	{
 		return;
@@ -3770,7 +3770,7 @@ void cg_draw_inventory_select()
 		return;
 	}
 
-	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
+	if (cg.predictedPlayerState.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
 	{
 		return;
 	}
@@ -4381,7 +4381,7 @@ void CG_DrawForceSelect()
 	int smallIconSize, bigIconSize;
 
 	// don't display if dead
-	if (cg.predicted_player_state.stats[STAT_HEALTH] <= 0 || cg.snap->ps.viewEntity > 0 && cg.snap->ps.viewEntity <
+	if (cg.predictedPlayerState.stats[STAT_HEALTH] <= 0 || cg.snap->ps.viewEntity > 0 && cg.snap->ps.viewEntity <
 		ENTITYNUM_WORLD)
 	{
 		return;
@@ -4392,7 +4392,7 @@ void CG_DrawForceSelect()
 		return;
 	}
 
-	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
+	if (cg.predictedPlayerState.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
 	{
 		return;
 	}

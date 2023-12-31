@@ -53,11 +53,11 @@ void CG_LoadingString(const char* s)
 CG_LoadingItem
 ===================
 */
-void CG_LoadingItem(const int item_num)
+void CG_LoadingItem(const int itemNum)
 {
 	char upper_key[1024];
 
-	const gitem_t* item = &bg_itemlist[item_num];
+	const gitem_t* item = &bg_itemlist[itemNum];
 
 	if (!item->classname || !item->classname[0])
 	{

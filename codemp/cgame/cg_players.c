@@ -2210,7 +2210,7 @@ void CG_NewClientInfo(int clientNum, qboolean entities_initialized)
 		cg_entities[clientNum].eventAnimIndex = CG_G2EvIndexForModel(cg_entities[clientNum].ghoul2,
 			cg_entities[clientNum].localAnimIndex);
 
-		if (cg_entities[clientNum].currentState.number != cg.predicted_player_state.clientNum &&
+		if (cg_entities[clientNum].currentState.number != cg.predictedPlayerState.clientNum &&
 			cg_entities[clientNum].currentState.weapon == WP_SABER)
 		{
 			cg_entities[clientNum].weapon = cg_entities[clientNum].currentState.weapon;
@@ -3043,7 +3043,7 @@ void CG_PlayerAmbientEvents(centity_t* cent)
 	int event_num;
 
 	if (cent->currentState.eFlags & EF_DEAD || cent->currentState.eType == ET_PLAYER &&
-		(cg.predicted_player_state.pm_type == PM_INTERMISSION || cgs.clientinfo[cent->currentState.clientNum].team ==
+		(cg.predictedPlayerState.pm_type == PM_INTERMISSION || cgs.clientinfo[cent->currentState.clientNum].team ==
 			TEAM_SPECTATOR))
 	{
 		//Shouldn't play ambient sounds when dead; in intermission; or a spectator.
@@ -6108,7 +6108,7 @@ void CG_DrawPlayerShield(const centity_t* cent, vec3_t origin)
 void CG_PlayerHitFX(centity_t* cent)
 {
 	// only do the below fx if the cent in question is...uh...me, and it's first person.
-	if (cent->currentState.clientNum != cg.predicted_player_state.clientNum || cg.renderingThirdPerson)
+	if (cent->currentState.clientNum != cg.predictedPlayerState.clientNum || cg.renderingThirdPerson)
 	{
 		if (cent->damageTime > cg.time && cent->currentState.NPC_class != CLASS_VEHICLE
 			&& cent->currentState.NPC_class != CLASS_SEEKER
@@ -13485,7 +13485,7 @@ void CG_DrawPlayerSphere(const centity_t* cent, vec3_t origin, const float scale
 
 	trap->R_AddRefEntityToScene(&ent);
 
-	if (!cg.renderingThirdPerson && cent->currentState.number == cg.predicted_player_state.clientNum)
+	if (!cg.renderingThirdPerson && cent->currentState.number == cg.predictedPlayerState.clientNum)
 	{
 		//don't do the rest then
 		return;
@@ -14232,11 +14232,11 @@ static void CG_CreateSurfaceDebris(centity_t* cent, const int surfNum, const int
 	int b = -1;
 	vec3_t v, d;
 	mdxaBone_t boltMatrix;
-	const char* surf_name = NULL;
+	const char* surfName = NULL;
 
 	if (surfNum > 0)
 	{
-		surf_name = bgToggleableSurfaces[surfNum];
+		surfName = bgToggleableSurfaces[surfNum];
 	}
 
 	if (!cent->ghoul2)
@@ -14300,9 +14300,9 @@ static void CG_CreateSurfaceDebris(centity_t* cent, const int surfNum, const int
 			lost_part_fx = cent->m_pVehicle->m_pVehicleInfo->iNoseFX;
 		}
 	}
-	else if (surf_name)
+	else if (surfName)
 	{
-		b = trap->G2API_AddBolt(cent->ghoul2, 0, surf_name);
+		b = trap->G2API_AddBolt(cent->ghoul2, 0, surfName);
 	}
 
 	if (b == -1 || surfNum == -1)
@@ -14337,7 +14337,7 @@ static void CG_CreateSurfaceSmoke(centity_t* cent, const int ship_surf, const in
 {
 	vec3_t v, d;
 	mdxaBone_t boltMatrix;
-	const char* surf_name;
+	const char* surfName;
 
 	if (!cent->ghoul2)
 	{
@@ -14349,29 +14349,29 @@ static void CG_CreateSurfaceSmoke(centity_t* cent, const int ship_surf, const in
 	if (ship_surf == SHIPSURF_FRONT)
 	{
 		//front flame/smoke
-		surf_name = "*nosedamage";
+		surfName = "*nosedamage";
 	}
 	else if (ship_surf == SHIPSURF_BACK)
 	{
 		//back flame/smoke
-		surf_name = "*exhaust1"; //FIXME: random?  Some point in-between?
+		surfName = "*exhaust1"; //FIXME: random?  Some point in-between?
 	}
 	else if (ship_surf == SHIPSURF_RIGHT)
 	{
 		//right wing flame/smoke
-		surf_name = "*r_wingdamage";
+		surfName = "*r_wingdamage";
 	}
 	else if (ship_surf == SHIPSURF_LEFT)
 	{
 		//left wing flame/smoke
-		surf_name = "*l_wingdamage";
+		surfName = "*l_wingdamage";
 	}
 	else
 	{
 		//unknown surf!
 		return;
 	}
-	const int b = trap->G2API_AddBolt(cent->ghoul2, 0, surf_name);
+	const int b = trap->G2API_AddBolt(cent->ghoul2, 0, surfName);
 	if (b == -1)
 	{
 		//couldn't find this surface apparently
@@ -15034,7 +15034,7 @@ static QINLINE void CG_VehicleEffects(centity_t* cent)
 
 	Vehicle_t* p_veh_npc = cent->m_pVehicle;
 
-	if (cent->currentState.clientNum == cg.predicted_player_state.m_iVehicleNum //my vehicle
+	if (cent->currentState.clientNum == cg.predictedPlayerState.m_iVehicleNum //my vehicle
 		&& cent->currentState.eFlags2 & EF2_HYPERSPACE) //hyperspacing
 	{
 		//in hyperspace!
@@ -15053,21 +15053,21 @@ static QINLINE void CG_VehicleEffects(centity_t* cent)
 	}
 
 	//FLYBY sound
-	if (cent->currentState.clientNum != cg.predicted_player_state.m_iVehicleNum
+	if (cent->currentState.clientNum != cg.predictedPlayerState.m_iVehicleNum
 		&& (p_veh_npc->m_pVehicleInfo->soundFlyBy || p_veh_npc->m_pVehicleInfo->soundFlyBy2))
 	{
 		//not my vehicle
-		if (cent->currentState.speed && cg.predicted_player_state.speed + cent->currentState.speed > 500)
+		if (cent->currentState.speed && cg.predictedPlayerState.speed + cent->currentState.speed > 500)
 		{
 			//he's moving and between the two of us, we're moving fast
 			vec3_t diff;
-			VectorSubtract(cent->lerpOrigin, cg.predicted_player_state.origin, diff);
+			VectorSubtract(cent->lerpOrigin, cg.predictedPlayerState.origin, diff);
 			if (VectorLength(diff) < 2048)
 			{
 				//close
 				vec3_t my_fwd, their_fwd;
-				AngleVectors(cg.predicted_player_state.viewangles, my_fwd, NULL, NULL);
-				VectorScale(my_fwd, cg.predicted_player_state.speed, my_fwd);
+				AngleVectors(cg.predictedPlayerState.viewangles, my_fwd, NULL, NULL);
+				VectorScale(my_fwd, cg.predictedPlayerState.speed, my_fwd);
 				AngleVectors(cent->lerpAngles, their_fwd, NULL, NULL);
 				VectorScale(their_fwd, cent->currentState.speed, their_fwd);
 				if (lastFlyBySound[cent->currentState.clientNum] + FLYBYSOUNDTIME < cg.time)
@@ -15382,7 +15382,7 @@ void CG_CheckThirdPersonAlpha(const centity_t* cent, refEntity_t* legs)
 	if (cent->m_pVehicle)
 	{
 		//a vehicle
-		if (cg.predicted_player_state.m_iVehicleNum != cent->currentState.clientNum //not mine
+		if (cg.predictedPlayerState.m_iVehicleNum != cent->currentState.clientNum //not mine
 			&& cent->m_pVehicle->m_pVehicleInfo
 			&& cent->m_pVehicle->m_pVehicleInfo->cameraOverride
 			&& cent->m_pVehicle->m_pVehicleInfo->cameraAlpha) //it has alpha
@@ -15399,10 +15399,10 @@ void CG_CheckThirdPersonAlpha(const centity_t* cent, refEntity_t* legs)
 		return;
 	}
 
-	if (cg.predicted_player_state.m_iVehicleNum)
+	if (cg.predictedPlayerState.m_iVehicleNum)
 	{
 		//in a vehicle
-		if (cg.predicted_player_state.m_iVehicleNum == cent->currentState.clientNum)
+		if (cg.predictedPlayerState.m_iVehicleNum == cent->currentState.clientNum)
 		{
 			//this is my vehicle
 			if (cent->m_pVehicle
@@ -15418,7 +15418,7 @@ void CG_CheckThirdPersonAlpha(const centity_t* cent, refEntity_t* legs)
 				VectorMA(cameraCurLoc, cent->m_pVehicle->m_pVehicleInfo->cameraRange * 2.0f, dir2_crosshair, end);
 				CG_G2Trace(&trace, cameraCurLoc, vec3_origin, vec3_origin, end, ENTITYNUM_NONE, CONTENTS_BODY);
 				if (trace.entityNum == cent->currentState.clientNum
-					|| trace.entityNum == cg.predicted_player_state.clientNum)
+					|| trace.entityNum == cg.predictedPlayerState.clientNum)
 				{
 					//hit me or the vehicle I'm in
 					cg_vehThirdPersonAlpha -= 0.1f * cg.frametime / 50.0f;
@@ -15447,7 +15447,7 @@ void CG_CheckThirdPersonAlpha(const centity_t* cent, refEntity_t* legs)
 			}
 		}
 	}
-	else if (cg.predicted_player_state.clientNum == cent->currentState.clientNum)
+	else if (cg.predictedPlayerState.clientNum == cent->currentState.clientNum)
 	{
 		//it's me
 		//reset this
@@ -15474,8 +15474,8 @@ Based On:  G_GetAnimPoint
 //Get the point in the leg animation and return a percentage of the current point in the anim between 0 and the total anim length (0.0f - 1.0f)
 float GetSelfLegAnimPoint()
 {
-	return BG_GetLegsAnimPoint(&cg.predicted_player_state,
-		cg_entities[cg.predicted_player_state.clientNum].localAnimIndex);
+	return BG_GetLegsAnimPoint(&cg.predictedPlayerState,
+		cg_entities[cg.predictedPlayerState.clientNum].localAnimIndex);
 }
 
 /*
@@ -15488,8 +15488,8 @@ Based On:  G_GetAnimPoint
 //Get the point in the torso animation and return a percentage of the current point in the anim between 0 and the total anim length (0.0f - 1.0f)
 float GetSelfTorsoAnimPoint()
 {
-	return bg_get_torso_anim_point(&cg.predicted_player_state,
-		cg_entities[cg.predicted_player_state.clientNum].localAnimIndex);
+	return bg_get_torso_anim_point(&cg.predictedPlayerState,
+		cg_entities[cg.predictedPlayerState.clientNum].localAnimIndex);
 }
 
 /*
@@ -15517,14 +15517,14 @@ void SmoothTrueView(vec3_t eye_angles)
 	//Rolls
 	if (cg_trueroll.integer)
 	{
-		if (cg.predicted_player_state.legsAnim == BOTH_WALL_RUN_LEFT
-			|| cg.predicted_player_state.legsAnim == BOTH_WALL_RUN_RIGHT
-			|| cg.predicted_player_state.legsAnim == BOTH_WALL_RUN_LEFT_STOP
-			|| cg.predicted_player_state.legsAnim == BOTH_WALL_RUN_RIGHT_STOP
-			|| cg.predicted_player_state.legsAnim == BOTH_WALL_RUN_LEFT_FLIP
-			|| cg.predicted_player_state.legsAnim == BOTH_WALL_RUN_RIGHT_FLIP
-			|| cg.predicted_player_state.legsAnim == BOTH_WALL_FLIP_LEFT
-			|| cg.predicted_player_state.legsAnim == BOTH_WALL_FLIP_RIGHT)
+		if (cg.predictedPlayerState.legsAnim == BOTH_WALL_RUN_LEFT
+			|| cg.predictedPlayerState.legsAnim == BOTH_WALL_RUN_RIGHT
+			|| cg.predictedPlayerState.legsAnim == BOTH_WALL_RUN_LEFT_STOP
+			|| cg.predictedPlayerState.legsAnim == BOTH_WALL_RUN_RIGHT_STOP
+			|| cg.predictedPlayerState.legsAnim == BOTH_WALL_RUN_LEFT_FLIP
+			|| cg.predictedPlayerState.legsAnim == BOTH_WALL_RUN_RIGHT_FLIP
+			|| cg.predictedPlayerState.legsAnim == BOTH_WALL_FLIP_LEFT
+			|| cg.predictedPlayerState.legsAnim == BOTH_WALL_FLIP_RIGHT)
 		{
 			//Roll moves that look good with eye range
 			eye_range = qtrue;
@@ -15533,8 +15533,8 @@ void SmoothTrueView(vec3_t eye_angles)
 		else if (cg_trueroll.integer == 1)
 		{
 			//Use simple roll for the more complicated rolls
-			if (cg.predicted_player_state.legsAnim == BOTH_FLIP_L
-				|| cg.predicted_player_state.legsAnim == BOTH_ROLL_L)
+			if (cg.predictedPlayerState.legsAnim == BOTH_FLIP_L
+				|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_L)
 			{
 				//Left rolls
 				VectorCopy(cg.refdef.viewangles, eye_angles);
@@ -15543,8 +15543,8 @@ void SmoothTrueView(vec3_t eye_angles)
 				eye_range = qfalse;
 				did_special = qtrue;
 			}
-			else if (cg.predicted_player_state.legsAnim == BOTH_FLIP_R
-				|| cg.predicted_player_state.legsAnim == BOTH_ROLL_R)
+			else if (cg.predictedPlayerState.legsAnim == BOTH_FLIP_R
+				|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_R)
 			{
 				//Right rolls
 				VectorCopy(cg.refdef.viewangles, eye_angles);
@@ -15557,10 +15557,10 @@ void SmoothTrueView(vec3_t eye_angles)
 		else
 		{
 			//You're here because you're using cg_trueroll.integer == 2
-			if (cg.predicted_player_state.legsAnim == BOTH_FLIP_L
-				|| cg.predicted_player_state.legsAnim == BOTH_ROLL_L
-				|| cg.predicted_player_state.legsAnim == BOTH_FLIP_R
-				|| cg.predicted_player_state.legsAnim == BOTH_ROLL_R)
+			if (cg.predictedPlayerState.legsAnim == BOTH_FLIP_L
+				|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_L
+				|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_R
+				|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_R)
 			{
 				//Roll animation, lock the eyemovement
 				eye_range = qfalse;
@@ -15568,18 +15568,18 @@ void SmoothTrueView(vec3_t eye_angles)
 			}
 		}
 	}
-	else if (cg.predicted_player_state.legsAnim == BOTH_WALL_RUN_LEFT
-		|| cg.predicted_player_state.legsAnim == BOTH_WALL_RUN_RIGHT
-		|| cg.predicted_player_state.legsAnim == BOTH_WALL_RUN_LEFT_STOP
-		|| cg.predicted_player_state.legsAnim == BOTH_WALL_RUN_RIGHT_STOP
-		|| cg.predicted_player_state.legsAnim == BOTH_WALL_RUN_LEFT_FLIP
-		|| cg.predicted_player_state.legsAnim == BOTH_WALL_RUN_RIGHT_FLIP
-		|| cg.predicted_player_state.legsAnim == BOTH_WALL_FLIP_LEFT
-		|| cg.predicted_player_state.legsAnim == BOTH_WALL_FLIP_RIGHT
-		|| cg.predicted_player_state.legsAnim == BOTH_FLIP_L
-		|| cg.predicted_player_state.legsAnim == BOTH_ROLL_L
-		|| cg.predicted_player_state.legsAnim == BOTH_FLIP_R
-		|| cg.predicted_player_state.legsAnim == BOTH_ROLL_R)
+	else if (cg.predictedPlayerState.legsAnim == BOTH_WALL_RUN_LEFT
+		|| cg.predictedPlayerState.legsAnim == BOTH_WALL_RUN_RIGHT
+		|| cg.predictedPlayerState.legsAnim == BOTH_WALL_RUN_LEFT_STOP
+		|| cg.predictedPlayerState.legsAnim == BOTH_WALL_RUN_RIGHT_STOP
+		|| cg.predictedPlayerState.legsAnim == BOTH_WALL_RUN_LEFT_FLIP
+		|| cg.predictedPlayerState.legsAnim == BOTH_WALL_RUN_RIGHT_FLIP
+		|| cg.predictedPlayerState.legsAnim == BOTH_WALL_FLIP_LEFT
+		|| cg.predictedPlayerState.legsAnim == BOTH_WALL_FLIP_RIGHT
+		|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_L
+		|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_L
+		|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_R
+		|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_R)
 	{
 		//you don't want rolling so use cg.refdef.viewangles as the view
 		use_ref_def = qtrue;
@@ -15588,7 +15588,7 @@ void SmoothTrueView(vec3_t eye_angles)
 	//Flips
 	if (cg_trueflip.integer)
 	{
-		if (cg.predicted_player_state.legsAnim == BOTH_WALL_FLIP_BACK1)
+		if (cg.predictedPlayerState.legsAnim == BOTH_WALL_FLIP_BACK1)
 		{
 			//Flip moves that look good with the eyemovement locked
 			eye_range = qfalse;
@@ -15597,11 +15597,11 @@ void SmoothTrueView(vec3_t eye_angles)
 		else if (cg_trueflip.integer == 1)
 		{
 			//Use simple flip for the more complicated flips
-			if (cg.predicted_player_state.legsAnim == BOTH_FLIP_F
-				|| cg.predicted_player_state.legsAnim == BOTH_FLIP_F2
-				|| cg.predicted_player_state.legsAnim == BOTH_ROLL_F
-				|| cg.predicted_player_state.legsAnim == BOTH_ROLL_F1
-				|| cg.predicted_player_state.legsAnim == BOTH_ROLL_F2)
+			if (cg.predictedPlayerState.legsAnim == BOTH_FLIP_F
+				|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_F2
+				|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_F
+				|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_F1
+				|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_F2)
 			{
 				//forward flips
 				VectorCopy(cg.refdef.viewangles, eye_angles);
@@ -15610,11 +15610,11 @@ void SmoothTrueView(vec3_t eye_angles)
 				eye_range = qfalse;
 				did_special = qtrue;
 			}
-			else if (cg.predicted_player_state.legsAnim == BOTH_FLIP_B
-				|| cg.predicted_player_state.legsAnim == BOTH_ROLL_B
-				|| cg.predicted_player_state.legsAnim == BOTH_FLIP_BACK1
-				|| cg.predicted_player_state.legsAnim == BOTH_FLIP_BACK2
-				|| cg.predicted_player_state.legsAnim == BOTH_FLIP_BACK3)
+			else if (cg.predictedPlayerState.legsAnim == BOTH_FLIP_B
+				|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_B
+				|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_BACK1
+				|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_BACK2
+				|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_BACK3)
 			{
 				//back flips
 				VectorCopy(cg.refdef.viewangles, eye_angles);
@@ -15627,16 +15627,16 @@ void SmoothTrueView(vec3_t eye_angles)
 		else
 		{
 			//You're here because you're using cg_trueflip.integer = 2
-			if (cg.predicted_player_state.legsAnim == BOTH_FLIP_F
-				|| cg.predicted_player_state.legsAnim == BOTH_FLIP_F2
-				|| cg.predicted_player_state.legsAnim == BOTH_ROLL_F
-				|| cg.predicted_player_state.legsAnim == BOTH_ROLL_F1
-				|| cg.predicted_player_state.legsAnim == BOTH_ROLL_F2
-				|| cg.predicted_player_state.legsAnim == BOTH_FLIP_B
-				|| cg.predicted_player_state.legsAnim == BOTH_ROLL_B
-				|| cg.predicted_player_state.legsAnim == BOTH_FLIP_BACK1
-				|| cg.predicted_player_state.legsAnim == BOTH_FLIP_BACK2
-				|| cg.predicted_player_state.legsAnim == BOTH_FLIP_BACK3)
+			if (cg.predictedPlayerState.legsAnim == BOTH_FLIP_F
+				|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_F2
+				|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_F
+				|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_F1
+				|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_F2
+				|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_B
+				|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_B
+				|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_BACK1
+				|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_BACK2
+				|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_BACK3)
 			{
 				//Flip animation and using cg_trueflip.integer = 2, lock the eyemovement
 				eye_range = qfalse;
@@ -15644,15 +15644,15 @@ void SmoothTrueView(vec3_t eye_angles)
 			}
 		}
 	}
-	else if (cg.predicted_player_state.legsAnim == BOTH_WALL_FLIP_BACK1
-		|| cg.predicted_player_state.legsAnim == BOTH_FLIP_F
-		|| cg.predicted_player_state.legsAnim == BOTH_FLIP_F2
-		|| cg.predicted_player_state.legsAnim == BOTH_ROLL_F
-		|| cg.predicted_player_state.legsAnim == BOTH_ROLL_F1
-		|| cg.predicted_player_state.legsAnim == BOTH_ROLL_F2
-		|| cg.predicted_player_state.legsAnim == BOTH_FLIP_B
-		|| cg.predicted_player_state.legsAnim == BOTH_ROLL_B
-		|| cg.predicted_player_state.legsAnim == BOTH_FLIP_BACK1)
+	else if (cg.predictedPlayerState.legsAnim == BOTH_WALL_FLIP_BACK1
+		|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_F
+		|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_F2
+		|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_F
+		|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_F1
+		|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_F2
+		|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_B
+		|| cg.predictedPlayerState.legsAnim == BOTH_ROLL_B
+		|| cg.predictedPlayerState.legsAnim == BOTH_FLIP_BACK1)
 	{
 		//you don't want flipping so use cg.refdef.viewangles as the view
 		use_ref_def = qtrue;
@@ -15663,32 +15663,32 @@ void SmoothTrueView(vec3_t eye_angles)
 		if (cg_truespin.integer == 1)
 		{
 			//Do a simulated Spin for the more complicated spins
-			if (cg.predicted_player_state.torsoAnim == BOTH_T1_TL_BR
-				|| cg.predicted_player_state.torsoAnim == BOTH_T1__L_BR
-				|| cg.predicted_player_state.torsoAnim == BOTH_T1__L__R
-				|| cg.predicted_player_state.torsoAnim == BOTH_T1_BL_BR
-				|| cg.predicted_player_state.torsoAnim == BOTH_T1_BL__R
-				|| cg.predicted_player_state.torsoAnim == BOTH_T1_BL_TR
-				|| cg.predicted_player_state.torsoAnim == BOTH_T2__L_BR
-				|| cg.predicted_player_state.torsoAnim == BOTH_T2_BL_BR
-				|| cg.predicted_player_state.torsoAnim == BOTH_T2_BL__R
-				|| cg.predicted_player_state.torsoAnim == BOTH_T3__L_BR
-				|| cg.predicted_player_state.torsoAnim == BOTH_T3_BL_BR
-				|| cg.predicted_player_state.torsoAnim == BOTH_T3_BL__R
-				|| cg.predicted_player_state.torsoAnim == BOTH_T4__L_BR
-				|| cg.predicted_player_state.torsoAnim == BOTH_T4_BL_BR
-				|| cg.predicted_player_state.torsoAnim == BOTH_T4_BL__R
-				|| cg.predicted_player_state.torsoAnim == BOTH_T5_TL_BR
-				|| cg.predicted_player_state.torsoAnim == BOTH_T5__L_BR
-				|| cg.predicted_player_state.torsoAnim == BOTH_T5__L__R
-				|| cg.predicted_player_state.torsoAnim == BOTH_T5_BL_BR
-				|| cg.predicted_player_state.torsoAnim == BOTH_T5_BL__R
-				|| cg.predicted_player_state.torsoAnim == BOTH_T5_BL_TR
-				|| cg.predicted_player_state.torsoAnim == BOTH_ATTACK_BACK
-				|| cg.predicted_player_state.torsoAnim == BOTH_CROUCHATTACKBACK1
-				|| cg.predicted_player_state.torsoAnim == BOTH_BUTTERFLY_LEFT
+			if (cg.predictedPlayerState.torsoAnim == BOTH_T1_TL_BR
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T1__L_BR
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T1__L__R
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T1_BL_BR
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T1_BL__R
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T1_BL_TR
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T2__L_BR
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T2_BL_BR
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T2_BL__R
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T3__L_BR
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T3_BL_BR
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T3_BL__R
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T4__L_BR
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T4_BL_BR
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T4_BL__R
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T5_TL_BR
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T5__L_BR
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T5__L__R
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T5_BL_BR
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T5_BL__R
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T5_BL_TR
+				|| cg.predictedPlayerState.torsoAnim == BOTH_ATTACK_BACK
+				|| cg.predictedPlayerState.torsoAnim == BOTH_CROUCHATTACKBACK1
+				|| cg.predictedPlayerState.torsoAnim == BOTH_BUTTERFLY_LEFT
 				//This technically has 2 spins and seems to have been labeled wrong
-				|| cg.predicted_player_state.legsAnim == BOTH_FJSS_TR_BL)
+				|| cg.predictedPlayerState.legsAnim == BOTH_FJSS_TR_BL)
 			{
 				//Left Spins
 				VectorCopy(cg.refdef.viewangles, eye_angles);
@@ -15697,31 +15697,31 @@ void SmoothTrueView(vec3_t eye_angles)
 				eye_range = qfalse;
 				did_special = qtrue;
 			}
-			else if (cg.predicted_player_state.torsoAnim == BOTH_T1_BR_BL
-				|| cg.predicted_player_state.torsoAnim == BOTH_T1__R__L
-				|| cg.predicted_player_state.torsoAnim == BOTH_T1__R_BL
-				|| cg.predicted_player_state.torsoAnim == BOTH_T1_TR_BL
-				|| cg.predicted_player_state.torsoAnim == BOTH_T1_BR_TL
-				|| cg.predicted_player_state.torsoAnim == BOTH_T1_BR__L
-				|| cg.predicted_player_state.torsoAnim == BOTH_T2_BR__L
-				|| cg.predicted_player_state.torsoAnim == BOTH_T2_BR_BL
-				|| cg.predicted_player_state.torsoAnim == BOTH_T2__R_BL
-				|| cg.predicted_player_state.torsoAnim == BOTH_T3_BR__L
-				|| cg.predicted_player_state.torsoAnim == BOTH_T3_BR_BL
-				|| cg.predicted_player_state.torsoAnim == BOTH_T3__R_BL
-				|| cg.predicted_player_state.torsoAnim == BOTH_T4_BR__L
-				|| cg.predicted_player_state.torsoAnim == BOTH_T4_BR_BL
-				|| cg.predicted_player_state.torsoAnim == BOTH_T4__R_BL
-				|| cg.predicted_player_state.torsoAnim == BOTH_T5_BR_BL
-				|| cg.predicted_player_state.torsoAnim == BOTH_T5__R__L
-				|| cg.predicted_player_state.torsoAnim == BOTH_T5__R_BL
-				|| cg.predicted_player_state.torsoAnim == BOTH_T5_TR_BL
-				|| cg.predicted_player_state.torsoAnim == BOTH_T5_BR_TL
-				|| cg.predicted_player_state.torsoAnim == BOTH_T5_BR__L
+			else if (cg.predictedPlayerState.torsoAnim == BOTH_T1_BR_BL
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T1__R__L
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T1__R_BL
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T1_TR_BL
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T1_BR_TL
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T1_BR__L
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T2_BR__L
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T2_BR_BL
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T2__R_BL
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T3_BR__L
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T3_BR_BL
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T3__R_BL
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T4_BR__L
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T4_BR_BL
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T4__R_BL
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T5_BR_BL
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T5__R__L
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T5__R_BL
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T5_TR_BL
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T5_BR_TL
+				|| cg.predictedPlayerState.torsoAnim == BOTH_T5_BR__L
 				//This technically has 2 spins
-				|| cg.predicted_player_state.legsAnim == BOTH_BUTTERFLY_RIGHT
+				|| cg.predictedPlayerState.legsAnim == BOTH_BUTTERFLY_RIGHT
 				//This technically has 2 spins and seems to have been labeled wrong
-				|| cg.predicted_player_state.legsAnim == BOTH_FJSS_TL_BR)
+				|| cg.predictedPlayerState.legsAnim == BOTH_FJSS_TL_BR)
 			{
 				//Right Spins
 				VectorCopy(cg.refdef.viewangles, eye_angles);
@@ -15734,9 +15734,9 @@ void SmoothTrueView(vec3_t eye_angles)
 		else
 		{
 			//You're here because you're using cg_truespin.integer == 2
-			if (PM_SpinningSaberAnim(cg.predicted_player_state.torsoAnim)
-				&& cg.predicted_player_state.torsoAnim != BOTH_JUMPFLIPSLASHDOWN1
-				&& cg.predicted_player_state.torsoAnim != BOTH_JUMPFLIPSTABDOWN)
+			if (PM_SpinningSaberAnim(cg.predictedPlayerState.torsoAnim)
+				&& cg.predictedPlayerState.torsoAnim != BOTH_JUMPFLIPSLASHDOWN1
+				&& cg.predictedPlayerState.torsoAnim != BOTH_JUMPFLIPSTABDOWN)
 			{
 				//Flip animation and using cg_trueflip.integer = 2, lock the eyemovement
 				eye_range = qfalse;
@@ -15744,60 +15744,60 @@ void SmoothTrueView(vec3_t eye_angles)
 			}
 		}
 	}
-	else if (PM_SpinningSaberAnim(cg.predicted_player_state.torsoAnim)
-		&& cg.predicted_player_state.torsoAnim != BOTH_JUMPFLIPSLASHDOWN1
-		&& cg.predicted_player_state.torsoAnim != BOTH_JUMPFLIPSTABDOWN)
+	else if (PM_SpinningSaberAnim(cg.predictedPlayerState.torsoAnim)
+		&& cg.predictedPlayerState.torsoAnim != BOTH_JUMPFLIPSLASHDOWN1
+		&& cg.predictedPlayerState.torsoAnim != BOTH_JUMPFLIPSTABDOWN)
 	{
 		//you don't want spinning so use cg.refdef.viewangles as the view
 		use_ref_def = qtrue;
 	}
-	else if (cg.predicted_player_state.legsAnim == BOTH_JUMPATTACK6)
+	else if (cg.predictedPlayerState.legsAnim == BOTH_JUMPATTACK6)
 	{
 		use_ref_def = qtrue;
 	}
-	else if (cg.predicted_player_state.legsAnim == BOTH_GRIEVOUS_LUNGE)
+	else if (cg.predictedPlayerState.legsAnim == BOTH_GRIEVOUS_LUNGE)
 	{
 		use_ref_def = qtrue;
 	}
 
 	//Prevent camera flicker while landing.
-	if (cg.predicted_player_state.legsAnim == BOTH_LAND1
-		|| cg.predicted_player_state.legsAnim == BOTH_LAND2
-		|| cg.predicted_player_state.legsAnim == BOTH_LAND3
-		|| cg.predicted_player_state.legsAnim == BOTH_LANDBACK1
-		|| cg.predicted_player_state.legsAnim == BOTH_LANDLEFT1
-		|| cg.predicted_player_state.legsAnim == BOTH_LANDRIGHT1)
+	if (cg.predictedPlayerState.legsAnim == BOTH_LAND1
+		|| cg.predictedPlayerState.legsAnim == BOTH_LAND2
+		|| cg.predictedPlayerState.legsAnim == BOTH_LAND3
+		|| cg.predictedPlayerState.legsAnim == BOTH_LANDBACK1
+		|| cg.predictedPlayerState.legsAnim == BOTH_LANDLEFT1
+		|| cg.predictedPlayerState.legsAnim == BOTH_LANDRIGHT1)
 	{
 		use_ref_def = qtrue;
 	}
 
 	//Prevent the camera flicker while switching to the saber.
-	if (cg.predicted_player_state.torsoAnim == BOTH_STAND2TO1
-		|| cg.predicted_player_state.torsoAnim == BOTH_STAND1TO2
-		|| cg.predicted_player_state.torsoAnim == BOTH_S1_S7
-		|| cg.predicted_player_state.torsoAnim == BOTH_S7_S1
-		|| cg.predicted_player_state.torsoAnim == BOTH_S1_S6
-		|| cg.predicted_player_state.torsoAnim == BOTH_S6_S1
-		|| cg.predicted_player_state.torsoAnim == BOTH_DOOKU_FULLDRAW
-		|| cg.predicted_player_state.torsoAnim == BOTH_DOOKU_SMALLDRAW
-		|| cg.predicted_player_state.torsoAnim == BOTH_SABER_IGNITION
-		|| cg.predicted_player_state.torsoAnim == BOTH_SABER_IGNITION_JFA
-		|| cg.predicted_player_state.torsoAnim == BOTH_SABER_BACKHAND_IGNITION
-		|| cg.predicted_player_state.torsoAnim == BOTH_GRIEVOUS_SABERON)
+	if (cg.predictedPlayerState.torsoAnim == BOTH_STAND2TO1
+		|| cg.predictedPlayerState.torsoAnim == BOTH_STAND1TO2
+		|| cg.predictedPlayerState.torsoAnim == BOTH_S1_S7
+		|| cg.predictedPlayerState.torsoAnim == BOTH_S7_S1
+		|| cg.predictedPlayerState.torsoAnim == BOTH_S1_S6
+		|| cg.predictedPlayerState.torsoAnim == BOTH_S6_S1
+		|| cg.predictedPlayerState.torsoAnim == BOTH_DOOKU_FULLDRAW
+		|| cg.predictedPlayerState.torsoAnim == BOTH_DOOKU_SMALLDRAW
+		|| cg.predictedPlayerState.torsoAnim == BOTH_SABER_IGNITION
+		|| cg.predictedPlayerState.torsoAnim == BOTH_SABER_IGNITION_JFA
+		|| cg.predictedPlayerState.torsoAnim == BOTH_SABER_BACKHAND_IGNITION
+		|| cg.predictedPlayerState.torsoAnim == BOTH_GRIEVOUS_SABERON)
 	{
 		use_ref_def = qtrue;
 	}
 
 	//special camera view for blue backstab
-	if (cg.predicted_player_state.torsoAnim == BOTH_A2_STABBACK1 || cg.predicted_player_state.torsoAnim ==
+	if (cg.predictedPlayerState.torsoAnim == BOTH_A2_STABBACK1 || cg.predictedPlayerState.torsoAnim ==
 		BOTH_A2_STABBACK1B)
 	{
 		eye_range = qfalse;
 		did_special = qtrue;
 	}
 
-	if (cg.predicted_player_state.torsoAnim == BOTH_JUMPFLIPSLASHDOWN1
-		|| cg.predicted_player_state.torsoAnim == BOTH_JUMPFLIPSTABDOWN)
+	if (cg.predictedPlayerState.torsoAnim == BOTH_JUMPFLIPSLASHDOWN1
+		|| cg.predictedPlayerState.torsoAnim == BOTH_JUMPFLIPSTABDOWN)
 	{
 		eye_range = qfalse;
 		did_special = qtrue;
@@ -16157,7 +16157,7 @@ void CG_VisualWeaponsUpdate(centity_t* cent, clientInfo_t* ci)
 			cent->currentState.trickedentindex2,
 			cent->currentState.trickedentindex3,
 			cent->currentState.trickedentindex4,
-			cg.predicted_player_state.clientNum))
+			cg.predictedPlayerState.clientNum))
 		{
 			//this player has mind tricked the client, don't render weapons on this dude.
 			return;
@@ -17041,7 +17041,7 @@ void CG_Player(centity_t* cent)
 
 	if ((cg_smoothClients.integer || cent->currentState.heldByClient) && (cent->currentState.groundEntityNum >=
 		ENTITYNUM_WORLD || cent->currentState.eType == ET_TERRAIN) &&
-		!(cent->currentState.eFlags2 & EF2_HYPERSPACE) && cg.predicted_player_state.m_iVehicleNum != cent->currentState.
+		!(cent->currentState.eFlags2 & EF2_HYPERSPACE) && cg.predictedPlayerState.m_iVehicleNum != cent->currentState.
 		number)
 	{
 		//always smooth when being thrown
@@ -17239,7 +17239,7 @@ void CG_Player(centity_t* cent)
 		if (cent->currentState.NPC_class == CLASS_VEHICLE && CG_InFighter())
 		{
 			//this is a vehicle, bracket it
-			if (cg.predicted_player_state.m_iVehicleNum != cent->currentState.clientNum)
+			if (cg.predictedPlayerState.m_iVehicleNum != cent->currentState.clientNum)
 			{
 				//don't add the vehicle I'm in... :)
 				CG_AddBracketedEnt(cent);
@@ -17295,7 +17295,7 @@ void CG_Player(centity_t* cent)
 		}
 	}
 
-	if (cg.predicted_player_state.pm_type == PM_INTERMISSION)
+	if (cg.predictedPlayerState.pm_type == PM_INTERMISSION)
 	{
 		//don't show all this shit during intermission
 		if (cent->currentState.eType == ET_NPC
@@ -17609,10 +17609,10 @@ void CG_Player(centity_t* cent)
 	{
 		if (!cg.renderingThirdPerson)
 		{
-			if (!cg_trueguns.integer && cg.predicted_player_state.weapon != WP_SABER
-				&& cg.predicted_player_state.weapon != WP_MELEE
-				|| cg.predicted_player_state.weapon == WP_SABER && cg_truesaberonly.integer
-				|| cg.predicted_player_state.zoomMode)
+			if (!cg_trueguns.integer && cg.predictedPlayerState.weapon != WP_SABER
+				&& cg.predictedPlayerState.weapon != WP_MELEE
+				|| cg.predictedPlayerState.weapon == WP_SABER && cg_truesaberonly.integer
+				|| cg.predictedPlayerState.zoomMode)
 			{
 				renderfx = RF_THIRD_PERSON; // only draw in mirrors
 			}
@@ -17804,7 +17804,7 @@ void CG_Player(centity_t* cent)
 	else if (cgs.gametype == GT_POWERDUEL && cg_drawFriend.integer &&
 		cent->currentState.number != cg.snap->ps.clientNum)
 	{
-		if (cg.predicted_player_state.persistant[PERS_TEAM] != TEAM_SPECTATOR &&
+		if (cg.predictedPlayerState.persistant[PERS_TEAM] != TEAM_SPECTATOR &&
 			cent->currentState.number < MAX_CLIENTS &&
 			!(cent->currentState.eFlags & EF_DEAD) &&
 			ci &&
@@ -17813,7 +17813,7 @@ void CG_Player(centity_t* cent)
 			//ally in powerduel, so draw the icon
 			CG_PlayerFloatSprite(cent, cgs.media.powerDuelAllyShader);
 		}
-		else if (cg.predicted_player_state.persistant[PERS_TEAM] == TEAM_SPECTATOR &&
+		else if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_SPECTATOR &&
 			cent->currentState.number < MAX_CLIENTS &&
 			!(cent->currentState.eFlags & EF_DEAD) &&
 			ci->duelTeam == DUELTEAM_DOUBLE)
@@ -17993,7 +17993,7 @@ void CG_Player(centity_t* cent)
 	if (cg.snap && cent->currentState.number == cg.snap->ps.clientNum && cg_truebobbing.integer)
 	{
 		if (!cg.renderingThirdPerson && (cg_trueguns.integer || cent->currentState.weapon == WP_SABER
-			|| cent->currentState.weapon == WP_MELEE) && !cg.predicted_player_state.zoomMode)
+			|| cent->currentState.weapon == WP_MELEE) && !cg.predictedPlayerState.zoomMode)
 		{
 			//<True View varibles
 			mdxaBone_t eye_matrix;
@@ -18516,6 +18516,11 @@ SkipTrueView:
 		cent->bodyFadeTime = 0;
 	}
 
+	if (cent->currentState.powerups & (1 << PW_SPHERESHIELDED))
+	{
+		trap->S_AddLoopingSound(cent->currentState.number, cg.refdef.vieworg, vec3_origin, trap->S_RegisterSound("sound/barrier/barrier_loop.wav"));
+	}
+
 	if (cent->currentState.weapon == WP_STUN_BATON && cent->currentState.number == cg.snap->ps.clientNum)
 	{
 		if (cent->currentState.weapon == WP_STUN_BATON && cent->currentState.eFlags & EF_ALT_FIRING)
@@ -18646,8 +18651,8 @@ SkipTrueView:
 	}
 
 	if (cgs.gametype == GT_HOLOCRON && cent->currentState.time2 &&
-		(cg.renderingThirdPerson || cg_trueguns.integer || cg.predicted_player_state.weapon == WP_SABER || cg.
-			predicted_player_state.weapon == WP_MELEE
+		(cg.renderingThirdPerson || cg_trueguns.integer || cg.predictedPlayerState.weapon == WP_SABER || cg.
+			predictedPlayerState.weapon == WP_MELEE
 			|| cg.snap->ps.clientNum != cent->currentState.number))
 	{
 		int i = 0;
@@ -19452,12 +19457,12 @@ stillDoSaber:
 							legs.origin,
 							rootAngles,
 							NULL);
-					}
-				}
+			}
+		}
 #else
 				vectoangles(legs.axis[0], root_angles);
 #endif
-			}
+	}
 
 			while (k < ci->saber[l].numBlades)
 			{
@@ -19491,8 +19496,8 @@ stillDoSaber:
 			}
 
 			l++;
-		}
 	}
+}
 
 	if (cent->currentState.saberInFlight && !cent->currentState.saberEntityNum)
 	{
@@ -19707,7 +19712,7 @@ stillDoSaber:
 		}
 		else
 		{
-			if (cg.renderingThirdPerson || cent->currentState.number != cg.predicted_player_state.clientNum)
+			if (cg.renderingThirdPerson || cent->currentState.number != cg.predictedPlayerState.clientNum)
 			{
 				if (cg_shadows.integer != 2 && cgs.glconfig.stencilBits >= 4 && cg_renderToTextureFX.integer)
 				{
@@ -19803,6 +19808,41 @@ stillDoSaber:
 		cent->frame_hold_refreshed = 0;
 	}
 
+	if (cent->currentState.powerups & (1 << PW_SPHERESHIELDED))
+	{
+		if (!cent->sphereshielded)
+		{
+			cent->sphereshielded = qtrue;
+			cent->unsphereshielding = cg.time + 2000;
+		}
+	}
+	else if (cent->sphereshielded)
+	{
+		cent->sphereshielded = qfalse;
+		cent->unsphereshielding = cg.time + 2000;
+	}
+
+	if (cent->unsphereshielding > cg.time)
+	{//in the middle of cloaking
+		float perc2 = (float)(cent->unsphereshielding - cg.time) / 2000.0f;
+		if ((cent->currentState.powerups & (1 << PW_SPHERESHIELDED)))
+		{//actually cloaking, so reverse it
+			perc2 = 1.0f - perc2;
+		}
+
+		if (perc2 >= 0.0f && perc2 <= 1.0f)
+		{
+			CG_DrawPlayerSphere(cent, cent->lerpOrigin, 1.25f, cgs.media.ysaliblueShader);
+		}
+	}
+	else if ((cent->currentState.powerups & (1 << PW_SPHERESHIELDED)))
+	{//fully cloaked
+		if (cg.renderingThirdPerson || cent->currentState.number != cg.predictedPlayerState.clientNum)
+		{
+			CG_DrawPlayerSphere(cent, cent->lerpOrigin, 1.25f, cgs.media.ysaliblueShader);
+		}
+	}
+
 	//
 	// add the gun / barrel / flash
 	//
@@ -19822,8 +19862,8 @@ stillDoSaber:
 
 	if (cent->currentState.forcePowersActive & 1 << FP_RAGE &&
 		(cg.renderingThirdPerson || cent->currentState.number != cg.snap->ps.clientNum
-			|| cg_trueguns.integer || cg.predicted_player_state.weapon == WP_SABER
-			|| cg.predicted_player_state.weapon == WP_MELEE))
+			|| cg_trueguns.integer || cg.predictedPlayerState.weapon == WP_SABER
+			|| cg.predictedPlayerState.weapon == WP_MELEE))
 	{
 		legs.renderfx &= ~RF_FORCE_ENT_ALPHA;
 		legs.renderfx &= ~RF_MINLIGHT;
@@ -20346,8 +20386,8 @@ void CG_ResetPlayerEntity(centity_t* cent)
 		if (cent->currentState.NPC_class == CLASS_VEHICLE &&
 			cent->m_pVehicle &&
 			cent->m_pVehicle->m_pVehicleInfo->type == VH_FIGHTER &&
-			cg.predicted_player_state.m_iVehicleNum &&
-			cent->currentState.number == cg.predicted_player_state.m_iVehicleNum)
+			cg.predictedPlayerState.m_iVehicleNum &&
+			cent->currentState.number == cg.predictedPlayerState.m_iVehicleNum)
 		{
 			//holy hackery, batman!
 			//I don't think this will break anything. But really, do I ever?
@@ -20453,7 +20493,7 @@ void CG_ResetPlayerEntity(centity_t* cent)
 	}
 
 	//do this to prevent us from making a saber unholster sound the first time we enter the pvs
-	if (cent->currentState.number != cg.predicted_player_state.clientNum &&
+	if (cent->currentState.number != cg.predictedPlayerState.clientNum &&
 		cent->currentState.weapon == WP_SABER &&
 		cent->weapon != cent->currentState.weapon)
 	{

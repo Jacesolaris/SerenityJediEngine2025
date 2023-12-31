@@ -8842,8 +8842,8 @@ static int UI_FeederCount(float feederID)
 			trap->Cvar_VariableStringBuffer(va("ui_class_item%i", i), info, sizeof info);
 			// A hack so health and ammo dispenser icons don't show up.
 			if (Q_stricmp(info, "gfx/2d/select") != 0 &&
-				Q_stricmp(info, "gfx/hud/i_icon_healthdisp") != 0 &&
-				Q_stricmp(info, "gfx/hud/i_icon_ammodisp") != 0)
+				Q_stricmp(info, "gfx/hud/i_icon_health_disp") != 0 &&
+				Q_stricmp(info, "gfx/hud/i_icon_ammo_disp") != 0)
 			{
 				count++;
 			}
@@ -9555,8 +9555,8 @@ static qhandle_t UI_FeederItemImage(float feederID, int index)
 			trap->Cvar_VariableStringBuffer(va("ui_class_item%i", i), info, sizeof info);
 			// A hack so health and ammo dispenser icons don't show up.
 			if (Q_stricmp(info, "gfx/2d/select") != 0
-				&& Q_stricmp(info, "gfx/hud/i_icon_healthdisp") != 0 &&
-				Q_stricmp(info, "gfx/hud/i_icon_ammodisp") != 0)
+				&& Q_stricmp(info, "gfx/hud/i_icon_health_disp") != 0 &&
+				Q_stricmp(info, "gfx/hud/i_icon_ammo_disp") != 0)
 			{
 				if (validCnt == index)
 				{

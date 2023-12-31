@@ -2345,8 +2345,7 @@ static void RenderSurfaces(CRenderSurface& RS)
 						}
 						if (curTime < (*kcur).second.mGoreGrowEndTime)
 						{
-							newSurf2->scale = 1.0f / ((curTime - (*kcur).second.mGoreGrowStartTime) * (*kcur).second.
-								mGoreGrowFactor + (*kcur).second.mGoreGrowOffset);
+							newSurf2->scale = 1.0f / ((curTime - (*kcur).second.mGoreGrowStartTime) * (*kcur).second.mGoreGrowFactor + (*kcur).second.mGoreGrowOffset);
 							if (newSurf2->scale < 1.0f)
 							{
 								newSurf2->scale = 1.0f;

@@ -198,88 +198,154 @@ static void IN_GenCMD4(void)
 static void IN_GenCMD5(void)
 {
 	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_FORCE_PULL;
+	cl.gcmdValue = GENCMD_FORCE_THROW;
 }
 
 static void IN_GenCMD6(void)
 {
 	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_FORCE_DISTRACT;
+	cl.gcmdValue = GENCMD_FORCE_PULL;
 }
 
 static void IN_GenCMD7(void)
 {
 	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_FORCE_RAGE;
+	cl.gcmdValue = GENCMD_FORCE_DISTRACT;
 }
 
 static void IN_GenCMD8(void)
 {
 	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_FORCE_PROTECT;
+	cl.gcmdValue = GENCMD_FORCE_RAGE;
 }
 
 static void IN_GenCMD9(void)
 {
 	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_FORCE_ABSORB;
+	cl.gcmdValue = GENCMD_FORCE_PROTECT;
 }
 
 static void IN_GenCMD10(void)
 {
 	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_FORCE_HEALOTHER;
+	cl.gcmdValue = GENCMD_FORCE_ABSORB;
 }
 
 static void IN_GenCMD11(void)
 {
 	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_FORCE_FORCEPOWEROTHER;
+	cl.gcmdValue = GENCMD_FORCE_HEALOTHER;
 }
 
 static void IN_GenCMD12(void)
 {
 	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_FORCE_SEEING;
+	cl.gcmdValue = GENCMD_FORCE_FORCEPOWEROTHER;
 }
 
 static void IN_GenCMD13(void)
 {
 	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_USE_SEEKER;
+	cl.gcmdValue = GENCMD_FORCE_SEEING;
 }
 
 static void IN_GenCMD14(void)
 {
 	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_USE_FIELD;
+	cl.gcmdValue = GENCMD_USE_SEEKER;
 }
 
 static void IN_GenCMD15(void)
 {
 	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_USE_BACTA;
+	cl.gcmdValue = GENCMD_USE_SHIELD;
 }
 
 static void IN_GenCMD16(void)
 {
 	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_USE_ELECTROBINOCULARS;
+	cl.gcmdValue = GENCMD_USE_MEDPAC;
 }
 
 static void IN_GenCMD17(void)
 {
 	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_ZOOM;
+	cl.gcmdValue = GENCMD_USE_MEDPAC_BIG;
 }
 
 static void IN_GenCMD18(void)
 {
 	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_USE_SENTRY;
+	cl.gcmdValue = GENCMD_USE_ELECTROBINOCULARS;
 }
 
 static void IN_GenCMD19(void)
+{
+	cl.gcmdSendValue = qtrue;
+	cl.gcmdValue = GENCMD_USE_SENTRY;
+}
+
+static void IN_GenCMD20(void)
+{
+	cl.gcmdSendValue = qtrue;
+	cl.gcmdValue = GENCMD_USE_JETPACK;
+}
+
+static void IN_GenCMD21(void)
+{
+	cl.gcmdSendValue = qtrue;
+	cl.gcmdValue = GENCMD_USE_HEALTHDISP;
+}
+
+static void IN_GenCMD22(void)
+{
+	cl.gcmdSendValue = qtrue;
+	cl.gcmdValue = GENCMD_USE_AMMODISP;
+}
+
+static void IN_GenCMD23(void)
+{
+	cl.gcmdSendValue = qtrue;
+	cl.gcmdValue = GENCMD_USE_EWEB;
+}
+
+static void IN_GenCMD24(void)
+{
+	cl.gcmdSendValue = qtrue;
+	cl.gcmdValue = GENCMD_USE_CLOAK;
+}
+
+static void IN_GenCMD25(void)
+{
+	cl.gcmdSendValue = qtrue;
+	cl.gcmdValue = GENCMD_FLAMETHROWER;
+}
+
+static void IN_GenCMD26(void)
+{
+	cl.gcmdSendValue = qtrue;
+	cl.gcmdValue = GENCMD_USE_SWOOP;
+}
+
+static void IN_GenCMD27(void)
+{
+	cl.gcmdSendValue = qtrue;
+	cl.gcmdValue = GENCMD_USE_DECCA;
+}
+
+static void IN_GenCMD28(void)
+{
+	cl.gcmdSendValue = qtrue;
+	cl.gcmdValue = GENCMD_USE_SPHERESHIELD;
+}
+
+static void IN_GenCMD29(void)
+{
+	cl.gcmdSendValue = qtrue;
+	cl.gcmdValue = GENCMD_USE_GRAPPLE;
+}
+
+static void IN_GenCMD30(void)
 {
 	if (Cvar_VariableIntegerValue("d_saberStanceDebug"))
 	{
@@ -289,79 +355,37 @@ static void IN_GenCMD19(void)
 	cl.gcmdValue = GENCMD_SABERATTACKCYCLE;
 }
 
-static void IN_GenCMD20(void)
-{
-	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_FORCE_THROW;
-}
-
-static void IN_GenCMD21(void)
-{
-	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_USE_JETPACK;
-}
-
-static void IN_GenCMD22(void)
-{
-	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_USE_BACTABIG;
-}
-
-static void IN_GenCMD23(void)
-{
-	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_USE_HEALTHDISP;
-}
-
-static void IN_GenCMD24(void)
-{
-	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_USE_AMMODISP;
-}
-
-static void IN_GenCMD25(void)
-{
-	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_USE_EWEB;
-}
-
-static void IN_GenCMD26(void)
-{
-	cl.gcmdSendValue = qtrue;
-	cl.gcmdValue = GENCMD_USE_CLOAK;
-}
-
-static void IN_GenCMD27(void)
+static void IN_GenCMD31(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_TAUNT;
 }
 
-static void IN_GenCMD28(void)
+static void IN_GenCMD32(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_BOW;
 }
 
-static void IN_GenCMD29(void)
+static void IN_GenCMD33(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_MEDITATE;
 }
 
-static void IN_GenCMD30(void)
+static void IN_GenCMD34(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_FLOURISH;
 }
 
-static void IN_GenCMD31(void)
+static void IN_GenCMD35(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_GLOAT;
 }
 
-static void IN_GenCMD32(void)
+static void IN_GenCMD36(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_SURRENDER;
@@ -1938,42 +1962,55 @@ static constexpr cmdList_t inputCmds[] =
 
 	{"+mlook", "Hold to use mouse look", IN_MLookDown, nullptr},
 	{"-mlook", nullptr, IN_MLookUp, nullptr},
-	{"sv_saberswitch", "Holster/activate lightsaber", IN_GenCMD1, nullptr},
-	{"engage_duel", "Engage private duel", IN_GenCMD2, nullptr},
-	{"force_heal", "Use heal force power", IN_GenCMD3, nullptr},
-	{"force_speed", "Activate speed force power", IN_GenCMD4, nullptr},
-	{"force_pull", "Use pull force power", IN_GenCMD5, nullptr},
-	{"force_distract", "Activate mind trick force power", IN_GenCMD6, nullptr},
-	{"force_rage", "Activate rage force power", IN_GenCMD7, nullptr},
-	{"force_protect", "Activate protect force power", IN_GenCMD8, nullptr},
-	{"force_absorb", "Activate absorb force power", IN_GenCMD9, nullptr},
-	{"force_healother", "Use team heal force power", IN_GenCMD10, nullptr},
-	{"force_forcepowerother", "Use team energize force power", IN_GenCMD11, nullptr},
-	{"force_seeing", "Activate seeing force power", IN_GenCMD12, nullptr},
-	{"use_seeker", "Use seeker drone item", IN_GenCMD13, nullptr},
-	{"use_field", "Use forcefield item", IN_GenCMD14, nullptr},
-	{"use_bacta", "Use bacta item", IN_GenCMD15, nullptr},
-	{"use_electrobinoculars", "Use electro binoculars item", IN_GenCMD16, nullptr},
-	{"zoom", "Use binoculars item", IN_GenCMD17, nullptr},
-	{"use_sentry", "Use sentry gun item", IN_GenCMD18, nullptr},
-	{"saberAttackCycle", "Switch lightsaber attack styles", IN_GenCMD19, nullptr},
-	{"force_throw", "Use push force power", IN_GenCMD20, nullptr},
-	{"use_jetpack", "Use jetpack item", IN_GenCMD21, nullptr},
-	{"use_bactabig", "Use big bacta item", IN_GenCMD22, nullptr},
-	{"use_healthdisp", "Use health dispenser item", IN_GenCMD23, nullptr},
-	{"use_ammodisp", "Use ammo dispenser item", IN_GenCMD24, nullptr},
-	{"use_eweb", "Use e-web item", IN_GenCMD25, nullptr},
-	{"use_cloak", "Use cloaking item", IN_GenCMD26, nullptr},
-	{"taunt", "Taunt", IN_GenCMD27, nullptr},
-	{"bow", "Bow", IN_GenCMD28, nullptr},
-	{"meditate", "Meditate", IN_GenCMD29, nullptr},
-	{"flourish", "Flourish", IN_GenCMD30, nullptr},
-	{"gloat", "Gloat", IN_GenCMD31, nullptr},
-	{"surrender", "Surrender", IN_GenCMD32, nullptr},
-	{"useGivenForce", "Use specified force power", IN_UseGivenForce, nullptr},
-	{"automap_button", "Show/hide automap", IN_AutoMapButton, nullptr},
-	{"automap_toggle", "Show/hide radar", IN_AutoMapToggle, nullptr},
-	{"voicechat", "Open voice chat menu", IN_VoiceChatButton, nullptr},
+
+	{"sv_saberswitch", "Holster/activate lightsaber", IN_GenCMD1, nullptr},                   //GENCMD_SABERSWITCH
+	{"engage_duel", "Engage private duel", IN_GenCMD2, nullptr},                              //GENCMD_ENGAGE_DUEL
+
+	{"force_heal", "Use heal force power", IN_GenCMD3, nullptr},                              //GENCMD_FORCE_HEAL
+	{"force_speed", "Activate speed force power", IN_GenCMD4, nullptr},                       //GENCMD_FORCE_SPEED
+	{"force_throw", "Use push force power", IN_GenCMD5, nullptr},                             //GENCMD_FORCE_THROW
+	{"force_pull", "Use pull force power", IN_GenCMD6, nullptr},                              //GENCMD_FORCE_PULL
+	{"force_distract", "Activate mind trick force power", IN_GenCMD7, nullptr},               //GENCMD_FORCE_DISTRACT
+	{"force_rage", "Activate rage force power",  IN_GenCMD8, nullptr},                        //GENCMD_FORCE_RAGE
+	{"force_protect", "Activate protect force power", IN_GenCMD9, nullptr},                   //GENCMD_FORCE_PROTECT
+	{"force_absorb", "Activate absorb force power", IN_GenCMD10, nullptr},                    //GENCMD_FORCE_ABSORB
+	{"force_healother", "Use team heal force power", IN_GenCMD11, nullptr},                   //GENCMD_FORCE_HEALOTHER
+	{"force_forcepowerother", "Use team energize force power", IN_GenCMD12, nullptr},         //GENCMD_FORCE_FORCEPOWEROTHER
+	{"force_seeing", "Activate seeing force power", IN_GenCMD13, nullptr},                    //GENCMD_FORCE_SEEING
+
+	{"use_seeker", "Use seeker drone item", IN_GenCMD14, nullptr},                            //GENCMD_USE_SEEKER
+	{"use_field", "Use forcefield item",  IN_GenCMD15, nullptr},                              //GENCMD_USE_SHIELD
+	{"use_bacta", "Use bacta item", IN_GenCMD16, nullptr},                                    //GENCMD_USE_MEDPAC
+	{"use_bactabig", "Use big bacta item", IN_GenCMD17, nullptr},                             //GENCMD_USE_MEDPAC_BIG
+	{"zoom", "Use binoculars item", IN_GenCMD18, nullptr},                                    //GENCMD_USE_ELECTROBINOCULARS
+	{"use_sentry", "Use sentry gun item", IN_GenCMD19, nullptr},                              //GENCMD_USE_SENTRY
+	{"use_jetpack", "Use jetpack item", IN_GenCMD20, nullptr},                                //GENCMD_USE_JETPACK
+
+	{"use_healthdisp", "Use health dispenser item", IN_GenCMD21, nullptr},                    //GENCMD_USE_HEALTHDISP
+	{"use_ammodisp", "Use ammo dispenser item", IN_GenCMD22, nullptr},                        //GENCMD_USE_AMMODISP
+	{"use_eweb", "Use e-web item", IN_GenCMD23, nullptr},                                     //GENCMD_USE_EWEB
+	{"use_cloak", "Use cloaking item",  IN_GenCMD24, nullptr},                                //GENCMD_USE_CLOAK
+
+	{"flamethrower", "Use flamethrower item", IN_GenCMD25, nullptr},                          //GENCMD_FLAMETHROWER
+	{"swoop", "Use swoop item", IN_GenCMD26, nullptr},                                        //GENCMD_USE_SWOOP
+	{"decca", "decca", IN_GenCMD27, nullptr},                                                 //GENCMD_USE_DECCA
+	{"Sphereshield", "Sphereshield", IN_GenCMD28, nullptr },                                  //GENCMD_USE_SPHERESHIELD
+
+	{"grapple", "grapple", IN_GenCMD29, nullptr},                                             //GENCMD_USE_GRAPPLE
+
+	{"flourish", "Flourish", IN_GenCMD30, nullptr},                                           //GENCMD_SABERATTACKCYCLE
+
+	{"taunt", "Taunt",IN_GenCMD31, nullptr},                                                  //GENCMD_TAUNT
+	{"bow", "Bow",IN_GenCMD32, nullptr},                                                      //GENCMD_BOW
+	{"meditate", "Meditate", IN_GenCMD33, nullptr },                                          //GENCMD_MEDITATE
+	{"flourish", "Flourish", IN_GenCMD34, nullptr },                                          //GENCMD_FLOURISH
+	{"gloat", "Gloat", IN_GenCMD35, nullptr},                                                 //GENCMD_GLOAT
+	{"surrender", "Surrender", IN_GenCMD36, nullptr},                                         //GENCMD_SURRENDER
+
+	{ "useGivenForce", "Use specified force power", IN_UseGivenForce, nullptr },
+	{ "automap_button", "Show/hide automap", IN_AutoMapButton, nullptr },
+	{ "automap_toggle", "Show/hide radar", IN_AutoMapToggle, nullptr },
+	{ "voicechat", "Open voice chat menu", IN_VoiceChatButton, nullptr },
 	{nullptr, nullptr, nullptr, nullptr}
 };
 

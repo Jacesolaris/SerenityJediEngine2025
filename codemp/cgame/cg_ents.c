@@ -349,27 +349,27 @@ static void CG_EntityEffects(const centity_t* cent)
 			else
 			{
 				trap->S_AddLoopingSound(cent->currentState.number, cent->lerpOrigin, vec3_origin, realSoundIndex);
-				//	trap->S_AddRealLoopingSound( cent->currentState.number, cent->lerpOrigin, vec3_origin, realSoundIndex );
 			}
 		}
 	}
 
 	// constant light glow
 	if (cent->currentState.constantLight
-		&& cent->currentState.eType != ET_GENERAL
 		&& cent->currentState.eType != ET_PLAYER
+		&& cent->currentState.eType != ET_BODY
+		&& cent->currentState.eType != ET_NPC
+		&& cent->currentState.eType != ET_INVISIBLE
+		/*&& cent->currentState.eType != ET_GENERAL
 		&& cent->currentState.eType != ET_ITEM
 		&& cent->currentState.eType != ET_MISSILE
 		&& cent->currentState.eType != ET_SPECIAL
 		&& cent->currentState.eType != ET_HOLOCRON
 		&& cent->currentState.eType != ET_MOVER
 		&& cent->currentState.eType != ET_BEAM
-		&& cent->currentState.eType != ET_NPC
 		&& cent->currentState.eType != ET_TEAM
-		&& cent->currentState.eType != ET_BODY
-		&& cent->currentState.eType != ET_INVISIBLE
 		&& cent->currentState.eType != ET_TERRAIN
-		&& cent->currentState.eType != ET_FX)
+		&& cent->currentState.eType != ET_FX*/
+		)
 	{
 		const int cl = cent->currentState.constantLight;
 		const float r = (float)(cl & 0xFF) / 255.0;
@@ -380,7 +380,7 @@ static void CG_EntityEffects(const centity_t* cent)
 	}
 }
 
-localEntity_t* FX_AddOrientedLine(vec3_t start, vec3_t end, vec3_t normal, const float st_scale, const float scale,
+static localEntity_t* FX_AddOrientedLine(vec3_t start, vec3_t end, vec3_t normal, const float st_scale, const float scale,
 	const float dscale, const float startalpha, const float endalpha,
 	const float kill_time,
 	const qhandle_t shader)
@@ -432,7 +432,7 @@ localEntity_t* FX_AddOrientedLine(vec3_t start, vec3_t end, vec3_t normal, const
 	return le;
 }
 
-void FX_DrawPortableShield(const centity_t* cent)
+static void FX_DrawPortableShield(const centity_t* cent)
 {
 	//rww - this code differs a bit from the draw code in EF, I don't know why I had to do
 	//it this way yet it worked in EF the other way.
@@ -512,7 +512,7 @@ void FX_DrawPortableShield(const centity_t* cent)
 CG_Special
 ==================
 */
-void CG_Special(const centity_t* cent)
+static void CG_Special(const centity_t* cent)
 {
 	const entityState_t* s1 = &cent->currentState;
 
@@ -555,74 +555,11 @@ void CG_SetGhoul2Info(refEntity_t* ent, const centity_t* cent)
 // create 8 new points on screen around a model so we can see it's bounding box
 void CG_CreateBBRefEnts(entityState_t* s1, vec3_t origin)
 {
-	/*
-	//g2r
-	#if _DEBUG
-		refEntity_t		point[8];
-		int				i;
-		vec3_t			angles = {0,0,0};
-
-		for (i=0; i<8; i++)
-		{
-			memset (&point[i], 0, sizeof(refEntity_t));
-			point[i].reType = RT_SPRITE;
-			point[i].radius = 1;
-			point[i].customShader = trap->R_RegisterShader("textures/tests/circle");
-			point[i].shaderRGBA[0] = 255;
-			point[i].shaderRGBA[1] = 255;
-			point[i].shaderRGBA[2] = 255;
-			point[i].shaderRGBA[3] = 255;
-
-			AnglesToAxis( angles, point[i].axis );
-
-			// now, we need to put the correct origins into each origin from the mins and max's
-			switch(i)
-			{
-			case 0:
-				VectorCopy(s1->mins, point[i].origin);
-				break;
-			case 1:
-				VectorCopy(s1->mins, point[i].origin);
-				point[i].origin[0] = s1->maxs[0];
-				break;
-			case 2:
-				VectorCopy(s1->mins, point[i].origin);
-				point[i].origin[1] = s1->maxs[1];
-				break;
-			case 3:
-				VectorCopy(s1->mins, point[i].origin);
-				point[i].origin[0] = s1->maxs[0];
-				point[i].origin[1] = s1->maxs[1];
-				break;
-			case 4:
-				VectorCopy(s1->maxs, point[i].origin);
-				break;
-			case 5:
-				VectorCopy(s1->maxs, point[i].origin);
-				point[i].origin[0] = s1->mins[0];
-				break;
-			case 6:
-				VectorCopy(s1->maxs, point[i].origin);
-				point[i].origin[1] = s1->mins[1];
-				break;
-			case 7:
-				VectorCopy(s1->maxs, point[i].origin);
-				point[i].origin[0] = s1->mins[0];
-				point[i].origin[1] = s1->mins[1];
-				break;
-			}
-
-			// add the original origin to each point and then stuff them out there
-			VectorAdd(point[i].origin, origin, point[i].origin);
-
-			trap->R_AddRefEntityToScene (&point[i]);
-		}
-	#endif
-		*/
+	//wtf
 }
 
 // write in the axis and stuff
-void G2_BoltToGhoul2Model(centity_t* cent, refEntity_t* ent)
+static void G2_BoltToGhoul2Model(centity_t* cent, refEntity_t* ent)
 {
 	// extract the wraith ID from the bolt info
 	int model_num = cent->boltInfo >> MODEL_SHIFT;
@@ -775,7 +712,7 @@ static qboolean CG_RenderTimeEntBolt(centity_t* cent)
 		return qfalse;
 	}
 
-	if (clientNum == cg.predicted_player_state.clientNum &&
+	if (clientNum == cg.predictedPlayerState.clientNum &&
 		!cg.renderingThirdPerson)
 	{
 		//If in first person and you have it then render the thing spinning around on your hud.
@@ -1015,7 +952,7 @@ static void CG_General(centity_t* cent)
 			pl->currentState.trickedentindex2,
 			pl->currentState.trickedentindex3,
 			pl->currentState.trickedentindex4,
-			cg.predicted_player_state.clientNum))
+			cg.predictedPlayerState.clientNum))
 		{
 			//don't show if this guy is mindtricking
 			return;
@@ -2008,7 +1945,7 @@ static void CG_General(centity_t* cent)
 		if (cgs.gametype == GT_SIEGE)
 		{
 			// A team game
-			if (cg.predicted_player_state.persistant[PERS_TEAM] == TEAM_SPECTATOR || cg.predicted_player_state.persistant[
+			if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_SPECTATOR || cg.predictedPlayerState.persistant[
 				PERS_TEAM] == TEAM_FREE)
 			{
 				//yellow
@@ -2017,7 +1954,7 @@ static void CG_General(centity_t* cent)
 				ent.shaderRGBA[2] = 0;
 				ent.renderfx |= RF_MINLIGHT | RF_NODEPTH;
 			}
-			else if (cg.predicted_player_state.persistant[PERS_TEAM] == TEAM_RED)
+			else if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_RED)
 			{
 				//red
 				ent.shaderRGBA[0] = 255;
@@ -2037,7 +1974,7 @@ static void CG_General(centity_t* cent)
 		else if (cgs.gametype >= GT_TEAM)
 		{
 			// A team game
-			if (cg.predicted_player_state.persistant[PERS_TEAM] == TEAM_RED)
+			if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_RED)
 			{
 				//red
 				ent.shaderRGBA[0] = 255;
@@ -2251,7 +2188,7 @@ static void CG_Speaker(centity_t* cent)
 		Q_flrand(-1.0f, 1.0f);
 }
 
-qboolean CG_GreyItem(const int type, const int tag, const int pl_side)
+static qboolean CG_GreyItem(const int type, const int tag, const int pl_side)
 {
 	if (type == IT_POWERUP &&
 		(tag == PW_FORCE_ENLIGHTENED_LIGHT || tag == PW_FORCE_ENLIGHTENED_DARK))
@@ -2751,7 +2688,7 @@ static void CG_Item(centity_t* cent)
 
 //============================================================================
 
-void CG_CreateDistortionTrailPart(const centity_t* cent, const float scale, vec3_t pos)
+static void CG_CreateDistortionTrailPart(const centity_t* cent, const float scale, vec3_t pos)
 {
 	refEntity_t ent;
 	vec3_t ang;
@@ -3429,7 +3366,7 @@ static void CG_Mover(centity_t* cent)
 	{
 		//I'm the hyperspace brush
 		qboolean draw_me = qfalse;
-		if (cg.predicted_player_state.m_iVehicleNum
+		if (cg.predictedPlayerState.m_iVehicleNum
 			&& cg.predictedVehicleState.hyperSpaceTime
 			&& cg.time - cg.predictedVehicleState.hyperSpaceTime < HYPERSPACE_TIME
 			&& cg.time - cg.predictedVehicleState.hyperSpaceTime > 1000)
@@ -3678,7 +3615,7 @@ void CG_AdjustPositionForMover(const vec3_t in, const int mover_num, const int f
 	vec3_t old_origin, origin, delta_origin;
 	vec3_t old_angles, angles, delta_angles;
 
-	if (cg.predicted_player_state.persistant[PERS_TEAM] == TEAM_SPECTATOR)
+	if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_SPECTATOR)
 	{
 		VectorCopy(in, out);
 		return;
@@ -3769,14 +3706,14 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 		}
 	}
 
-	if (cg.predicted_player_state.m_iVehicleNum &&
-		cg.predicted_player_state.m_iVehicleNum == cent->currentState.number &&
+	if (cg.predictedPlayerState.m_iVehicleNum &&
+		cg.predictedPlayerState.m_iVehicleNum == cent->currentState.number &&
 		cent->currentState.eType == ET_NPC && cent->currentState.NPC_class == CLASS_VEHICLE)
 	{
 		//special case for vehicle we are riding
-		const centity_t* veh = &cg_entities[cg.predicted_player_state.m_iVehicleNum];
+		const centity_t* veh = &cg_entities[cg.predictedPlayerState.m_iVehicleNum];
 
-		if (veh->currentState.owner == cg.predicted_player_state.clientNum)
+		if (veh->currentState.owner == cg.predictedPlayerState.clientNum)
 		{
 			//only do this if the vehicle is pilotted by this client and predicting properly
 			BG_EvaluateTrajectory(&cent->currentState.pos, cg.time, cent->lerpOrigin);
@@ -3979,7 +3916,7 @@ static void CG_AddCEntity(centity_t* cent)
 		return;
 	}
 
-	if (cg.predicted_player_state.pm_type == PM_INTERMISSION)
+	if (cg.predictedPlayerState.pm_type == PM_INTERMISSION)
 	{
 		//don't render anything then
 		if (cent->currentState.eType == ET_GENERAL ||
@@ -4000,7 +3937,7 @@ static void CG_AddCEntity(centity_t* cent)
 	}
 
 	// don't render when we are in spec, happens occasionally on map_restart and such
-	if (cg.predicted_player_state.clientNum == cent->currentState.number && cg.predicted_player_state.persistant[PERS_TEAM]
+	if (cg.predictedPlayerState.clientNum == cent->currentState.number && cg.predictedPlayerState.persistant[PERS_TEAM]
 		== TEAM_SPECTATOR)
 		return;
 
@@ -4146,17 +4083,17 @@ void CG_AddPacketEntities(const qboolean is_portal)
 	cg.bracketedEntityCount = 0;
 
 	// generate and add the entity from the playerstate
-	playerState_t* ps = &cg.predicted_player_state;
+	playerState_t* ps = &cg.predictedPlayerState;
 
-	CG_CheckPlayerG2Weapons(ps, &cg_entities[cg.predicted_player_state.clientNum]);
-	BG_PlayerStateToEntityState(ps, &cg_entities[cg.predicted_player_state.clientNum].currentState, qfalse);
+	CG_CheckPlayerG2Weapons(ps, &cg_entities[cg.predictedPlayerState.clientNum]);
+	BG_PlayerStateToEntityState(ps, &cg_entities[cg.predictedPlayerState.clientNum].currentState, qfalse);
 
-	if (cg.predicted_player_state.m_iVehicleNum)
+	if (cg.predictedPlayerState.m_iVehicleNum)
 	{
 		//add the vehicle I'm riding first
-		centity_t* veh = &cg_entities[cg.predicted_player_state.m_iVehicleNum];
+		centity_t* veh = &cg_entities[cg.predictedPlayerState.m_iVehicleNum];
 
-		if (veh->currentState.owner == cg.predicted_player_state.clientNum)
+		if (veh->currentState.owner == cg.predictedPlayerState.clientNum)
 		{
 			BG_PlayerStateToEntityState(&cg.predictedVehicleState, &veh->currentState, qfalse);
 			veh->currentState.eType = ET_NPC;
@@ -4167,7 +4104,7 @@ void CG_AddPacketEntities(const qboolean is_portal)
 		veh->bodyHeight = cg.time; //indicate we have already been added
 	}
 
-	CG_AddCEntity(&cg_entities[cg.predicted_player_state.clientNum]);
+	CG_AddCEntity(&cg_entities[cg.predictedPlayerState.clientNum]);
 
 	/*
 	// lerp the non-predicted value for lightning gun origins

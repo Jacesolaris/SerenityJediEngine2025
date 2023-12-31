@@ -400,7 +400,7 @@ static void CG_CalcIdealThirdPersonViewTarget()
 	}
 
 	// Add in the new viewheight
-	cameraFocusLoc[2] += cg.predicted_player_state.viewheight;
+	cameraFocusLoc[2] += cg.predictedPlayerState.viewheight;
 	if (cg.snap
 		&& cg.snap->ps.eFlags & EF_HELD_BY_SAND_CREATURE)
 	{
@@ -419,7 +419,7 @@ static void CG_CalcIdealThirdPersonViewTarget()
 		VectorCopy(cameraFocusLoc, cameraIdealTarget);
 		cameraIdealTarget[2] += cg.overrides.thirdPersonVertOffset;
 	}
-	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
+	else if (cg.renderingThirdPerson && cg.predictedPlayerState.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
 	{
 		VectorCopy(cameraFocusLoc, cameraIdealTarget);
 		cameraIdealTarget[2] -= 15.5f;
@@ -432,7 +432,7 @@ static void CG_CalcIdealThirdPersonViewTarget()
 	}
 
 	// Now, if the player is crouching, do a little special tweak.  The problem is that the player's head is way out of his bbox.
-	if (cg.predicted_player_state.pm_flags & PMF_DUCKED)
+	if (cg.predictedPlayerState.pm_flags & PMF_DUCKED)
 	{
 		// Nudge to focus location up a tad.
 		vec3_t nudgepos;
@@ -441,7 +441,7 @@ static void CG_CalcIdealThirdPersonViewTarget()
 		VectorCopy(cameraFocusLoc, nudgepos);
 		nudgepos[2] += CAMERA_CROUCH_NUDGE;
 		CG_Trace(&trace, cameraFocusLoc, cameramins, cameramaxs, nudgepos,
-			uses_view_entity ? cg.snap->ps.viewEntity : cg.predicted_player_state.clientNum, MASK_CAMERACLIP);
+			uses_view_entity ? cg.snap->ps.viewEntity : cg.predictedPlayerState.clientNum, MASK_CAMERACLIP);
 		if (trace.fraction < 1.0)
 		{
 			VectorCopy(trace.endpos, cameraFocusLoc);
@@ -463,7 +463,7 @@ static void CG_CalcIdealThirdPersonViewTarget()
 		VectorCopy(cameraFocusLoc, nudgepos);
 		nudgepos[2] += CAMERA_CROUCH_NUDGE;
 		CG_Trace(&trace, cameraFocusLoc, cameramins, cameramaxs, nudgepos,
-			uses_view_entity ? cg.snap->ps.viewEntity : cg.predicted_player_state.clientNum, MASK_CAMERACLIP);
+			uses_view_entity ? cg.snap->ps.viewEntity : cg.predictedPlayerState.clientNum, MASK_CAMERACLIP);
 		if (trace.fraction < 1.0)
 		{
 			VectorCopy(trace.endpos, cameraFocusLoc);
@@ -483,7 +483,7 @@ CG_CalcIdealThirdPersonViewLocation
 */
 static void CG_CalcIdealThirdPersonViewLocation()
 {
-	const qboolean doing_dash_action = cg.predicted_player_state.communicatingflags & 1 << DASHING ? qtrue : qfalse;
+	const qboolean doing_dash_action = cg.predictedPlayerState.communicatingflags & 1 << DASHING ? qtrue : qfalse;
 
 	if (cg.overrides.active & CG_OVERRIDE_3RD_PERSON_RNG)
 	{
@@ -569,7 +569,7 @@ static void CG_ResetThirdPersonViewDamp()
 	VectorCopy(cameraIdealTarget, cameraCurTarget);
 
 	// First thing we do is trace from the first person viewpoint out to the new target location.
-	CG_Trace(&trace, cameraFocusLoc, cameramins, cameramaxs, cameraCurTarget, cg.predicted_player_state.clientNum,
+	CG_Trace(&trace, cameraFocusLoc, cameramins, cameramaxs, cameraCurTarget, cg.predictedPlayerState.clientNum,
 		MASK_CAMERACLIP);
 	if (trace.fraction <= 1.0)
 	{
@@ -577,7 +577,7 @@ static void CG_ResetThirdPersonViewDamp()
 	}
 
 	// Now we trace from the new target location to the new view location, to make sure there is nothing in the way.
-	CG_Trace(&trace, cameraCurTarget, cameramins, cameramaxs, cameraCurLoc, cg.predicted_player_state.clientNum,
+	CG_Trace(&trace, cameraCurTarget, cameramins, cameramaxs, cameraCurLoc, cg.predictedPlayerState.clientNum,
 		MASK_CAMERACLIP);
 	if (trace.fraction <= 1.0)
 	{
@@ -598,8 +598,8 @@ static void CG_UpdateThirdPersonTargetDamp()
 	// Automatically get the ideal target, to avoid jittering.
 	CG_CalcIdealThirdPersonViewTarget();
 
-	if (cg.predicted_player_state.hyperSpaceTime
-		&& cg.time - cg.predicted_player_state.hyperSpaceTime < HYPERSPACE_TIME)
+	if (cg.predictedPlayerState.hyperSpaceTime
+		&& cg.time - cg.predictedPlayerState.hyperSpaceTime < HYPERSPACE_TIME)
 	{
 		//hyperspacing, no damp
 		VectorCopy(cameraIdealTarget, cameraCurTarget);
@@ -609,7 +609,7 @@ static void CG_UpdateThirdPersonTargetDamp()
 		//if moving on a plat, camera is *tight*
 		VectorCopy(cameraIdealTarget, cameraCurTarget);
 	}
-	else if (cg_thirdPersonTargetDamp.value >= 1.0 || cg.thisFrameTeleport || cg.predicted_player_state.m_iVehicleNum)
+	else if (cg_thirdPersonTargetDamp.value >= 1.0 || cg.thisFrameTeleport || cg.predictedPlayerState.m_iVehicleNum)
 	{
 		// No damping.
 		VectorCopy(cameraIdealTarget, cameraCurTarget);
@@ -650,11 +650,11 @@ static void CG_UpdateThirdPersonTargetDamp()
 	{
 		//if being held by a sand creature, trace from his actual origin, since we could be underground or otherwise in solid once he eats us
 		CG_Trace(&trace, cg_entities[cg_entities[cg.snap->ps.clientNum].gent->activator->s.number].lerpOrigin,
-			cameramins, cameramaxs, cameraCurTarget, cg.predicted_player_state.clientNum, MASK_CAMERACLIP);
+			cameramins, cameramaxs, cameraCurTarget, cg.predictedPlayerState.clientNum, MASK_CAMERACLIP);
 	}
 	else
 	{
-		CG_Trace(&trace, cameraFocusLoc, cameramins, cameramaxs, cameraCurTarget, cg.predicted_player_state.clientNum,
+		CG_Trace(&trace, cameraFocusLoc, cameramins, cameramaxs, cameraCurTarget, cg.predictedPlayerState.clientNum,
 			MASK_CAMERACLIP);
 	}
 	if (trace.fraction < 1.0)
@@ -681,8 +681,8 @@ static void CG_UpdateThirdPersonCameraDamp()
 	// First thing we do is calculate the appropriate damping factor for the camera.
 	float dampfactor = 0.0f;
 
-	if (cg.predicted_player_state.hyperSpaceTime
-		&& cg.time - cg.predicted_player_state.hyperSpaceTime < HYPERSPACE_TIME)
+	if (cg.predictedPlayerState.hyperSpaceTime
+		&& cg.time - cg.predictedPlayerState.hyperSpaceTime < HYPERSPACE_TIME)
 	{
 		//hyperspacing - don't damp camera
 		dampfactor = 1.0f;
@@ -757,7 +757,7 @@ static void CG_UpdateThirdPersonCameraDamp()
 	}
 
 	// Now we trace from the first person viewpoint to the new view location, to make sure there is nothing in the way between the user and the camera...
-	//	CG_Trace(&trace, cameraFocusLoc, cameramins, cameramaxs, cameraCurLoc, cg.predicted_player_state.clientNum, MASK_CAMERACLIP);
+	//	CG_Trace(&trace, cameraFocusLoc, cameramins, cameramaxs, cameraCurLoc, cg.predictedPlayerState.clientNum, MASK_CAMERACLIP);
 	// (OLD) Now we trace from the new target location to the new view location, to make sure there is nothing in the way.
 	if (cg.snap
 		&& cg.snap->ps.eFlags & EF_HELD_BY_SAND_CREATURE
@@ -765,11 +765,11 @@ static void CG_UpdateThirdPersonCameraDamp()
 	{
 		//if being held by a sand creature, trace from his actual origin, since we could be underground or otherwise in solid once he eats us
 		CG_Trace(&trace, cg_entities[cg_entities[cg.snap->ps.clientNum].gent->activator->s.number].lerpOrigin,
-			cameramins, cameramaxs, cameraCurLoc, cg.predicted_player_state.clientNum, MASK_CAMERACLIP);
+			cameramins, cameramaxs, cameraCurLoc, cg.predictedPlayerState.clientNum, MASK_CAMERACLIP);
 	}
 	else
 	{
-		CG_Trace(&trace, cameraCurTarget, cameramins, cameramaxs, cameraCurLoc, cg.predicted_player_state.clientNum,
+		CG_Trace(&trace, cameraCurTarget, cameramins, cameramaxs, cameraCurLoc, cg.predictedPlayerState.clientNum,
 			MASK_CAMERACLIP);
 	}
 	if (trace.fraction < 1.0f)
@@ -826,7 +826,7 @@ static void CG_OffsetThirdPersonView()
 			cameraFocusAngles[YAW] += cg_thirdPersonAngle.value;
 		}
 	}
-	else if (cg.predicted_player_state.stats[STAT_HEALTH] <= 0)
+	else if (cg.predictedPlayerState.stats[STAT_HEALTH] <= 0)
 	{
 		//if dead, look at killer
 		if (MatrixMode)
@@ -837,16 +837,16 @@ static void CG_OffsetThirdPersonView()
 			}
 			else
 			{
-				cameraFocusAngles[YAW] = cg.predicted_player_state.stats[STAT_DEAD_YAW];
+				cameraFocusAngles[YAW] = cg.predictedPlayerState.stats[STAT_DEAD_YAW];
 				cameraFocusAngles[YAW] += cg_thirdPersonAngle.value;
 			}
 		}
 		else
 		{
-			cameraFocusAngles[YAW] = cg.predicted_player_state.stats[STAT_DEAD_YAW];
+			cameraFocusAngles[YAW] = cg.predictedPlayerState.stats[STAT_DEAD_YAW];
 		}
 	}
-	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
+	else if (cg.renderingThirdPerson && cg.predictedPlayerState.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
 	{
 		cameraFocusAngles[YAW] += cg.overrides.thirdPersonAngle = 32.5f;
 		cameraFocusAngles[PITCH] += cg.overrides.thirdPersonPitchOffset = -11.25f;
@@ -1016,7 +1016,7 @@ static void CG_OffsetFirstPersonView(const qboolean firstPersonSaber)
 		angles[ROLL] = 40;
 		angles[PITCH] = -15;
 		angles[YAW] = cg.snap->ps.stats[STAT_DEAD_YAW];
-		origin[2] += cg.predicted_player_state.viewheight;
+		origin[2] += cg.predictedPlayerState.viewheight;
 		return;
 	}
 
@@ -1094,7 +1094,7 @@ static void CG_OffsetFirstPersonView(const qboolean firstPersonSaber)
 #endif
 
 	// add angles based on velocity
-	VectorCopy(cg.predicted_player_state.velocity, predictedVelocity);
+	VectorCopy(cg.predictedPlayerState.velocity, predictedVelocity);
 
 	delta = DotProduct(predictedVelocity, cg.refdef.viewaxis[0]);
 	angles[PITCH] += delta * cg_runpitch.value;
@@ -1109,14 +1109,14 @@ static void CG_OffsetFirstPersonView(const qboolean firstPersonSaber)
 
 	delta = cg.bobfracsin * cg_bobpitch.value * speed;
 
-	if (cg.predicted_player_state.pm_flags & PMF_DUCKED)
+	if (cg.predictedPlayerState.pm_flags & PMF_DUCKED)
 	{
 		delta *= 3; // crouching
 		angles[PITCH] += delta;
 		delta = cg.bobfracsin * cg_bobroll.value * speed;
 	}
 
-	if (cg.predicted_player_state.pm_flags & PMF_DUCKED)
+	if (cg.predictedPlayerState.pm_flags & PMF_DUCKED)
 	{
 		delta *= 3; // crouching accentuates roll
 	}
@@ -1159,7 +1159,7 @@ static void CG_OffsetFirstPersonView(const qboolean firstPersonSaber)
 		}
 		else
 		{
-			origin[2] += cg.predicted_player_state.viewheight;
+			origin[2] += cg.predictedPlayerState.viewheight;
 		}
 	}
 
@@ -1376,9 +1376,9 @@ Fixed fov at intermissions, otherwise account for fov variable and zooms.
 static qboolean CG_CalcFov()
 {
 	float fov_x;
-	const qboolean doing_dash_action = cg.predicted_player_state.communicatingflags & 1 << DASHING ? qtrue : qfalse;
+	const qboolean doing_dash_action = cg.predictedPlayerState.communicatingflags & 1 << DASHING ? qtrue : qfalse;
 
-	if (cg.predicted_player_state.pm_type == PM_INTERMISSION)
+	if (cg.predictedPlayerState.pm_type == PM_INTERMISSION)
 	{
 		// if in intermission, use a fixed value
 		fov_x = 80;
@@ -1572,7 +1572,7 @@ void CG_SaberClashFlare()
 		return;
 	}
 
-	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING))
+	if (cg.predictedPlayerState.communicatingflags & (1 << CF_SABERLOCKING))
 	{
 		return;
 	}
@@ -1694,7 +1694,7 @@ static qboolean CG_CalcViewValues()
 	}
 	else
 	{
-		ps = &cg.predicted_player_state;
+		ps = &cg.predictedPlayerState;
 	}
 #ifndef FINAL_BUILD
 	trap_Com_SetOrgAngles(ps->origin, ps->viewangles);
@@ -2136,7 +2136,7 @@ void CG_DrawActiveFrame(const int serverTime, const stereoFrame_t stereoView)
 	// this counter will be bumped for every valid scene we generate
 	cg.clientFrame++;
 
-	// update cg.predicted_player_state
+	// update cg.predictedPlayerState
 	CG_PredictPlayerState();
 
 	if (cg.snap->ps.eFlags & EF_HELD_BY_SAND_CREATURE)
@@ -2236,7 +2236,7 @@ void CG_DrawActiveFrame(const int serverTime, const stereoFrame_t stereoView)
 		&& cg.snap->ps.weapon != WP_SABER
 		&& (cg.snap->ps.viewEntity == 0 || cg.snap->ps.viewEntity >= ENTITYNUM_WORLD))
 	{
-		CG_AddViewWeapon(&cg.predicted_player_state);
+		CG_AddViewWeapon(&cg.predictedPlayerState);
 	}
 	else if (cg.snap->ps.viewEntity != 0 && cg.snap->ps.viewEntity < ENTITYNUM_WORLD)
 	{

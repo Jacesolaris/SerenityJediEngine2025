@@ -680,7 +680,7 @@ gentity_t* create_missile(vec3_t org, vec3_t dir, const float vel, const int lif
 
 	missile->s.pos.trType = TR_LINEAR;
 	missile->s.pos.trTime = level.time; // - MISSILE_PRESTEP_TIME;	// NOTE This is a Quake 3 addition over JK2
-	missile->target_ent = NULL;
+	missile->targetEnt = NULL;
 
 	SnapVector(org);
 	VectorCopy(org, missile->s.pos.trBase);
@@ -993,6 +993,25 @@ qboolean G_MissileImpact(gentity_t* ent, trace_t* trace)
 		{
 			G_MissileAddAlerts(ent);
 		}
+		G_MissileBounceBeskarEffect(ent, ent->r.currentOrigin, fwd, trace->entityNum == ENTITYNUM_WORLD);
+		return qfalse;
+	}
+
+	if (other && other->client && other->client->ps.powerups[PW_SPHERESHIELDED])
+	{
+		bounce = qfalse;
+		// Check to see if there is a bounce count
+		if (ent->bounceCount)
+		{
+			// decrement number of bounces and then see if it should be done bouncing
+			if (!--ent->bounceCount)
+			{
+				// He (or she) will bounce no more (after this current bounce, that is).
+				ent->flags &= ~(FL_BOUNCE | FL_BOUNCE_HALF);
+			}
+		}
+
+		G_BounceMissile(ent, trace);
 		G_MissileBounceBeskarEffect(ent, ent->r.currentOrigin, fwd, trace->entityNum == ENTITYNUM_WORLD);
 		return qfalse;
 	}
@@ -1408,9 +1427,9 @@ void g_run_missile(gentity_t* ent)
 	BG_EvaluateTrajectory(&ent->s.pos, level.time, origin);
 
 	// if this missile bounced off an invulnerability sphere
-	if (ent->target_ent)
+	if (ent->targetEnt)
 	{
-		passent = ent->target_ent->s.number;
+		passent = ent->targetEnt->s.number;
 	}
 	else
 	{
@@ -1612,7 +1631,7 @@ gentity_t* fire_grapple(gentity_t* self, vec3_t start, vec3_t dir)
 	hook->methodOfDeath = MOD_ELECTROCUTE;
 	hook->clipmask = MASK_SHOT;
 	hook->parent = self;
-	hook->target_ent = NULL;
+	hook->targetEnt = NULL;
 	hook->s.pos.trType = TR_LINEAR;
 	hook->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
 	hook->s.otherentity_num = self->s.number; // use to match beam in client
@@ -1640,7 +1659,7 @@ gentity_t* fire_stun(gentity_t* self, vec3_t start, vec3_t dir)
 	stun->methodOfDeath = MOD_ELECTROCUTE;
 	stun->clipmask = MASK_SHOT;
 	stun->parent = self;
-	stun->target_ent = NULL;
+	stun->targetEnt = NULL;
 	stun->s.pos.trType = TR_LINEAR;
 	stun->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;
 	stun->s.otherentity_num = self->s.number;

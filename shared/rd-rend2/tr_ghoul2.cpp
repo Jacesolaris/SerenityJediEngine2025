@@ -2448,17 +2448,14 @@ static void RenderSurfaces(CRenderSurface& RS, const trRefEntity_t* ent, int ent
 								float(curTime - kcur->second.mGoreGrowStartTime) /
 								float(magicFactor42);  // linear
 						}
-#ifdef REND2_SP_GORE
-						if (curTime < kcur->second.mGoreGrowEndTime)
+						if (curTime < (*kcur).second.mGoreGrowEndTime)
 						{
-							newSurf2->scale = Q_max(
-								1.0f,
-								1.0f /
-								((curTime - kcur->second.mGoreGrowStartTime) *
-									kcur->second.mGoreGrowFactor +
-									kcur->second.mGoreGrowOffset));
+							newSurf2->scale = 1.0f / ((curTime - (*kcur).second.mGoreGrowStartTime) * (*kcur).second.mGoreGrowFactor + (*kcur).second.mGoreGrowOffset);
+							if (newSurf2->scale < 1.0f)
+							{
+								newSurf2->scale = 1.0f;
+							}
 						}
-#endif
 						shader_t* gshader;
 						if (kcur->second.shader)
 						{

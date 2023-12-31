@@ -1324,7 +1324,7 @@ struct gentity_s
 	int pushDebounceTime;
 	int aimDebounceTime;
 	int useDebounceTime;
-	gentity_t* target_ent;
+	gentity_t* targetEnt;
 
 	//Unions for miscellaneous fields used under very specific circumstances
 	union

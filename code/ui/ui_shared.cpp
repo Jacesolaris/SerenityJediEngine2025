@@ -7254,7 +7254,7 @@ static void Item_Model_Paint(itemDef_t* item)
 	if (item->flags & ITF_ISANYSABER && !(item->flags & ITF_ISCHARACTER))
 	{
 		//hack to put saber on it's side
-		VectorSet(angles, curYaw, 0, 90);
+		VectorSet(angles, curYaw, 0, 90); // rotate saber
 	}
 	else
 	{

@@ -852,7 +852,7 @@ gitem_t bg_itemlist[] =
 	/* precache */ "", // precaches
 	/* sounds */ "", // sounds
 	"" // description
-}, // leave index 0 alone
+},      // leave index 0 alone
 
 //
 // Pickups
@@ -925,6 +925,7 @@ Instant medpack pickup, heals 25
 // ITEMS
 //
 
+//////////////////////////////////////////////////////////////////////////////  IT_HOLDABLE START
 /*QUAKED item_seeker (.3 .3 1) (-8 -8 -0) (8 8 16) suspended
 30 seconds of seeker drone
 */
@@ -1051,7 +1052,7 @@ Sentry gun inventory pickup.
 	/* sounds */ "",
 	"@MENUS_THIS_DEADLY_WEAPON_IS" // description
 },
-
+//done dont show
 /*QUAKED item_jetpack (.3 .3 1) (-8 -8 -0) (8 8 16) suspended
 Do not place.
 */
@@ -1084,7 +1085,7 @@ Do not place. For siege classes ONLY.
 		0, 0, 0
 	},
 	/* view */ NULL,
-	/* icon */ "gfx/hud/i_icon_healthdisp",
+	/* icon */ "gfx/hud/i_icon_health_disp",
 	/* pickup */ //	"Sentry Gun",
 	120,
 	IT_HOLDABLE,
@@ -1105,7 +1106,7 @@ Do not place. For siege classes ONLY.
 		0, 0, 0
 	},
 	/* view */ NULL,
-	/* icon */ "gfx/hud/i_icon_ammodisp",
+	/* icon */ "gfx/hud/i_icon_ammo_disp",
 	/* pickup */ //	"Sentry Gun",
 	120,
 	IT_HOLDABLE,
@@ -1156,6 +1157,7 @@ Do not place. For siege classes ONLY.
 	/* sounds */ "",
 	"@MENUS_CLOAK_DESC" // description
 },
+
 {
 	"item_flamethrower",
 	"sound/weapons/w_pkup.wav",
@@ -1173,15 +1175,34 @@ Do not place. For siege classes ONLY.
 	/* sounds */ "",
 	"Flamethrower" // description
 },
+
 {
-	"item_Droidecca",
+	"item_swoop",
 	"sound/weapons/w_pkup.wav",
 	{
 		"models/items/psgun.glm", //FIXME: no model
 		0, 0, 0
 	},
 	/* view */ NULL,
-	/* icon */ "gfx/hud/w_icon_droideka",
+	/* icon */ "gfx/hud/i_icon_swoop",
+	/* pickup */ //	"Seeker Drone",
+	120,
+	IT_HOLDABLE,
+	HI_SWOOP,
+	/* precache */ "",
+	/* sounds */ "",
+	"Swoop" // description
+},
+
+{
+	"item_decca",
+	"sound/weapons/w_pkup.wav",
+	{
+		"models/items/psgun.glm", //FIXME: no model
+		0, 0, 0
+	},
+	/* view */ NULL,
+	/* icon */ "gfx/hud/i_icon_droidecca",
 	/* pickup */ //	"Seeker Drone",
 	120,
 	IT_HOLDABLE,
@@ -1191,26 +1212,47 @@ Do not place. For siege classes ONLY.
 	"Droidecca" // description
 },
 
-/*QUAKED item_medpac (.3 .3 1) (-8 -8 -0) (8 8 16) suspended
-Bacta canister pickup, heals 25 on use
+/*QUAKED item_shield (.3 .3 1) (-8 -8 -0) (8 8 16) suspended
+Portable shield
 */
 {
-	"item_bacta", //should be item_bacta
+	"item_barrier",
 	"sound/weapons/w_pkup.wav",
 	{
-		"models/map_objects/mp/bacta.md3",
+		"models/items/psgun.glm", //FIXME: no model
+		0, 0, 0
+	 } ,
+	/* view */		NULL,
+	/* icon */		"gfx/hud/i_icon_sphereshield",
+	/* pickup *///	"Seeker Drone",
+	120,
+	IT_HOLDABLE,
+	HI_SPHERESHIELD,
+	/* precache */ "",
+	/* sounds */ "",
+	"Sphereshield"					// description
+},
+
+//done dont show
+{
+	"item_grapple",
+	"sound/weapons/w_pkup.wav",
+	{
+		"models/items/psgun.glm", //FIXME: no model
 		0, 0, 0
 	},
 	/* view */ NULL,
-	/* icon */ "gfx/hud/i_icon_bacta",
-	/* pickup */ //	"Bacta Canister",
-	25,
+	/* icon */ "gfx/hud/i_icon_grapple",
+	/* pickup */ //	"Seeker Drone",
+	120,
 	IT_HOLDABLE,
-	HI_BACTA,
+	HI_GRAPPLE,
 	/* precache */ "",
 	/* sounds */ "",
-	"@SP_INGAME_BACTA_DESC" // description
+	"Grapple" // description
 },
+
+//////////////////////////////////////////////////////////////////////////////  IT_HOLDABLE END
 
 /*QUAKED item_force_enlighten_light (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
 Adds one rank to all Force powers temporarily. Only light jedi can use.
@@ -2313,8 +2355,10 @@ int BG_GetItemIndexByTag(const int tag, const int type)
 //yeah..
 qboolean BG_IsItemSelectable(const int item)
 {
-	if (item == HI_HEALTHDISP || item == HI_AMMODISP ||
-		item == HI_JETPACK)
+	if (//item == HI_HEALTHDISP ||
+		//item == HI_AMMODISP ||
+		item == HI_JETPACK ||
+		item == HI_GRAPPLE)
 	{
 		return qfalse;
 	}
@@ -2895,6 +2939,7 @@ const char* eventnames[] = {
 	"EV_USE_ITEM13",
 	"EV_USE_ITEM14",
 	"EV_USE_ITEM15",
+	"EV_USE_ITEM16",
 
 	"EV_ITEMUSEFAIL",
 

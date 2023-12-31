@@ -658,6 +658,7 @@ static int G_CountHumanPlayers(const int team)
 	for (int i = 0; i < sv_maxclients.integer; i++)
 	{
 		const gclient_t* cl = level.clients + i;
+
 		if (cl->pers.connected != CON_CONNECTED)
 		{
 			continue;

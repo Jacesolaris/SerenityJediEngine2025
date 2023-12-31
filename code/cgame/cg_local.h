@@ -365,7 +365,7 @@ using cg_t = struct
 
 	// prediction state
 	qboolean hyperspace; // true if prediction has hit a trigger_teleport
-	playerState_t predicted_player_state;
+	playerState_t predictedPlayerState;
 	//playerState_t	predictedVehicleState;
 	qboolean validPPS; // clear until the first call to CG_PredictPlayerState
 	int predictedErrorTime;
@@ -879,7 +879,7 @@ void CG_DPNextForcePower_f();
 void CG_DPPrevForcePower_f();
 
 void CG_RegisterWeapon(int weapon_num);
-void CG_RegisterItemVisuals(int item_num);
+void CG_RegisterItemVisuals(int itemNum);
 void CG_RegisterItemSounds(int itemNum);
 
 void CG_FireWeapon(centity_t* cent, const qboolean alt_fire);

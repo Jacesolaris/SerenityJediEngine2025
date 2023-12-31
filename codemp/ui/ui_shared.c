@@ -5392,7 +5392,9 @@ static const char* g_bindCommands[] = {
 	"hips",
 	"won",
 	"emote",
-	"r_weather"
+	"r_weather",
+	"use_barrier",
+	"use_decca"
 };
 
 #define g_bindCount ARRAY_LEN(g_bindCommands)
@@ -5912,7 +5914,7 @@ static void Item_Model_Paint(itemDef_t* item)
 		//hack to put saber on it's side
 		if (modelPtr->rotationSpeed)
 		{
-			VectorSet(angles, modelPtr->angle + (float)refdef.time / modelPtr->rotationSpeed, 0, 90);
+			VectorSet(angles, modelPtr->angle + (float)refdef.time / modelPtr->rotationSpeed, 0, 90); // rotate saber
 		}
 		else
 		{

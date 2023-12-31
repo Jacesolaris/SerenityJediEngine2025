@@ -21,7 +21,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 ===========================================================================
 */
 
-// cg_predict.c -- this file generates cg.predicted_player_state by either
+// cg_predict.c -- this file generates cg.predictedPlayerState by either
 // interpolating between snapshots from the server or locally predicting
 // ahead the client's movement
 
@@ -252,8 +252,8 @@ void CG_SetClientViewAngles(vec3_t angles, const qboolean override_view_ent)
 		//don't clamp angles when looking through a viewEntity
 		for (int i = 0; i < 3; i++)
 		{
-			cg.predicted_player_state.viewangles[i] = angles[i];
-			cg.predicted_player_state.delta_angles[i] = 0;
+			cg.predictedPlayerState.viewangles[i] = angles[i];
+			cg.predictedPlayerState.delta_angles[i] = 0;
 			cg.snap->ps.viewangles[i] = angles[i];
 			cg.snap->ps.delta_angles[i] = 0;
 			g_entities[0].client->pers.cmd_angles[i] = ANGLE2SHORT(angles[i]);
@@ -357,7 +357,7 @@ qboolean CG_OnMovingPlat(const playerState_t* ps)
 ========================
 CG_InterpolatePlayerState
 
-Generates cg.predicted_player_state by interpolating between
+Generates cg.predictedPlayerState by interpolating between
 cg.snap->player_state and cg.nextFrame->player_state
 ========================
 */
@@ -366,7 +366,7 @@ void CG_InterpolatePlayerState(const qboolean grab_angles)
 	int i;
 	vec3_t old_org;
 
-	playerState_t* out = &cg.predicted_player_state;
+	playerState_t* out = &cg.predictedPlayerState;
 	const snapshot_t* prev = cg.snap;
 	const snapshot_t* next = cg.nextSnap;
 
@@ -507,12 +507,12 @@ void CG_TouchItem(centity_t* cent)
 		return;
 	}
 
-	if (!BG_PlayerTouchesItem(&cg.predicted_player_state, &cent->currentState, cg.time))
+	if (!BG_PlayerTouchesItem(&cg.predictedPlayerState, &cent->currentState, cg.time))
 	{
 		return;
 	}
 
-	if (!bg_can_item_be_grabbed(&cent->currentState, &cg.predicted_player_state))
+	if (!bg_can_item_be_grabbed(&cent->currentState, &cg.predictedPlayerState))
 	{
 		return; // can't hold it
 	}
@@ -520,7 +520,7 @@ void CG_TouchItem(centity_t* cent)
 	const gitem_t* item = &bg_itemlist[cent->currentState.modelindex];
 
 	// grab it
-	AddEventToPlayerstate(EV_ITEM_PICKUP, cent->currentState.modelindex, &cg.predicted_player_state);
+	AddEventToPlayerstate(EV_ITEM_PICKUP, cent->currentState.modelindex, &cg.predictedPlayerState);
 
 	// remove it from the frame so it won't be drawn
 	cent->currentState.eFlags |= EF_NODRAW;
@@ -532,10 +532,10 @@ void CG_TouchItem(centity_t* cent)
 	if (item->giType == IT_WEAPON)
 	{
 		const int ammotype = weaponData[item->giTag].ammoIndex;
-		cg.predicted_player_state.stats[STAT_WEAPONS] |= 1 << item->giTag;
-		if (!cg.predicted_player_state.ammo[ammotype])
+		cg.predictedPlayerState.stats[STAT_WEAPONS] |= 1 << item->giTag;
+		if (!cg.predictedPlayerState.ammo[ammotype])
 		{
-			cg.predicted_player_state.ammo[ammotype] = 1;
+			cg.predictedPlayerState.ammo[ammotype] = 1;
 		}
 	}
 }
@@ -553,14 +553,14 @@ void CG_TouchTriggerPrediction()
 	trace_t trace;
 
 	// dead clients don't activate triggers
-	if (cg.predicted_player_state.stats[STAT_HEALTH] <= 0)
+	if (cg.predictedPlayerState.stats[STAT_HEALTH] <= 0)
 	{
 		return;
 	}
 
-	const auto spectator = static_cast<qboolean>(cg.predicted_player_state.pm_type == PM_SPECTATOR);
+	const auto spectator = static_cast<qboolean>(cg.predictedPlayerState.pm_type == PM_SPECTATOR);
 
-	if (cg.predicted_player_state.pm_type != PM_NORMAL && !spectator)
+	if (cg.predictedPlayerState.pm_type != PM_NORMAL && !spectator)
 	{
 		return;
 	}
@@ -592,7 +592,7 @@ void CG_TouchTriggerPrediction()
 			continue;
 		}
 
-		cgi_CM_BoxTrace(&trace, cg.predicted_player_state.origin, cg.predicted_player_state.origin,
+		cgi_CM_BoxTrace(&trace, cg.predictedPlayerState.origin, cg.predictedPlayerState.origin,
 			cg_pmove.mins, cg_pmove.maxs, cmodel, -1);
 
 		if (!trace.startsolid)
@@ -612,7 +612,7 @@ void CG_TouchTriggerPrediction()
 				continue;
 			}
 
-			VectorCopy(ent->origin2, cg.predicted_player_state.velocity);
+			VectorCopy(ent->origin2, cg.predictedPlayerState.velocity);
 		}
 	}
 }
@@ -621,8 +621,8 @@ void CG_TouchTriggerPrediction()
 =================
 CG_PredictPlayerState
 
-Generates cg.predicted_player_state for the current cg.time
-cg.predicted_player_state is guaranteed to be valid after exiting.
+Generates cg.predictedPlayerState for the current cg.time
+cg.predictedPlayerState is guaranteed to be valid after exiting.
 
 For normal gameplay, it will be the result of predicted usercmd_t on
 top of the most recent playerState_t received from the server.
@@ -647,12 +647,12 @@ void CG_PredictPlayerState()
 	cg.hyperspace = qfalse; // will be set if touching a trigger_teleport
 
 	// if this is the first frame we must guarantee
-	// predicted_player_state is valid even if there is some
+	// predictedPlayerState is valid even if there is some
 	// other error condition
 	if (!cg.validPPS)
 	{
 		cg.validPPS = qtrue;
-		cg.predicted_player_state = cg.snap->ps;
+		cg.predictedPlayerState = cg.snap->ps;
 	}
 
 	if (true) //cg_timescale.value >= 1.0f )

@@ -200,13 +200,21 @@ static void CG_EntityEffects(const centity_t* cent)
 
 	// constant light glow
 	if (cent->currentState.constantLight
-		&& cent->currentState.eType != ET_GENERAL
 		&& cent->currentState.eType != ET_PLAYER
-		&& cent->currentState.eType != ET_ITEM
-		&& cent->currentState.eType != ET_MISSILE
-		&& cent->currentState.eType != ET_MOVER
-		&& cent->currentState.eType != ET_BEAM
-		&& cent->currentState.eType != ET_TERRAIN)
+		//&& cent->currentState.eType != ET_BODY
+		//&& cent->currentState.eType != ET_NPC
+		&& cent->currentState.eType != ET_INVISIBLE
+		//&& cent->currentState.eType != ET_GENERAL
+		//&& cent->currentState.eType != ET_ITEM
+		//&& cent->currentState.eType != ET_MISSILE
+		////&& cent->currentState.eType != ET_SPECIAL
+		////&& cent->currentState.eType != ET_HOLOCRON
+		//&& cent->currentState.eType != ET_MOVER
+		//&& cent->currentState.eType != ET_BEAM
+		////&& cent->currentState.eType != ET_TEAM
+		//&& cent->currentState.eType != ET_TERRAIN
+		////&& cent->currentState.eType != ET_FX
+		)
 	{
 		const int cl = cent->currentState.constantLight;
 		const float r = static_cast<float>(cl & 0xFF) / 255.0;
@@ -1509,7 +1517,7 @@ static void CG_Mover(centity_t* cent)
 		//I'm the hyperspace brush
 		qboolean draw_me = qfalse;
 
-		if (cg.predicted_player_state.m_iVehicleNum
+		if (cg.predictedPlayerState.m_iVehicleNum
 			&& cent->gent->s.hyperSpaceTime
 			&& cg.time - cent->gent->s.hyperSpaceTime < HYPERSPACE_TIME
 			&& cg.time - cent->gent->s.hyperSpaceTime > 1000)
@@ -1973,8 +1981,8 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 	if (cent->currentState.number == cg.snap->ps.clientNum)
 	{
 		// if the player, take position from prediction
-		VectorCopy(cg.predicted_player_state.origin, cent->lerpOrigin);
-		VectorCopy(cg.predicted_player_state.viewangles, cent->lerpAngles);
+		VectorCopy(cg.predictedPlayerState.origin, cent->lerpOrigin);
+		VectorCopy(cg.predictedPlayerState.viewangles, cent->lerpAngles);
 		/*
 		Ghoul2 Insert Start
 		*/
@@ -2124,8 +2132,8 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 	if (cent->currentState.number == cg.snap->ps.clientNum)
 	{
 		// if the player, take position from prediction
-		VectorCopy(cg.predicted_player_state.origin, cent->lerpOrigin);
-		VectorCopy(cg.predicted_player_state.viewangles, cent->lerpAngles);
+		VectorCopy(cg.predictedPlayerState.origin, cent->lerpOrigin);
+		VectorCopy(cg.predictedPlayerState.viewangles, cent->lerpAngles);
 		OutputDebugString(va("b=(%6.2f,%6.2f,%6.2f)\n", cent->lerpOrigin[0], cent->lerpOrigin[1], cent->lerpOrigin[2]));
 		return;
 	}
@@ -2974,7 +2982,7 @@ void CG_AddPacketEntities(const qboolean is_portal)
 	cg.radarEntityCount = 0;
 
 	// generate and add the entity from the playerstate
-	playerState_t* ps = &cg.predicted_player_state;
+	playerState_t* ps = &cg.predictedPlayerState;
 
 	PlayerStateToEntityState(ps, &cg_entities[ps->clientNum].currentState);
 

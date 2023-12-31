@@ -1323,13 +1323,18 @@ void ItemUse_Sentry2(gentity_t* ent)
 }
 
 extern gentity_t* NPC_SpawnType(const gentity_t* ent, const char* npc_type, const char* targetname, qboolean isVehicle);
+extern void NPC_SetMoveGoal(const gentity_t* ent, vec3_t point, int radius, qboolean isNavGoal, int combatPoint, gentity_t* targetEnt);
+gentity_t* ViewTarget(gentity_t* ent, int length, vec3_t* target, cplane_t* plane);
 
 void ItemUse_Seeker(gentity_t* ent)
 {
+	//gentity_t* seeker = ent->client->remote;
+
 	if (level.gametype == GT_SIEGE && d_siegeSeekerNPC.integer)
 	{
 		//actualy spawn a remote NPC
 		gentity_t* remote = NPC_SpawnType(ent, "remote", NULL, qfalse);
+
 		if (remote && remote->client)
 		{
 			//set it to my team
@@ -1358,15 +1363,36 @@ void ItemUse_Seeker(gentity_t* ent)
 	}
 }
 
-void ItemUse_Decca(gentity_t* ent)
+void ItemUse_ATST(gentity_t* ent)
 {
-	gentity_t* decca = NPC_SpawnType(ent, "droideka", NULL, qfalse);
+	gentity_t* decca = NPC_SpawnType(ent, "ATST_vehicle", NULL, qtrue);
 
 	if (decca && decca->client)
 	{
-		//set it to my team
-		decca->s.owner = decca->r.ownerNum = ent->s.number;
-		decca->activator = ent;
+		NPC_SetAnim(ent, SETANIM_TORSO, BOTH_INV_USE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		G_Sound(ent, CHAN_BODY, G_SoundIndex("sound/chars/atst/atst_hatch_open.mp3"));
+	}
+}
+
+void ItemUse_Decca(gentity_t* ent)
+{
+	gentity_t* decca = NPC_SpawnType(ent, "droideka_veh", NULL, qtrue);
+
+	if (decca && decca->client)
+	{
+		NPC_SetAnim(ent, SETANIM_TORSO, BOTH_INV_USE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		G_Sound(ent, CHAN_BODY, G_SoundIndex("sound/chars/droideka/foldout.mp3"));
+	}
+}
+
+void ItemUse_Swoop(gentity_t* ent)
+{
+	gentity_t* swoop = NPC_SpawnType(ent, "swoop_mp", NULL, qtrue);
+
+	if (swoop && swoop->client)
+	{
+		NPC_SetAnim(ent, SETANIM_TORSO, BOTH_INV_USE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		G_Sound(ent, CHAN_BODY, G_SoundIndex("sound/vehicles/swoop/on.mp3"));
 	}
 }
 
@@ -1718,6 +1744,46 @@ void ItemUse_UseCloak(gentity_t* ent)
 	ent->client->cloakToggleTime = level.time + CLOAK_TOGGLE_TIME;
 }
 
+#define SPHERESHIELD_TOGGLE_TIME			1000
+#define OVERLOAD_TOGGLE_TIME			1000
+
+extern void Sphereshield_On(gentity_t* self);
+extern void Sphereshield_Off(gentity_t* self);
+void ItemUse_UseSphereshield(gentity_t* ent)
+{
+	assert(ent && ent->client);
+
+	if (ent->client->sphereshieldToggleTime >= level.time)
+	{
+		return;
+	}
+
+	if (ent->health <= 0 ||
+		ent->client->ps.stats[STAT_HEALTH] <= 0 ||
+		(ent->client->ps.eFlags & EF_DEAD) ||
+		ent->client->ps.pm_type == PM_DEAD)
+	{ //can't use it when dead under any circumstances.
+		return;
+	}
+
+	if (!ent->client->ps.powerups[PW_SPHERESHIELDED] &&
+		ent->client->ps.cloakFuel < 5)
+	{ //too low on fuel to start it up
+		return;
+	}
+
+	if (ent->client->ps.powerups[PW_SPHERESHIELDED])
+	{//decloak
+		Sphereshield_Off(ent);
+	}
+	else
+	{//cloak
+		Sphereshield_On(ent);
+	}
+
+	ent->client->sphereshieldToggleTime = level.time + SPHERESHIELD_TOGGLE_TIME;
+}
+
 #define TOSSED_ITEM_STAY_PERIOD			20000
 #define TOSSED_ITEM_OWNER_NOTOUCH_DUR	1000
 
@@ -1795,7 +1861,22 @@ void G_PrecacheDispensers(void)
 	}
 }
 
-void ItemUse_UseDisp(const gentity_t* ent, const int type)
+void G_LoadDispensers(void)
+{
+	const gitem_t* item = BG_FindItem(DISP_HEALTH_ITEM);
+	if (item)
+	{
+		register_item(item);
+	}
+
+	item = BG_FindItem(DISP_AMMO_ITEM);
+	if (item)
+	{
+		register_item(item);
+	}
+}
+
+void ItemUse_UseDisp(gentity_t* ent, int type)
 {
 	gitem_t* item;
 
@@ -1845,7 +1926,7 @@ void ItemUse_UseDisp(const gentity_t* ent, const int type)
 		VectorScale(fwd, 128.0f, eItem->epVelocity);
 		eItem->epVelocity[2] = 16.0f;
 
-		//	G_SetAnim( ent, NULL, SETANIM_TORSO, BOTH_THERMAL_THROW, SETANIM_FLAG_OVERRIDE|SETANIM_FLAG_HOLD, 0 );
+		NPC_SetAnim(ent, SETANIM_TORSO, BOTH_BUTTON2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 
 		gentity_t* te = G_TempEntity(ent->client->ps.origin, EV_LOCALTIMER);
 		te->s.time = level.time;
@@ -3460,10 +3541,6 @@ free fall from their spawn points
 void FinishSpawningItem(gentity_t* ent)
 {
 	trace_t tr;
-	//	gitem_t		*item;
-
-	//	VectorSet( ent->r.mins, -ITEM_RADIUS, -ITEM_RADIUS, -ITEM_RADIUS );
-	//	VectorSet( ent->r.maxs, ITEM_RADIUS, ITEM_RADIUS, ITEM_RADIUS );
 
 	if (level.gametype == GT_SIEGE)
 	{
@@ -3710,9 +3787,12 @@ void clear_registered_items(void)
 	register_item(BG_FindItemForWeapon(WP_CONCUSSION));
 
 	if (level.gametype == GT_SIEGE)
-	{
-		//kind of cheesy, maybe check if siege class with disp's is gonna be on this map too
+	{//kind of cheesy, maybe check if siege class with disp's is gonna be on this map too
 		G_PrecacheDispensers();
+	}
+	else
+	{
+		G_LoadDispensers();
 	}
 }
 

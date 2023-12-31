@@ -302,8 +302,7 @@ extern void ClearPlayerAlertEvents(void);
 extern qboolean G_BoundsOverlap(const vec3_t mins1, const vec3_t maxs1, const vec3_t mins2, const vec3_t maxs2);
 extern qboolean NAV_HitNavGoal(vec3_t point, vec3_t mins, vec3_t maxs, vec3_t dest, int radius, qboolean flying);
 
-extern void NPC_SetMoveGoal(const gentity_t* ent, vec3_t point, int radius, qboolean isNavGoal, int combatPoint,
-	gentity_t* target_ent); //isNavGoal = qfalse, combatPoint = -1, targetEnt = NULL
+extern void NPC_SetMoveGoal(const gentity_t* ent, vec3_t point, int radius, qboolean isNavGoal, int combatPoint,gentity_t* targetEnt); 
 
 extern qboolean NAV_ClearPathToPoint(gentity_t* self, vec3_t pmins, vec3_t pmaxs, vec3_t point, int clipmask,
 	int ok_to_hit_ent_num);

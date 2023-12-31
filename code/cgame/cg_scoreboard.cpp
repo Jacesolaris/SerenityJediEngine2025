@@ -367,7 +367,7 @@ qboolean CG_DrawScoreboard()
 	}
 
 	// Character is either dead, or a script has brought up the screen
-	if (cg.predicted_player_state.pm_type == PM_DEAD && cg.missionStatusDeadTime < level.time
+	if (cg.predictedPlayerState.pm_type == PM_DEAD && cg.missionStatusDeadTime < level.time
 		|| cg.missionStatusShow)
 	{
 		CG_MissionFailed();

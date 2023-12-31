@@ -4798,11 +4798,6 @@ gentity_t* NPC_SpawnType(const gentity_t* ent, const char* npc_type, const char*
 
 	NPCspawner->delay = 0;
 
-	//NPCspawner->spawnflags |= SFB_NOTSOLID;
-
-	//NPCspawner->playerTeam = TEAM_FREE;
-	//NPCspawner->behaviorSet[BSET_SPAWN] = "common/guard";
-
 	if (isVehicle)
 	{
 		NPCspawner->classname = "NPC_Vehicle";
@@ -4893,7 +4888,7 @@ gentity_t* NPC_SpawnType(const gentity_t* ent, const char* npc_type, const char*
 	return NPC_Spawn_Do(NPCspawner);
 }
 
-void NPC_Spawn_f(gentity_t* ent)
+static void NPC_Spawn_f(gentity_t* ent)
 {
 	char npc_type[1024];
 	char targetname[1024];
@@ -4919,7 +4914,7 @@ NPC_Kill_f
 */
 extern stringID_table_t TeamTable[];
 
-void NPC_Kill_f(void)
+static void NPC_Kill_f(void)
 {
 	int n;
 	char name[1024];
@@ -5051,7 +5046,7 @@ void NPC_Kill_f(void)
 	}
 }
 
-void NPC_PrintScore(const gentity_t* ent)
+static void NPC_PrintScore(const gentity_t* ent)
 {
 	Com_Printf("%s: %d\n", ent->targetname, ent->client->ps.persistant[PERS_SCORE]);
 }

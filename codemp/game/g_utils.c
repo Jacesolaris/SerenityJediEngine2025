@@ -260,8 +260,7 @@ gentity_t* G_Find(gentity_t* from, const int fieldofs, const char* match)
 G_RadiusList - given an origin and a radius, return all entities that are in use that are within the list
 ============
 */
-int G_RadiusList(vec3_t origin, float radius, const gentity_t* ignore, const qboolean take_damage,
-	gentity_t* ent_list[MAX_GENTITIES])
+int G_RadiusList(vec3_t origin, float radius, const gentity_t* ignore, const qboolean take_damage, gentity_t* ent_list[MAX_GENTITIES])
 {
 	int entity_list[MAX_GENTITIES];
 	vec3_t mins, maxs;
@@ -501,7 +500,7 @@ void G_AllocateVehicleObject(Vehicle_t** p_veh)
 }
 
 //free the pointer, sort of a lame method
-void G_FreeVehicleObject(const Vehicle_t* p_veh)
+static void G_FreeVehicleObject(const Vehicle_t* p_veh)
 {
 	int i = 0;
 	while (i < MAX_VEHICLES_AT_A_TIME)
@@ -886,7 +885,7 @@ angles and bad trails.
 =================
 */
 
-gentity_t* find_remove_able_gent(void)
+static gentity_t* find_remove_able_gent(void)
 {
 	//returns an entity that we can remove to prevent the game from overloading
 	//on map entities.
@@ -1283,7 +1282,7 @@ G_SoundTempEntity
 Special event entity that keeps sound trackers in mind
 =================
 */
-gentity_t* G_SoundTempEntity(vec3_t origin, const int event, int channel)
+static gentity_t* G_SoundTempEntity(vec3_t origin, const int event, int channel)
 {
 	vec3_t snapped;
 
@@ -1656,7 +1655,7 @@ ValidUseTarget
 Returns whether or not the targeted entity is useable
 ==============
 */
-qboolean ValidUseTarget(const gentity_t* ent)
+static qboolean ValidUseTarget(const gentity_t* ent)
 {
 	if (!ent->use)
 	{
@@ -1679,7 +1678,7 @@ qboolean ValidUseTarget(const gentity_t* ent)
 }
 
 //use an ammo/health dispenser on another client
-void G_UseDispenserOn(const gentity_t* ent, const int dispType, gentity_t* target)
+static void G_UseDispenserOn(const gentity_t* ent, const int dispType, gentity_t* target)
 {
 	if (dispType == HI_HEALTHDISP)
 	{
@@ -1718,7 +1717,7 @@ void G_UseDispenserOn(const gentity_t* ent, const int dispType, gentity_t* targe
 }
 
 //see if this guy needs servicing from a specific type of dispenser
-int G_CanUseDispOn(const gentity_t* ent, const int dispType)
+static int G_CanUseDispOn(const gentity_t* ent, const int dispType)
 {
 	if (!ent->client || !ent->inuse || ent->health < 1 ||
 		ent->client->ps.stats[STAT_HEALTH] < 1)
@@ -1799,11 +1798,11 @@ qboolean TryHeal(gentity_t* ent, gentity_t* target)
 
 				//update net health for bar
 				G_ScaleNetHealth(target);
-				if (target->target_ent &&
-					target->target_ent->maxHealth)
+				if (target->targetEnt &&
+					target->targetEnt->maxHealth)
 				{
-					target->target_ent->health = target->health;
-					G_ScaleNetHealth(target->target_ent);
+					target->targetEnt->health = target->health;
+					G_ScaleNetHealth(target->targetEnt);
 				}
 			}
 
@@ -2088,8 +2087,7 @@ tryJetPack:
 	//if we got here, we didn't actually use anything else, so try to toggle jetpack if we are in the air, or if it is already on
 	if (ent->client->ps.stats[STAT_HOLDABLE_ITEMS] & 1 << HI_JETPACK)
 	{
-		if ((ent->client->jetPackOn || ent->client->ps.groundEntityNum == ENTITYNUM_NONE) && ent->client->ps.jetpackFuel
-		> 10)
+		if ((ent->client->jetPackOn || ent->client->ps.groundEntityNum == ENTITYNUM_NONE) && ent->client->ps.jetpackFuel > 10)
 		{
 			ItemUse_Jetpack(ent);
 			return;
@@ -2263,7 +2261,7 @@ DebugLine
   with r_debugSurface set to 2
 ================
 */
-int DebugLine(vec3_t start, vec3_t end, const int color)
+static int DebugLine(vec3_t start, vec3_t end, const int color)
 {
 	vec3_t points[4], dir, cross;
 	const vec3_t up = { 0, 0, 1 };

@@ -1141,7 +1141,7 @@ static qhandle_t RE_RegisterModel_Actual(const char* name) {
 	*/
 
 	if (!name || !name[0]) {
-		ri->Printf(PRINT_ALL, "RE_RegisterModel: NULL name\n");
+		ri->Printf(PRINT_WARNING, "RE_RegisterModel: NULL name\n");
 		return 0;
 	}
 

@@ -183,6 +183,17 @@ qboolean PM_CrouchAnim(const int anim)
 	return qfalse;
 }
 
+qboolean PM_LungeAnim(const int anim)
+{
+	switch (anim)
+	{
+	case BOTH_LUNGE2_B__T_:
+		return qtrue;
+	default:;
+	}
+	return qfalse;
+}
+
 qboolean PM_CrouchingAnim(const int anim)
 {
 	switch (anim)

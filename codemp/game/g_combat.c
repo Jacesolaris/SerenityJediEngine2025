@@ -5045,7 +5045,7 @@ int gGAvoidDismember = 0;
 
 void UpdateClientRenderBolts(gentity_t* self, vec3_t render_origin, vec3_t render_angles);
 
-qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit_loc, vec3_t point, vec3_t dir,
+qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surfName, int* hit_loc, vec3_t point, vec3_t dir,
 	vec3_t blade_dir, const int mod)
 {
 	qboolean dismember = qfalse;
@@ -5058,7 +5058,7 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 
 	*hit_loc = HL_NONE;
 
-	if (!surf_name || !surf_name[0])
+	if (!surfName || !surfName[0])
 	{
 		return qfalse;
 	}
@@ -5105,11 +5105,11 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 		//FIXME: almost impossible to hit these... perhaps we should
 		//		check for splashDamage and do radius damage to these parts?
 		//		Or, if we ever get bbox G2 traces, that may fix it, too
-		if (!Q_stricmp("head_light_blaster_cann", surf_name))
+		if (!Q_stricmp("head_light_blaster_cann", surfName))
 		{
 			*hit_loc = HL_ARM_LT;
 		}
-		else if (!Q_stricmp("head_concussion_charger", surf_name))
+		else if (!Q_stricmp("head_concussion_charger", surfName))
 		{
 			*hit_loc = HL_ARM_RT;
 		}
@@ -5117,39 +5117,39 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 	}
 	if (ent->client && ent->client->NPC_class == CLASS_MARK1)
 	{
-		if (!Q_stricmp("l_arm", surf_name))
+		if (!Q_stricmp("l_arm", surfName))
 		{
 			*hit_loc = HL_ARM_LT;
 		}
-		else if (!Q_stricmp("r_arm", surf_name))
+		else if (!Q_stricmp("r_arm", surfName))
 		{
 			*hit_loc = HL_ARM_RT;
 		}
-		else if (!Q_stricmp("torso_front", surf_name))
+		else if (!Q_stricmp("torso_front", surfName))
 		{
 			*hit_loc = HL_CHEST;
 		}
-		else if (!Q_stricmp("torso_tube1", surf_name))
+		else if (!Q_stricmp("torso_tube1", surfName))
 		{
 			*hit_loc = HL_GENERIC1;
 		}
-		else if (!Q_stricmp("torso_tube2", surf_name))
+		else if (!Q_stricmp("torso_tube2", surfName))
 		{
 			*hit_loc = HL_GENERIC2;
 		}
-		else if (!Q_stricmp("torso_tube3", surf_name))
+		else if (!Q_stricmp("torso_tube3", surfName))
 		{
 			*hit_loc = HL_GENERIC3;
 		}
-		else if (!Q_stricmp("torso_tube4", surf_name))
+		else if (!Q_stricmp("torso_tube4", surfName))
 		{
 			*hit_loc = HL_GENERIC4;
 		}
-		else if (!Q_stricmp("torso_tube5", surf_name))
+		else if (!Q_stricmp("torso_tube5", surfName))
 		{
 			*hit_loc = HL_GENERIC5;
 		}
-		else if (!Q_stricmp("torso_tube6", surf_name))
+		else if (!Q_stricmp("torso_tube6", surfName))
 		{
 			*hit_loc = HL_GENERIC6;
 		}
@@ -5157,15 +5157,15 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 	}
 	if (ent->client && ent->client->NPC_class == CLASS_MARK2)
 	{
-		if (!Q_stricmp("torso_canister1", surf_name))
+		if (!Q_stricmp("torso_canister1", surfName))
 		{
 			*hit_loc = HL_GENERIC1;
 		}
-		else if (!Q_stricmp("torso_canister2", surf_name))
+		else if (!Q_stricmp("torso_canister2", surfName))
 		{
 			*hit_loc = HL_GENERIC2;
 		}
-		else if (!Q_stricmp("torso_canister3", surf_name))
+		else if (!Q_stricmp("torso_canister3", surfName))
 		{
 			*hit_loc = HL_GENERIC3;
 		}
@@ -5173,11 +5173,11 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 	}
 	if (ent->client && ent->client->NPC_class == CLASS_GALAKMECH)
 	{
-		if (!Q_stricmp("torso_antenna", surf_name) || !Q_stricmp("torso_antenna_base", surf_name))
+		if (!Q_stricmp("torso_antenna", surfName) || !Q_stricmp("torso_antenna_base", surfName))
 		{
 			*hit_loc = HL_GENERIC1;
 		}
-		else if (!Q_stricmp("torso_shield", surf_name))
+		else if (!Q_stricmp("torso_shield", surfName))
 		{
 			*hit_loc = HL_GENERIC2;
 		}
@@ -5193,7 +5193,7 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 	//the direction of the cap, then the split is allowed, otherwise we
 	//hit it at the wrong angle and should not dismember...
 	const int actual_time = level.time;
-	if (!Q_strncmp("hips", surf_name, 4))
+	if (!Q_strncmp("hips", surfName, 4))
 	{
 		//FIXME: test properly for legs
 		*hit_loc = HL_WAIST;
@@ -5232,7 +5232,7 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 			}
 		}
 	}
-	else if (!Q_strncmp("torso", surf_name, 5))
+	else if (!Q_strncmp("torso", surfName, 5))
 	{
 		if (!ent->client)
 		{
@@ -5311,11 +5311,11 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 			}
 		}
 	}
-	else if (!Q_strncmp("head", surf_name, 4))
+	else if (!Q_strncmp("head", surfName, 4))
 	{
 		*hit_loc = HL_HEAD;
 	}
-	else if (!Q_strncmp("r_arm", surf_name, 5))
+	else if (!Q_strncmp("r_arm", surfName, 5))
 	{
 		*hit_loc = HL_ARM_RT;
 		if (ent->client != NULL && ent->ghoul2)
@@ -5339,7 +5339,7 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 			}
 		}
 	}
-	else if (!Q_strncmp("l_arm", surf_name, 5))
+	else if (!Q_strncmp("l_arm", surfName, 5))
 	{
 		*hit_loc = HL_ARM_LT;
 		if (ent->client != NULL && ent->ghoul2)
@@ -5363,7 +5363,7 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 			}
 		}
 	}
-	else if (!Q_strncmp("r_leg", surf_name, 5))
+	else if (!Q_strncmp("r_leg", surfName, 5))
 	{
 		*hit_loc = HL_LEG_RT;
 		if (ent->client != NULL && ent->ghoul2)
@@ -5387,7 +5387,7 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 			}
 		}
 	}
-	else if (!Q_strncmp("l_leg", surf_name, 5))
+	else if (!Q_strncmp("l_leg", surfName, 5))
 	{
 		*hit_loc = HL_LEG_LT;
 		if (ent->client != NULL && ent->ghoul2)
@@ -5411,17 +5411,17 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 			}
 		}
 	}
-	else if (!Q_strncmp("r_hand", surf_name, 6) || !Q_strncmp("w_", surf_name, 2))
+	else if (!Q_strncmp("r_hand", surfName, 6) || !Q_strncmp("w_", surfName, 2))
 	{
 		//right hand or weapon
 		*hit_loc = HL_HAND_RT;
 	}
-	else if (!Q_strncmp("l_hand", surf_name, 6))
+	else if (!Q_strncmp("l_hand", surfName, 6))
 	{
 		*hit_loc = HL_HAND_LT;
 	}
 	//added force_shield as a hit area
-	else if (ent->flags & FL_SHIELDED && !Q_stricmp("force_shield", surf_name))
+	else if (ent->flags & FL_SHIELDED && !Q_stricmp("force_shield", surfName))
 	{
 		*hit_loc = HL_GENERIC2;
 	}
@@ -6620,6 +6620,16 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 		{
 			damage *= 0.5;
 		}
+	}
+
+	if (targ && targ->client && targ->client->ps.powerups[PW_SPHERESHIELDED])
+	{
+		return;
+	}
+
+	if (dflags & DAMAGE_NO_DAMAGE)
+	{
+		damage = 0;
 	}
 
 	// the intermission has already been qualified for, so don't

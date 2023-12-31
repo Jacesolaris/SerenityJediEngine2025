@@ -245,7 +245,7 @@ static void CG_SiegeBriefing_f(void)
 		return;
 	}
 
-	const int team = cg.predicted_player_state.persistant[PERS_TEAM];
+	const int team = cg.predictedPlayerState.persistant[PERS_TEAM];
 
 	if (team != SIEGETEAM_TEAM1 &&
 		team != SIEGETEAM_TEAM2)
@@ -265,7 +265,7 @@ static void CG_SiegeCvarUpdate_f(void)
 		return;
 	}
 
-	const int team = cg.predicted_player_state.persistant[PERS_TEAM];
+	const int team = cg.predictedPlayerState.persistant[PERS_TEAM];
 
 	if (team != SIEGETEAM_TEAM1 &&
 		team != SIEGETEAM_TEAM2)

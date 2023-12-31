@@ -145,8 +145,8 @@ void CGCam_Disable(void)
 	//}
 
 	//we just came out of camera, so update cg.refdef.vieworg out of the camera's origin so the snapshot will know our new ori
-	VectorCopy(cg.predicted_player_state.origin, cg.refdef.vieworg);
-	VectorCopy(cg.predicted_player_state.viewangles, cg.refdef.viewangles);
+	VectorCopy(cg.predictedPlayerState.origin, cg.refdef.vieworg);
+	VectorCopy(cg.predictedPlayerState.viewangles, cg.refdef.viewangles);
 }
 
 /*

@@ -742,7 +742,7 @@ clientkilled:
 
 //==========================================================================
 
-void CG_ToggleBinoculars(const centity_t* cent, const int force_zoom)
+static void CG_ToggleBinoculars(const centity_t* cent, const int force_zoom)
 {
 	if (cent->currentState.number != cg.snap->ps.clientNum)
 	{
@@ -782,7 +782,7 @@ extern int cg_genericTimerBar;
 extern int cg_genericTimerDur;
 extern vec4_t cg_genericTimerColor;
 
-void CG_LocalTimingBar(const int start_time, const int duration)
+static void CG_LocalTimingBar(const int start_time, const int duration)
 {
 	cg_genericTimerBar = start_time + duration;
 	cg_genericTimerDur = duration;
@@ -805,34 +805,16 @@ static void CG_UseItem(const centity_t* cent)
 
 	const entityState_t* es = &cent->currentState;
 
-	int item_num = (es->event & ~EV_EVENT_BITS) - EV_USE_ITEM0;
-	if (item_num < 0 || item_num > HI_NUM_HOLDABLE)
+	int itemNum = (es->event & ~EV_EVENT_BITS) - EV_USE_ITEM0;
+	if (itemNum < 0 || itemNum > HI_NUM_HOLDABLE)
 	{
-		item_num = 0;
+		itemNum = 0;
 	}
 
-	// print a message if the local player
-	if (es->number == cg.snap->ps.clientNum)
-	{
-		if (!item_num)
-		{
-			//CG_CenterPrint( "No item to use", SCREEN_HEIGHT * 0.30, BIGCHAR_WIDTH );
-		}
-		else
-		{
-			//item = BG_FindItemForHoldable(itemNum);
-		}
-	}
-
-	switch (item_num)
+	switch (itemNum)
 	{
 	default:
 	case HI_NONE:
-		//trap->S_StartSound (NULL, es->number, CHAN_BODY, cgs.media.useNothingSound );
-		break;
-
-	case HI_BINOCULARS:
-		CG_ToggleBinoculars(cent, es->eventParm);
 		break;
 
 	case HI_SEEKER:
@@ -840,7 +822,6 @@ static void CG_UseItem(const centity_t* cent)
 		break;
 
 	case HI_SHIELD:
-	case HI_SENTRY_GUN:
 		break;
 
 	case HI_MEDPAC:
@@ -862,27 +843,53 @@ static void CG_UseItem(const centity_t* cent)
 		//Different sound for big bacta?
 		trap->S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.medkitSound);
 		break;
-	case HI_JETPACK:
+
+	case HI_BINOCULARS:
+		CG_ToggleBinoculars(cent, es->eventParm);
+		break;
+	case HI_SENTRY_GUN:
+		break;
+	case HI_JETPACK://done dont show
 		break; //Do something?
+
 	case HI_HEALTHDISP:
-		//CG_LocalTimingBar(cg.time, TOSS_DEBOUNCE_TIME);
 		break;
 	case HI_AMMODISP:
-		//CG_LocalTimingBar(cg.time, TOSS_DEBOUNCE_TIME);
 		break;
 	case HI_EWEB:
 		break;
 	case HI_CLOAK:
 		break; //Do something?
+
 	case HI_FLAMETHROWER:
+		break;
+	case HI_SWOOP:
 		break;
 	case HI_DROIDEKA:
 		break;
+	case HI_SPHERESHIELD:
+		break; //Do something?
+	case HI_GRAPPLE:   //done dont show
+		break; //Do something?
 	}
-
-	if (cg.snap && cg.snap->ps.clientNum == cent->currentState.number && item_num != HI_BINOCULARS &&
-		item_num != HI_JETPACK && item_num != HI_HEALTHDISP && item_num != HI_AMMODISP && item_num != HI_CLOAK
-		&& item_num != HI_EWEB && item_num != HI_FLAMETHROWER && item_num != HI_DROIDEKA && item_num != HI_SEEKER)
+	// These items never run out
+	if (cg.snap && cg.snap->ps.clientNum == cent->currentState.number &&
+		//itemNum != HI_SEEKER &&
+		//itemNum != HI_SHIELD &&
+		//itemNum != HI_MEDPAC &&
+		//itemNum != HI_MEDPAC_BIG &&
+		itemNum != HI_BINOCULARS &&
+		//itemNum != HI_SENTRY_GUN &&
+		itemNum != HI_JETPACK &&        //done dont show
+		itemNum != HI_HEALTHDISP &&
+		itemNum != HI_AMMODISP &&
+		itemNum != HI_EWEB &&
+		itemNum != HI_CLOAK &&
+		itemNum != HI_FLAMETHROWER &&
+		//itemNum != HI_SWOOP &&
+		//itemNum != HI_DROIDEKA &&
+		itemNum != HI_SPHERESHIELD &&       //done dont show
+		itemNum != HI_GRAPPLE)
 	{
 		//if not using binoculars/jetpack/dispensers/cloak, we just used that item up, so switch
 		BG_CycleInven(&cg.snap->ps, 1);
@@ -897,13 +904,13 @@ CG_ItemPickup
 A new item was picked up this frame
 ================
 */
-static void CG_ItemPickup(const int item_num)
+static void CG_ItemPickup(const int itemNum)
 {
-	cg.itemPickup = item_num;
+	cg.itemPickup = itemNum;
 	cg.itemPickupTime = cg.time;
 	cg.itemPickupBlendTime = cg.time;
 	// see if it should be the grabbed weapon
-	if (cg.snap && bg_itemlist[item_num].giType == IT_WEAPON)
+	if (cg.snap && bg_itemlist[itemNum].giType == IT_WEAPON)
 	{
 		// 0 == no switching
 		// 1 == automatically switch to best SAFE weapon
@@ -917,31 +924,31 @@ static void CG_ItemPickup(const int item_num)
 		else if (cg_autoSwitch.integer == 1)
 		{
 			//only autoselect if not explosive ("safe")
-			if (bg_itemlist[item_num].giTag != WP_TRIP_MINE &&
-				bg_itemlist[item_num].giTag != WP_DET_PACK &&
-				bg_itemlist[item_num].giTag != WP_THERMAL &&
-				bg_itemlist[item_num].giTag != WP_ROCKET_LAUNCHER &&
-				bg_itemlist[item_num].giTag > cg.snap->ps.weapon &&
+			if (bg_itemlist[itemNum].giTag != WP_TRIP_MINE &&
+				bg_itemlist[itemNum].giTag != WP_DET_PACK &&
+				bg_itemlist[itemNum].giTag != WP_THERMAL &&
+				bg_itemlist[itemNum].giTag != WP_ROCKET_LAUNCHER &&
+				bg_itemlist[itemNum].giTag > cg.snap->ps.weapon &&
 				cg.snap->ps.weapon != WP_SABER)
 			{
 				if (!cg.snap->ps.emplacedIndex)
 				{
 					cg.weaponSelectTime = cg.time;
 				}
-				cg.weaponSelect = bg_itemlist[item_num].giTag;
+				cg.weaponSelect = bg_itemlist[itemNum].giTag;
 			}
 		}
 		else if (cg_autoSwitch.integer == 2)
 		{
 			//autoselect if better
-			if (bg_itemlist[item_num].giTag > cg.snap->ps.weapon &&
+			if (bg_itemlist[itemNum].giTag > cg.snap->ps.weapon &&
 				cg.snap->ps.weapon != WP_SABER)
 			{
 				if (!cg.snap->ps.emplacedIndex)
 				{
 					cg.weaponSelectTime = cg.time;
 				}
-				cg.weaponSelect = bg_itemlist[item_num].giTag;
+				cg.weaponSelect = bg_itemlist[itemNum].giTag;
 			}
 		}
 	}
@@ -1087,7 +1094,7 @@ void CG_ReattachLimb(centity_t* source)
 	source->ghoul2weapon = NULL;
 }
 
-const char* CG_TeamName(const int team)
+static const char* CG_TeamName(const int team)
 {
 	if (team == TEAM_RED)
 		return "RED";
@@ -1098,7 +1105,7 @@ const char* CG_TeamName(const int team)
 	return "FREE";
 }
 
-void CG_PrintCTFMessage(clientInfo_t* ci, const char* team_name, const int ctf_message)
+static void CG_PrintCTFMessage(clientInfo_t* ci, const char* team_name, const int ctf_message)
 {
 	char printMsg[1024];
 	char* ref_name;
@@ -1185,7 +1192,7 @@ doPrint:
 	Com_Printf("%s\n", printMsg);
 }
 
-void CG_GetCTFMessageEvent(const entityState_t* es)
+static void CG_GetCTFMessageEvent(const entityState_t* es)
 {
 	const int cl_index = es->trickedentindex;
 	const int team_index = es->trickedentindex2;
@@ -1210,7 +1217,7 @@ void CG_GetCTFMessageEvent(const entityState_t* es)
 	CG_PrintCTFMessage(ci, team_name, es->eventParm);
 }
 
-void DoFall(centity_t* cent, const entityState_t* es, const int clientNum)
+static void DoFall(centity_t* cent, const entityState_t* es, const int clientNum)
 {
 	const int delta = es->eventParm;
 
@@ -1258,7 +1265,7 @@ void DoFall(centity_t* cent, const entityState_t* es, const int clientNum)
 		trap->S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.landSound);
 	}
 
-	if (clientNum == cg.predicted_player_state.clientNum)
+	if (clientNum == cg.predictedPlayerState.clientNum)
 	{
 		// smooth landing z changes
 		cg.landChange = -delta;
@@ -1274,7 +1281,7 @@ void DoFall(centity_t* cent, const entityState_t* es, const int clientNum)
 	}
 }
 
-int CG_InClientBitflags(const entityState_t* ent, const int client)
+static int CG_InClientBitflags(const entityState_t* ent, const int client)
 {
 	int check_in;
 	int sub = 0;
@@ -1310,7 +1317,7 @@ int CG_InClientBitflags(const entityState_t* ent, const int client)
 void CG_PlayDoorLoopSound(const centity_t* cent);
 void CG_PlayDoorSound(const centity_t* cent, int type);
 
-void CG_TryPlayCustomSound(vec3_t origin, const int entityNum, const soundChannel_t channel, const char* sound_name)
+static void CG_TryPlayCustomSound(vec3_t origin, const int entityNum, const soundChannel_t channel, const char* sound_name)
 {
 	const sfxHandle_t c_sound = CG_CustomSound(entityNum, sound_name);
 
@@ -1322,7 +1329,7 @@ void CG_TryPlayCustomSound(vec3_t origin, const int entityNum, const soundChanne
 	trap->S_StartSound(origin, entityNum, channel, c_sound);
 }
 
-void CG_G2MarkEvent(entityState_t* es)
+static void CG_G2MarkEvent(entityState_t* es)
 {
 	//es->origin should be the hit location of the projectile,
 	//whereas es->origin2 is the predicted position of the
@@ -1479,7 +1486,7 @@ void CG_CalcVehMuzzle(Vehicle_t* p_veh, centity_t* ent, const int muzzle_num)
 }
 
 //corresponds to G_VehMuzzleFireFX -rww
-void CG_VehMuzzleFireFX(centity_t* veh, const entityState_t* broadcaster)
+static void CG_VehMuzzleFireFX(centity_t* veh, const entityState_t* broadcaster)
 {
 	const Vehicle_t* p_veh = veh->m_pVehicle;
 
@@ -1560,7 +1567,7 @@ const char* cg_stringEdVoiceChatTable[MAX_CUSTOM_SIEGE_SOUNDS] =
 };
 
 //stupid way of figuring out what string to use for voice chats
-const char* CG_GetStringForVoiceSound(const char* s)
+static const char* CG_GetStringForVoiceSound(const char* s)
 {
 	int i = 0;
 	while (i < MAX_CUSTOM_SIEGE_SOUNDS)
@@ -1782,7 +1789,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			int delta;
 			int step;
 
-			if (clientNum != cg.predicted_player_state.clientNum)
+			if (clientNum != cg.predictedPlayerState.clientNum)
 			{
 				break;
 			}
@@ -1976,10 +1983,10 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 	case EV_GLOBAL_DUEL:
 		DEBUGNAME("EV_GLOBAL_DUEL");
 		//used for beginning of power duels
-		//if (cg.predicted_player_state.persistant[PERS_TEAM] != TEAM_SPECTATOR)
-		if (es->otherentity_num == cg.predicted_player_state.clientNum ||
-			es->otherentity_num2 == cg.predicted_player_state.clientNum ||
-			es->groundEntityNum == cg.predicted_player_state.clientNum)
+		//if (cg.predictedPlayerState.persistant[PERS_TEAM] != TEAM_SPECTATOR)
+		if (es->otherentity_num == cg.predictedPlayerState.clientNum ||
+			es->otherentity_num2 == cg.predictedPlayerState.clientNum ||
+			es->groundEntityNum == cg.predictedPlayerState.clientNum)
 		{
 			CG_CenterPrint(CG_GetStringEdString("MP_SVGAME", "BEGIN_DUEL"), 120, GIANTCHAR_WIDTH * 2);
 			trap->S_StartLocalSound(cgs.media.countFightSound, CHAN_ANNOUNCER);
@@ -2024,9 +2031,9 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		{
 			break;
 		}
-		if (cg.predicted_player_state.duelInProgress &&
-			(cg.predicted_player_state.clientNum != es->clientNum &&
-				cg.predicted_player_state.duelIndex != es->clientNum))
+		if (cg.predictedPlayerState.duelInProgress &&
+			(cg.predictedPlayerState.clientNum != es->clientNum &&
+				cg.predictedPlayerState.duelIndex != es->clientNum))
 		{
 			break;
 		}
@@ -2059,10 +2066,10 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			cg_entities[es->number].currentState.torsoFlip ^= qtrue;
 			cg_entities[es->number].currentState.legsFlip ^= qtrue;
 
-			if (cg.predicted_player_state.pm_flags & PMF_FOLLOW && es->number == cg.predicted_player_state.clientNum)
+			if (cg.predictedPlayerState.pm_flags & PMF_FOLLOW && es->number == cg.predictedPlayerState.clientNum)
 			{
-				cg.predicted_player_state.torsoFlip ^= qtrue;
-				cg.predicted_player_state.legsFlip ^= qtrue;
+				cg.predictedPlayerState.torsoFlip ^= qtrue;
+				cg.predictedPlayerState.legsFlip ^= qtrue;
 
 				if (cg.snap)
 				{
@@ -2084,9 +2091,9 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			break;
 		}
 
-		if (cg.predicted_player_state.duelInProgress &&
-			(es->clientNum != cg.predicted_player_state.clientNum &&
-				es->clientNum != cg.predicted_player_state.duelIndex))
+		if (cg.predictedPlayerState.duelInProgress &&
+			(es->clientNum != cg.predictedPlayerState.clientNum &&
+				es->clientNum != cg.predictedPlayerState.duelIndex))
 		{
 			break;
 		}
@@ -2484,7 +2491,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_SIEGESPEC:
 		DEBUGNAME("EV_SIEGESPEC");
-		if (es->owner == cg.predicted_player_state.clientNum)
+		if (es->owner == cg.predictedPlayerState.clientNum)
 		{
 			cg_siegeDeathTime = es->time;
 		}
@@ -3510,7 +3517,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			if (doit)
 			{
 				if (cent->currentState.eventParm != cg.snap->ps.clientNum || cg.renderingThirdPerson || cg_trueguns.integer
-					|| cg.predicted_player_state.weapon == WP_SABER || cg.predicted_player_state.weapon == WP_MELEE)
+					|| cg.predictedPlayerState.weapon == WP_SABER || cg.predictedPlayerState.weapon == WP_MELEE)
 				{
 					//h4q3ry
 					if (cent->currentState.eFlags & EF3_DUAL_WEAPONS)
@@ -3725,7 +3732,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_SCREENSHAKE:
 		DEBUGNAME("EV_SCREENSHAKE");
-		if (!es->modelIndex || cg.predicted_player_state.clientNum == es->modelIndex - 1)
+		if (!es->modelIndex || cg.predictedPlayerState.clientNum == es->modelIndex - 1)
 		{
 			CGCam_Shake(es->angles[0], es->time);
 		}
@@ -3734,12 +3741,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 	case EV_BLOCKSHAKE:
 		DEBUGNAME("EV_BLOCKSHAKE");
 
-		/*if (es->owner == cg.predicted_player_state.clientNum)
+		/*if (es->owner == cg.predictedPlayerState.clientNum)
 		{
 			CGCam_BlockShake(es->angles[0], es->time);
 		}*/
 
-		if (!es->modelIndex || cg.predicted_player_state.clientNum == es->modelIndex - 1)
+		if (!es->modelIndex || cg.predictedPlayerState.clientNum == es->modelIndex - 1)
 		{
 			CGCam_BlockShake(es->angles[0], es->time);
 		}
@@ -3747,7 +3754,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_LOCALTIMER:
 		DEBUGNAME("EV_LOCALTIMER");
-		if (es->owner == cg.predicted_player_state.clientNum)
+		if (es->owner == cg.predictedPlayerState.clientNum)
 		{
 			CG_LocalTimingBar(es->time, es->time2);
 		}
@@ -3814,6 +3821,10 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		break;
 	case EV_USE_ITEM15:
 		DEBUGNAME("EV_USE_ITEM15");
+		CG_UseItem(cent);
+		break;
+	case EV_USE_ITEM16:
+		DEBUGNAME("EV_USE_ITEM16");
 		CG_UseItem(cent);
 		break;
 
@@ -4475,17 +4486,17 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 			if (sfx)
 			{
-				if (entnum != cg.predicted_player_state.clientNum)
+				if (entnum != cg.predictedPlayerState.clientNum)
 				{
 					//play on the head as well to simulate hearing in radio and in world
-					if (ci->team == cg.predicted_player_state.persistant[PERS_TEAM])
+					if (ci->team == cg.predictedPlayerState.persistant[PERS_TEAM])
 					{
 						//don't hear it if this person is on the other team, but they can still
 						//hear it in the world spot.
 						trap->S_StartSound(NULL, cg.snap->ps.clientNum, CHAN_MENU1, sfx);
 					}
 				}
-				if (ci->team == cg.predicted_player_state.persistant[PERS_TEAM])
+				if (ci->team == cg.predictedPlayerState.persistant[PERS_TEAM])
 				{
 					//add to the chat box
 					//hear it in the world spot.
@@ -4776,7 +4787,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_DRUGGED:
 		DEBUGNAME("EV_DRUGGED");
-		if (es->owner == cg.predicted_player_state.clientNum)
+		if (es->owner == cg.predictedPlayerState.clientNum)
 		{
 			// Only allow setting up the wonky vision on the player..do it for 10 seconds...must be synchronized with calcs done in cg_view.  Just search for cg.wonkyTime to find 'em.
 			cg.wonkyTime = cg.time + 10000;
@@ -4785,7 +4796,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_STUNNED:
 		DEBUGNAME("EV_STUNNED");
-		if (es->owner == cg.predicted_player_state.clientNum)
+		if (es->owner == cg.predictedPlayerState.clientNum)
 		{
 			// Only allow setting up the wonky vision on the player..do it for 5 seconds...must be synchronized with calcs done in cg_view.  Just search for cg.wonkyTime to find 'em.
 			cg.stunnedTime = cg.time + 5000;

@@ -39,7 +39,7 @@ extern void CG_StrikeBolt(const centity_t* cent, vec3_t origin);
 
 //==========================================================================
 
-qboolean CG_IsFemale(const char* infostring)
+static qboolean CG_IsFemale(const char* infostring)
 {
 	const char* sex = Info_ValueForKey(infostring, "s");
 	if (sex[0] == 'f' || sex[0] == 'F')
@@ -114,17 +114,17 @@ CG_ItemPickup
 A new item was picked up this frame
 ================
 */
-void CG_ItemPickup(const int item_num, const qboolean b_had_item)
+void CG_ItemPickup(const int itemNum, const qboolean b_had_item)
 {
-	cg.itemPickup = item_num;
+	cg.itemPickup = itemNum;
 	cg.itemPickupTime = cg.time;
 	cg.itemPickupBlendTime = cg.time;
 
 	// see if it should be the grabbed weapon
-	if (bg_itemlist[item_num].giType == IT_WEAPON)
+	if (bg_itemlist[itemNum].giType == IT_WEAPON)
 	{
-		const int n_cur_wpn = cg.predicted_player_state.weapon;
-		const int n_new_wpn = bg_itemlist[item_num].giTag;
+		const int n_cur_wpn = cg.predictedPlayerState.weapon;
+		const int n_new_wpn = bg_itemlist[itemNum].giTag;
 
 		if (n_cur_wpn == WP_SABER || b_had_item)
 		{
@@ -228,11 +228,11 @@ UseItem
 extern void CG_ToggleBinoculars();
 extern void CG_ToggleLAGoggles();
 
-void UseItem(const int item_num)
+void UseItem(const int itemNum)
 {
 	const centity_t* cent = &cg_entities[cg.snap->ps.clientNum];
 
-	switch (item_num)
+	switch (itemNum)
 	{
 	case INV_ELECTROBINOCULARS:
 		CG_ToggleBinoculars();
@@ -272,9 +272,8 @@ static void CG_UseForce()
 CG_UseItem
 ===============
 */
-void CG_UseItem(const centity_t* cent)
+static void CG_UseItem(const centity_t* cent)
 {
-	//gitem_t* item;
 
 	const entityState_t* es = &cent->currentState;
 
@@ -282,19 +281,6 @@ void CG_UseItem(const centity_t* cent)
 	if (itemNum < 0 || itemNum > INV_MAX)
 	{
 		itemNum = 0;
-	}
-
-	// print a message if the local player
-	if (es->number == cg.snap->ps.clientNum)
-	{
-		if (!itemNum)
-		{
-			//CG_CenterPrint( "No item to use", SCREEN_HEIGHT * 0.30);
-		}
-		else
-		{
-			//item = FindItemForInventory( itemNum );
-		}
 	}
 
 	UseItem(itemNum);
@@ -308,7 +294,7 @@ Returns qtrue for event types that access cent->gent directly (and don't require
 to be the player / entity 0).
 ==============
 */
-qboolean CG_UnsafeEventType(const int event_type)
+static qboolean CG_UnsafeEventType(const int event_type)
 {
 	switch (event_type)
 	{
@@ -424,7 +410,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 	case EV_FALL_SHORT:
 		DEBUGNAME("EV_FALL_SHORT");
 		cgi_S_StartSound(nullptr, es->number, CHAN_AUTO, cgs.media.landSound);
-		if (clientNum == cg.predicted_player_state.clientNum)
+		if (clientNum == cg.predictedPlayerState.clientNum)
 		{
 			// smooth landing z changes
 			cg.landChange = -8;
@@ -451,7 +437,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			//still alive
 			CG_TryPlayCustomSound(nullptr, es->number, CHAN_BODY, "*pain100.wav", CS_BASIC);
 		}
-		if (clientNum == cg.predicted_player_state.clientNum)
+		if (clientNum == cg.predictedPlayerState.clientNum)
 		{
 			// smooth landing z changes
 			cg.landChange = -16;
@@ -464,7 +450,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		CG_TryPlayCustomSound(nullptr, es->number, CHAN_BODY, "*land1.wav", CS_BASIC);
 		cgi_S_StartSound(nullptr, es->number, CHAN_AUTO, cgs.media.landSound);
 		cent->pe.painTime = cg.time; // don't play a pain sound right after this
-		if (clientNum == cg.predicted_player_state.clientNum)
+		if (clientNum == cg.predictedPlayerState.clientNum)
 		{
 			// smooth landing z changes
 			cg.landChange = -24;
@@ -481,7 +467,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		{
 			float old_step;
 
-			if (clientNum != cg.predicted_player_state.clientNum)
+			if (clientNum != cg.predictedPlayerState.clientNum)
 			{
 				break;
 			}

@@ -51,6 +51,8 @@ void G_ROFF_NotetrackCallback(gentity_t* cent, const char* notetrack);
 
 extern stringID_table_t setTable[];
 
+extern void Sphereshield_Off(gentity_t* self);
+
 qboolean G_ParseSpawnVars(qboolean inSubBSP);
 void G_SpawnGEntityFromSpawnVars(qboolean inSubBSP);
 
@@ -4868,6 +4870,20 @@ void G_RunFrame(const int levelTime)
 					ent->client->cloakDebReduce = level.time + CLOAK_DEFUEL_RATE;
 				}
 			}
+			else if (ent->client->ps.powerups[PW_SPHERESHIELDED])
+			{ //using cloak, drain battery
+				if (ent->client->cloakDebReduce < level.time)
+				{
+					ent->client->ps.cloakFuel--;
+
+					if (ent->client->ps.cloakFuel <= 0)
+					{ //turn it off
+						ent->client->ps.cloakFuel = 0;
+						Sphereshield_Off(ent);
+					}
+					ent->client->cloakDebReduce = level.time + CLOAK_DEFUEL_RATE;
+				}
+			}
 			else if (ent->client->ps.cloakFuel < 100)
 			{
 				//recharge cloak
@@ -4949,7 +4965,7 @@ void G_RunFrame(const int levelTime)
 		{
 			ClearNPCGlobals();
 		}
-	}
+			}
 #ifdef _G_FRAME_PERFANAL
 	iTimer_ItemRun = trap->PrecisionTimer_End(timer_ItemRun);
 #endif
@@ -5046,7 +5062,7 @@ void G_RunFrame(const int levelTime)
 #endif
 
 	g_LastFrameTime = level.time;
-}
+	}
 
 const char* G_GetStringEdString(char* refSection, char* refName)
 {
