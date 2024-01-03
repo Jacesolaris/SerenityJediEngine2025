@@ -1522,7 +1522,8 @@ static void R_MarkLeaves(void) {
 
 	vis = R_ClusterPVS(tr.viewCluster);
 
-	for (i = 0, leaf = tr.world->nodes; i < tr.world->numnodes; i++, leaf++) {
+	for (i = 0, leaf = tr.world->nodes; i < tr.world->numnodes; i++, leaf++) 
+	{
 		cluster = leaf->cluster;
 		if (cluster < 0 || cluster >= tr.world->numClusters) {
 			continue;

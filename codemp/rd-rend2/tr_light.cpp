@@ -92,8 +92,11 @@ void R_DlightBmodel(bmodel_t* bmodel, trRefEntity_t* ent)
 
 	ent->needDlights = (qboolean)(mask != 0);
 
+	world_t* world = R_GetWorld(bmodel->worldIndex);
+
 	// set the dlight bits in all the surfaces
-	for (i = 0; i < bmodel->numSurfaces; i++) {
+	for (i = 0; i < bmodel->numSurfaces; i++) 
+	{
 		surf = tr.world->surfaces + bmodel->firstSurface + i;
 
 		switch (*surf->data)

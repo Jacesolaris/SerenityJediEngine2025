@@ -1998,7 +1998,7 @@ static constexpr cmdList_t inputCmds[] =
 
 	{"grapple", "grapple", IN_GenCMD29, nullptr},                                             //GENCMD_USE_GRAPPLE
 
-	{"flourish", "Flourish", IN_GenCMD30, nullptr},                                           //GENCMD_SABERATTACKCYCLE
+	{"saberAttackCycle", "Switch lightsaber attack styles", IN_GenCMD30, nullptr},           //GENCMD_SABERATTACKCYCLE
 
 	{"taunt", "Taunt",IN_GenCMD31, nullptr},                                                  //GENCMD_TAUNT
 	{"bow", "Bow",IN_GenCMD32, nullptr},                                                      //GENCMD_BOW
