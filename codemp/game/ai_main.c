@@ -1352,9 +1352,9 @@ static void bot_update_input(bot_state_t* bs, const int time, const int elapsed_
 			{
 				bi.actionflags |= ACTION_WALK;
 				walktime[bs->cur_ps.clientNum] = level.time + 2000;
-				if (bs->cur_ps.saber_holstered)
+				if (bs->cur_ps.saberHolstered)
 				{
-					bs->cur_ps.saber_holstered = 0;
+					bs->cur_ps.saberHolstered = 0;
 				}
 			}
 			else
@@ -10974,8 +10974,8 @@ void standard_bot_ai(bot_state_t* bs)
 			(!bs->doChat || bs->chatTime < level.time))
 		{
 			trap->EA_Attack(bs->client);
-			if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STAFF
-				&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DUAL)
+			if (g_entities[bs->client].client->ps.fd.saberAnimLevel != SS_STAFF
+				&& g_entities[bs->client].client->ps.fd.saberAnimLevel != SS_DUAL)
 			{
 				Cmd_SaberAttackCycle_f(&g_entities[bs->client]); // we died lets change the saber style
 			}
@@ -10997,22 +10997,22 @@ void standard_bot_ai(bot_state_t* bs)
 		staffSaber = qtrue;
 	}
 
-	if (dualSabers && bs->cur_ps.fd.saber_anim_level != SS_DUAL)
+	if (dualSabers && bs->cur_ps.fd.saberAnimLevel != SS_DUAL)
 	{//dual sabers
 		Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 	}
 
-	if (staffSaber && bs->cur_ps.fd.saber_anim_level != SS_STAFF)
+	if (staffSaber && bs->cur_ps.fd.saberAnimLevel != SS_STAFF)
 	{//dual sabers
 		Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 	}
 
 	if (!dualSabers && !staffSaber
-		&& (bs->cur_ps.fd.saber_anim_level != SS_FAST &&
-			bs->cur_ps.fd.saber_anim_level != SS_TAVION &&
-			bs->cur_ps.fd.saber_anim_level != SS_MEDIUM &&
-			bs->cur_ps.fd.saber_anim_level != SS_STRONG &&
-			bs->cur_ps.fd.saber_anim_level != SS_DESANN))
+		&& (bs->cur_ps.fd.saberAnimLevel != SS_FAST &&
+			bs->cur_ps.fd.saberAnimLevel != SS_TAVION &&
+			bs->cur_ps.fd.saberAnimLevel != SS_MEDIUM &&
+			bs->cur_ps.fd.saberAnimLevel != SS_STRONG &&
+			bs->cur_ps.fd.saberAnimLevel != SS_DESANN))
 	{//using a single saber
 		Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 	}
@@ -12207,14 +12207,14 @@ void standard_bot_ai(bot_state_t* bs)
 				bs->saberPowerTime = level.time + Q_irand(3000, 15000);
 			}
 
-			if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STAFF
-				&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DUAL) // dont change staff or dual styles
+			if (g_entities[bs->client].client->ps.fd.saberAnimLevel != SS_STAFF
+				&& g_entities[bs->client].client->ps.fd.saberAnimLevel != SS_DUAL) // dont change staff or dual styles
 			{
 				if (bs->currentEnemy->client->ps.fd.blockPoints > BLOCKPOINTS_FULL   // enemy has high BP
 					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 2) // We have offense level 3
 				{
-					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STRONG
-						&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DESANN && bs->saberPower)  // should swap from desann to strong and vise versa
+					if (g_entities[bs->client].client->ps.fd.saberAnimLevel != SS_STRONG
+						&& g_entities[bs->client].client->ps.fd.saberAnimLevel != SS_DESANN && bs->saberPower)  // should swap from desann to strong and vise versa
 					{ //if we are up against someone with a lot of blockpoints and we have a strong attack available, then h4q them
 						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 					}
@@ -12222,15 +12222,15 @@ void standard_bot_ai(bot_state_t* bs)
 				else if (bs->currentEnemy->client->ps.fd.blockPoints > BLOCKPOINTS_HALF
 					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 1)
 				{
-					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_MEDIUM)
+					if (g_entities[bs->client].client->ps.fd.saberAnimLevel != SS_MEDIUM)
 					{ //they're down on blockpoints a little, use level 2 if we can
 						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 					}
 				}
 				else
 				{
-					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_FAST
-						&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_TAVION)
+					if (g_entities[bs->client].client->ps.fd.saberAnimLevel != SS_FAST
+						&& g_entities[bs->client].client->ps.fd.saberAnimLevel != SS_TAVION)
 					{ //they've gone below 40 blockpoints, go at them with quick attacks
 						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 					}

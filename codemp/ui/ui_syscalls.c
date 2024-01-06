@@ -471,12 +471,12 @@ void UISyscall_RemoveCommand(const char* cmd_name)
 	Com_Printf(S_COLOR_YELLOW "WARNING: trap->ext.RemoveCommand() is only supported with SerenityJediEngine2025 mod API!\n");
 }
 
-void QDECL UI_Error(int level, const char* error, ...) {
+NORETURN void QDECL UI_Error(int level, const char* error, ...) {
 	va_list argptr;
 	char text[4096] = { 0 };
 
 	va_start(argptr, error);
-	Q_vsnprintf(text, sizeof text, error, argptr);
+	Q_vsnprintf(text, sizeof(text), error, argptr);
 	va_end(argptr);
 
 	trap_Error(text);
@@ -485,9 +485,10 @@ void QDECL UI_Error(int level, const char* error, ...) {
 void QDECL UI_Printf(const char* msg, ...) {
 	va_list argptr;
 	char text[4096] = { 0 };
+	int ret;
 
 	va_start(argptr, msg);
-	const int ret = Q_vsnprintf(text, sizeof text, msg, argptr);
+	ret = Q_vsnprintf(text, sizeof(text), msg, argptr);
 	va_end(argptr);
 
 	if (ret == -1)

@@ -1221,18 +1221,16 @@ void Q3_TaskIDClear(int* taskID)
 	*taskID = -1;
 }
 
-void G_DebugPrint(const int printLevel, const char* format, ...)
+void G_DebugPrint(int printLevel, const char* format, ...)
 {
-	va_list argptr;
-	char text[1024] = { 0 };
+	va_list		argptr;
+	char		text[1024] = { 0 };
 
-#ifndef _DEBUG
 	if (developer.integer != 2)
 		return;
-#endif
 
 	va_start(argptr, format);
-	Q_vsnprintf(text, sizeof text, format, argptr);
+	Q_vsnprintf(text, sizeof(text), format, argptr);
 	va_end(argptr);
 
 	//Add the color formatting
@@ -1248,12 +1246,15 @@ void G_DebugPrint(const int printLevel, const char* format, ...)
 
 	case WL_DEBUG:
 	{
-		int entNum = atoi(text);
+		int		entNum;
+		char* buffer;
 
-		char* buffer = text;
+		entNum = atoi(text);
+
+		buffer = (char*)text;
 		buffer += 5;
 
-		if (entNum < 0 || entNum >= MAX_GENTITIES)
+		if ((entNum < 0) || (entNum >= MAX_GENTITIES))
 			entNum = 0;
 
 		Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", g_entities[entNum].script_targetname, entNum, buffer);
@@ -7481,7 +7482,7 @@ static void Q3_SetSaberActive(const int ent_id, const qboolean active)
 		}
 	}
 	//was reversed
-	if (!ent->client->ps.saber_holstered && !active)
+	if (!ent->client->ps.saberHolstered && !active)
 	{
 		Cmd_ToggleSaber_f(ent);
 	}

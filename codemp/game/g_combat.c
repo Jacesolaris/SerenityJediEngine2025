@@ -3026,13 +3026,13 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 
 	if (self->client->ps.weapon == WP_SABER && self->client->saberKnockedTime)
 	{
-		gentity_t* saber_ent = &g_entities[self->client->ps.saberEntityNum];
+		gentity_t* saberEnt = &g_entities[self->client->ps.saberEntityNum];
 		self->client->saberKnockedTime = 0;
-		saberReactivate(saber_ent, self);
-		saber_ent->r.contents = CONTENTS_LIGHTSABER;
-		saber_ent->think = saberBackToOwner;
-		saber_ent->nextthink = level.time;
-		G_RunObject(saber_ent);
+		saberReactivate(saberEnt, self);
+		saberEnt->r.contents = CONTENTS_LIGHTSABER;
+		saberEnt->think = saberBackToOwner;
+		saberEnt->nextthink = level.time;
+		G_RunObject(saberEnt);
 	}
 
 	self->client->bodyGrabIndex = ENTITYNUM_NONE;
@@ -3180,7 +3180,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 	//Cheap method until/if I decide to put fancier stuff in (e.g. sabers falling out of hand and slowly
 	//holstering on death like sp)
 	if (self->client->ps.weapon == WP_SABER &&
-		!self->client->ps.saber_holstered &&
+		!self->client->ps.saberHolstered &&
 		self->client->ps.saberEntityNum)
 	{
 		if (!self->client->ps.saberInFlight &&
@@ -3334,7 +3334,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 			//also - if MOD_SABER, list the animation and saber style
 			if (means_of_death == MOD_SABER)
 			{
-				G_LogPrintf("killer saber style: %d, killer saber anim %s\n", attacker->client->ps.fd.saber_anim_level,
+				G_LogPrintf("killer saber style: %d, killer saber anim %s\n", attacker->client->ps.fd.saberAnimLevel,
 					animTable[attacker->client->ps.torsoAnim].name);
 			}
 		}
@@ -4527,7 +4527,7 @@ static void G_GetDismemberLoc(const gentity_t* self, vec3_t bolt_point, const in
 
 static void G_GetDismemberBolt(gentity_t* self, vec3_t bolt_point, const int limbType)
 {
-	vec3_t proper_origin, proper_angles, add_vel;
+	vec3_t properOrigin, properAngles, add_vel;
 	//matrix3_t legAxis;
 	mdxaBone_t boltMatrix;
 	float f_v_speed = 0;
@@ -4571,8 +4571,8 @@ static void G_GetDismemberBolt(gentity_t* self, vec3_t bolt_point, const int lim
 
 	const int use_bolt = trap->G2API_AddBolt(self->ghoul2, 0, rotate_bone);
 
-	VectorCopy(self->client->ps.origin, proper_origin);
-	VectorCopy(self->client->ps.viewangles, proper_angles);
+	VectorCopy(self->client->ps.origin, properOrigin);
+	VectorCopy(self->client->ps.viewangles, properAngles);
 
 	//try to predict the origin based on velocity so it's more like what the client is seeing
 	VectorCopy(self->client->ps.velocity, add_vel);
@@ -4605,32 +4605,32 @@ static void G_GetDismemberBolt(gentity_t* self, vec3_t bolt_point, const int lim
 
 	f_v_speed *= 0.08f;
 
-	proper_origin[0] += add_vel[0] * f_v_speed;
-	proper_origin[1] += add_vel[1] * f_v_speed;
-	proper_origin[2] += add_vel[2] * f_v_speed;
+	properOrigin[0] += add_vel[0] * f_v_speed;
+	properOrigin[1] += add_vel[1] * f_v_speed;
+	properOrigin[2] += add_vel[2] * f_v_speed;
 
-	proper_angles[0] = 0;
-	proper_angles[1] = self->client->ps.viewangles[YAW];
-	proper_angles[2] = 0;
+	properAngles[0] = 0;
+	properAngles[1] = self->client->ps.viewangles[YAW];
+	properAngles[2] = 0;
 
-	trap->G2API_GetBoltMatrix(self->ghoul2, 0, use_bolt, &boltMatrix, proper_angles, proper_origin, level.time, NULL,
+	trap->G2API_GetBoltMatrix(self->ghoul2, 0, use_bolt, &boltMatrix, properAngles, properOrigin, level.time, NULL,
 		self->modelScale);
 
 	bolt_point[0] = boltMatrix.matrix[0][3];
 	bolt_point[1] = boltMatrix.matrix[1][3];
 	bolt_point[2] = boltMatrix.matrix[2][3];
 
-	trap->G2API_GetBoltMatrix(self->ghoul2, 1, 0, &boltMatrix, proper_angles, proper_origin, level.time, NULL,
+	trap->G2API_GetBoltMatrix(self->ghoul2, 1, 0, &boltMatrix, properAngles, properOrigin, level.time, NULL,
 		self->modelScale);
 
 	if (self->client && limbType == G2_MODELPART_RHAND)
 	{
 		//Make some saber hit sparks over the severed wrist area
-		vec3_t bolt_angles;
+		vec3_t boltAngles;
 
-		bolt_angles[0] = -boltMatrix.matrix[0][1];
-		bolt_angles[1] = -boltMatrix.matrix[1][1];
-		bolt_angles[2] = -boltMatrix.matrix[2][1];
+		boltAngles[0] = -boltMatrix.matrix[0][1];
+		boltAngles[1] = -boltMatrix.matrix[1][1];
+		boltAngles[2] = -boltMatrix.matrix[2][1];
 
 		gentity_t* te = G_TempEntity(bolt_point, EV_SABER_BODY_HIT);
 		te->s.otherentity_num = self->s.number;
@@ -4639,7 +4639,7 @@ static void G_GetDismemberBolt(gentity_t* self, vec3_t bolt_point, const int lim
 		te->s.legsAnim = 0; //blade_num
 
 		VectorCopy(bolt_point, te->s.origin);
-		VectorCopy(bolt_angles, te->s.angles);
+		VectorCopy(boltAngles, te->s.angles);
 
 		if (!te->s.angles[0] && !te->s.angles[1] && !te->s.angles[2])
 		{
@@ -5893,7 +5893,7 @@ void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 		//racc - check to see if an NPC should get conventently kicked off a nearby cliff.
 		G_CheckLedgeDive(self, 72, push_dir, qfalse, qfalse);
 
-		if (!self->client->ps.saber_holstered)
+		if (!self->client->ps.saberHolstered)
 		{
 			if (self->client->saber[0].soundOff)
 			{
@@ -5903,7 +5903,7 @@ void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 			{
 				G_Sound(self, CHAN_WEAPON, self->client->saber[1].soundOff);
 			}
-			self->client->ps.saber_holstered = 2;
+			self->client->ps.saberHolstered = 2;
 		}
 
 		if (!PM_RollingAnim(self->client->ps.legsAnim)
@@ -6041,7 +6041,7 @@ void G_KnockOver(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 		}
 		G_CheckLedgeDive(self, 72, push_dir, qfalse, qfalse);
 
-		if (!self->client->ps.saber_holstered)
+		if (!self->client->ps.saberHolstered)
 		{
 			if (self->client->saber[0].soundOff)
 			{
@@ -6051,7 +6051,7 @@ void G_KnockOver(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 			{
 				G_Sound(self, CHAN_WEAPON, self->client->saber[1].soundOff);
 			}
-			self->client->ps.saber_holstered = 2;
+			self->client->ps.saberHolstered = 2;
 		}
 
 		if (!PM_RollingAnim(self->client->ps.legsAnim)

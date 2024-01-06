@@ -2035,15 +2035,15 @@ static int LoadPathData(const char* filename)
 {
 	fileHandle_t f;
 	char file_string[WPARRAY_BUFFER_SIZE];
-	char route_path[MAX_QPATH];
+	char routePath[MAX_QPATH];
 	wpobject_t thiswp;
 
 	int i = 0;
 	int i_cv;
 
-	Com_sprintf(route_path, sizeof route_path, "botroutes/%s.wnt\0", filename);
+	Com_sprintf(routePath, sizeof routePath, "botroutes/%s.wnt\0", filename);
 
-	const int len = trap->FS_Open(route_path, &f, FS_READ);
+	const int len = trap->FS_Open(routePath, &f, FS_READ);
 
 	if (!f)
 	{
@@ -2397,9 +2397,9 @@ static int SavePathData(const char* filename)
 		return 0;
 	}
 
-	const char* route_path = va("botroutes/%s.wnt\0", filename);
+	const char* routePath = va("botroutes/%s.wnt\0", filename);
 
-	trap->FS_Open(route_path, &f, FS_WRITE);
+	trap->FS_Open(routePath, &f, FS_WRITE);
 
 	if (!f)
 	{
@@ -2714,12 +2714,12 @@ static void G_DebugNodeFile()
 
 	while (i < nodenum)
 	{
-		Q_strcat(fileString, sizeof(fileString), va("%i-%f ", i, nodetable[i].weight));
+		strcat(fileString, va("%i-%f ", i, nodetable[i].weight));
 		placeX += DEFAULT_GRID_SPACING;
 
 		if (placeX >= terrain->r.absmax[0])
 		{
-			Q_strcat(fileString, sizeof(fileString), "\n");
+			strcat(fileString, "\n");
 			placeX = terrain->r.absmin[0];
 		}
 		i++;

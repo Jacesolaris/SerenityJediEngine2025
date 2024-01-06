@@ -92,7 +92,7 @@ int AI_GetGroupSize(gentity_t* ent, const int radius)
 	return AI_GetGroupSize(ent->currentOrigin, radius, ent->client->playerTeam, ent);
 }
 
-void AI_SetClosestBuddy(AIGroupInfo_t* group)
+static void AI_SetClosestBuddy(AIGroupInfo_t* group)
 {
 	for (int i = 0; i < group->numGroup; i++)
 	{
@@ -112,7 +112,7 @@ void AI_SetClosestBuddy(AIGroupInfo_t* group)
 	}
 }
 
-void AI_SortGroupByPathCostToEnemy(AIGroupInfo_t* group)
+static void AI_SortGroupByPathCostToEnemy(AIGroupInfo_t* group)
 {
 	int i;
 	qboolean sort = qfalse;
@@ -197,7 +197,7 @@ void AI_SortGroupByPathCostToEnemy(AIGroupInfo_t* group)
 	}
 }
 
-qboolean AI_FindSelfInPreviousGroup(const gentity_t* self)
+static qboolean AI_FindSelfInPreviousGroup(const gentity_t* self)
 {
 	//go through other groups made this frame and see if any of those contain me already
 	for (int i = 0; i < MAX_FRAME_GROUPS; i++)
@@ -218,7 +218,7 @@ qboolean AI_FindSelfInPreviousGroup(const gentity_t* self)
 	return qfalse;
 }
 
-void AI_InsertGroupMember(AIGroupInfo_t* group, gentity_t* member)
+static void AI_InsertGroupMember(AIGroupInfo_t* group, gentity_t* member)
 {
 	int i;
 	//okay, you know what?  Check this damn group and make sure we're not already in here!
@@ -248,7 +248,7 @@ void AI_InsertGroupMember(AIGroupInfo_t* group, gentity_t* member)
 	member->NPC->group = group;
 }
 
-qboolean AI_TryJoinPreviousGroup(gentity_t* self)
+static qboolean AI_TryJoinPreviousGroup(gentity_t* self)
 {
 	//go through other groups made this frame and see if any of those have the same enemy as me... if so, add me in!
 	for (int i = 0; i < MAX_FRAME_GROUPS; i++)
@@ -270,7 +270,7 @@ qboolean AI_TryJoinPreviousGroup(gentity_t* self)
 	return qfalse;
 }
 
-qboolean AI_GetNextEmptyGroup(gentity_t* self)
+static qboolean AI_GetNextEmptyGroup(gentity_t* self)
 {
 	if (AI_FindSelfInPreviousGroup(self))
 	{
@@ -303,7 +303,7 @@ qboolean AI_GetNextEmptyGroup(gentity_t* self)
 	}
 }
 
-qboolean AI_ValidateNoEnemyGroupMember(const AIGroupInfo_t* group, const gentity_t* member)
+static qboolean AI_ValidateNoEnemyGroupMember(const AIGroupInfo_t* group, const gentity_t* member)
 {
 	if (!group)
 	{
@@ -563,7 +563,7 @@ void AI_GetGroup(gentity_t* self)
 	AI_SetClosestBuddy(self->NPC->group);
 }
 
-void AI_SetNewGroupCommander(AIGroupInfo_t* group)
+static void AI_SetNewGroupCommander(AIGroupInfo_t* group)
 {
 	group->commander = nullptr;
 	for (int i = 0; i < group->numGroup; i++)
@@ -579,7 +579,7 @@ void AI_SetNewGroupCommander(AIGroupInfo_t* group)
 	}
 }
 
-void AI_DeleteGroupMember(AIGroupInfo_t* group, const int memberNum)
+static void AI_DeleteGroupMember(AIGroupInfo_t* group, const int memberNum)
 {
 	//added additional sanity checks to fix some crashing problems.
 	if (memberNum >= MAX_GROUP_MEMBERS || memberNum >= group->numGroup)

@@ -1050,7 +1050,7 @@ typedef struct forcedata_s {
 	qboolean	sentryDeployed;
 
 	int			saber_anim_levelBase;//sigh...
-	int			saber_anim_level;
+	int			saberAnimLevel;
 	int			saberDrawAnimLevel;
 
 	int			suicides;
@@ -1213,7 +1213,7 @@ typedef struct playerState_s {
 	short 		leanStopDebounceTime;
 	int			saberBlockingTime;
 	int         saberManualBlockingTime;
-	int			saber_anim_level;
+	int			saberAnimLevel;
 
 	int			saberLockTime;
 	int			saberLockEnemy;
@@ -1300,7 +1300,7 @@ typedef struct playerState_s {
 	int         saberFatigueChainCount;
 	int			BlasterAttackChainCount;
 
-	int			saber_holstered;
+	int			saberHolstered;
 
 	int			forceAllowDeactivateTime;
 	int			lastKickedEntNum;
@@ -1880,7 +1880,7 @@ typedef struct entityState_s {
 	int			saberEntityNum;
 	int			saber_move;
 	int			forcePowersActive;
-	int			saber_holstered;//sent in only only 2 bits - should be 0, 1 or 2
+	int			saberHolstered;//sent in only only 2 bits - should be 0, 1 or 2
 
 	qboolean	isJediMaster;
 

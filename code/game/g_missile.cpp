@@ -57,7 +57,7 @@ extern qboolean WP_DoingForcedAnimationForForcePowers(const gentity_t* self);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 extern qboolean PM_SaberInStart(int move);
 extern qboolean wp_saber_block_non_random_missile(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
-extern int wp_saber_must_block(gentity_t* self, const gentity_t* atk, qboolean check_b_box_block, vec3_t point, int r_saber_num, int r_blade_num);
+extern int wp_saber_must_block(gentity_t* self, const gentity_t* atk, qboolean check_b_box_block, vec3_t point, int rSaberNum, int rBladeNum);
 extern float VectorBlockDistance(vec3_t v1, vec3_t v2);
 vec3_t g_crosshairWorldCoord = { 0, 0, 0 };
 extern qboolean PM_RunningAnim(int anim);

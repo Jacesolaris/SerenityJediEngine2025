@@ -470,7 +470,7 @@ void Melee_TryGrab(void)
 	NPCS.ucmd.rightmove = NPCS.ucmd.forwardmove = NPCS.ucmd.upmove = 0;
 	NPCS.NPC->painDebounceTime = level.time + NPCS.NPC->client->ps.torsoTimer;
 	//WTF?
-	NPCS.NPC->client->ps.saber_holstered = 2;
+	NPCS.NPC->client->ps.saberHolstered = 2;
 }
 
 /*
@@ -619,7 +619,7 @@ qboolean NPC_CheckEnemyStealth(gentity_t* target)
 		return qfalse;
 	}
 
-	if (target->client->ps.weapon == WP_SABER && !target->client->ps.saber_holstered && !target->client->ps.
+	if (target->client->ps.weapon == WP_SABER && !target->client->ps.saberHolstered && !target->client->ps.
 		saberInFlight)
 	{
 		//if target has saber in hand and activated, we wake up even sooner even if not facing him
@@ -2304,7 +2304,7 @@ void ST_Commander(void)
 						{
 						case WP_SABER:
 							//if ( group->enemy->client->ps.SaberLength() > 0 )
-							if (!group->enemy->client->ps.saber_holstered)
+							if (!group->enemy->client->ps.saberHolstered)
 							{
 								if (DistanceSquared(group->enemy->r.currentOrigin, NPCS.NPC->r.currentOrigin) < 65536)
 								{
@@ -2680,7 +2680,7 @@ void ST_Commander(void)
 		if (cpFlags)
 		{
 			//we want to run to a combat point
-			if (group->enemy->client->ps.weapon == WP_SABER && !group->enemy->client->ps.saber_holstered)
+			if (group->enemy->client->ps.weapon == WP_SABER && !group->enemy->client->ps.saberHolstered)
 			{
 				//we obviously want to avoid the enemy if he has a saber
 				cpFlags |= CP_AVOID_ENEMY;

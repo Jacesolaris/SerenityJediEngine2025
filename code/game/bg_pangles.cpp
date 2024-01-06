@@ -811,7 +811,7 @@ qboolean PM_AdjustAnglesForSaberLock(gentity_t* ent, usercmd_t* ucmd)
 	return qfalse;
 }
 
-int pm_min_get_up_time(const gentity_t* ent)
+int G_MinGetUpTime(gentity_t* ent)
 {
 	if (ent
 		&& ent->client
@@ -895,7 +895,7 @@ qboolean PM_AdjustAnglesForKnockdown(gentity_t* ent, usercmd_t* ucmd, const qboo
 		//being knocked down or getting up, can't do anything!
 		if (!angle_clamp_only)
 		{
-			if (!PM_InForceGetUp(&ent->client->ps) && (ent->client->ps.legsAnimTimer > pm_min_get_up_time(ent)
+			if (!PM_InForceGetUp(&ent->client->ps) && (ent->client->ps.legsAnimTimer > G_MinGetUpTime(ent)
 				|| ent->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(ent)
 				|| ent->client->ps.legsAnim == BOTH_GETUP1
 				|| ent->client->ps.legsAnim == BOTH_GETUP2
@@ -1581,7 +1581,7 @@ are being updated instead of a full move
 ================
 */
 
-void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd, gentity_t* gent)
+void PM_UpdateViewAngles(int saberAnimLevel, playerState_t* ps, usercmd_t* cmd, gentity_t* gent)
 {
 	short temp;
 	float root_pitch = 0, pitch_min = -75, pitch_max = 75, yaw_min = 0, yaw_max = 0, locked_yaw_value = 0;
@@ -2098,7 +2098,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 					if (cmd->rightmove > 0)
 					{
 						//lean right
-						if (saber_anim_level == SS_DUAL)
+						if (saberAnimLevel == SS_DUAL)
 						{
 							if (ps->torsoAnim == BOTH_BLOCK_HOLD_R_DUAL)
 							{
@@ -2109,7 +2109,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 								anim = BOTH_BLOCK_R_DUAL;
 							}
 						}
-						else if (saber_anim_level == SS_STAFF)
+						else if (saberAnimLevel == SS_STAFF)
 						{
 							if (pm->ps->saber[0].type == SABER_BACKHAND
 								|| pm->ps->saber[0].type == SABER_ASBACKHAND)
@@ -2151,7 +2151,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 					else if (cmd->rightmove < 0)
 					{
 						//lean left
-						if (saber_anim_level == SS_DUAL)
+						if (saberAnimLevel == SS_DUAL)
 						{
 							if (ps->torsoAnim == BOTH_BLOCK_HOLD_L_DUAL)
 							{
@@ -2162,7 +2162,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 								anim = BOTH_BLOCK_L_DUAL;
 							}
 						}
-						else if (saber_anim_level == SS_STAFF)
+						else if (saberAnimLevel == SS_STAFF)
 						{
 							if (pm->ps->saber[0].type == SABER_BACKHAND
 								|| pm->ps->saber[0].type == SABER_ASBACKHAND)
@@ -2210,7 +2210,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 				{
 					int extra_hold_time = 0;
 
-					if (saber_anim_level == SS_DUAL)
+					if (saberAnimLevel == SS_DUAL)
 					{
 						if (PM_BlockDualAnim(ps->torsoAnim) && !PM_BlockHoldDualAnim(ps->torsoAnim))
 						{
@@ -2220,7 +2220,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 							extra_hold_time = 100;
 						}
 					}
-					else if (saber_anim_level == SS_STAFF)
+					else if (saberAnimLevel == SS_STAFF)
 					{
 						if (PM_BlockStaffAnim(ps->torsoAnim) && !PM_BlockHoldStaffAnim(ps->torsoAnim))
 						{

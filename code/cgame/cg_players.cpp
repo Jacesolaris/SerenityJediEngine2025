@@ -7063,7 +7063,7 @@ static void CG_StopWeaponSounds(centity_t* cent)
 }
 
 //--------------- SABER STUFF --------
-void cg_saber_do_weapon_hit_marks(const gclient_t* client, const gentity_t* saber_ent, gentity_t* hit_ent,
+void cg_saber_do_weapon_hit_marks(const gclient_t* client, const gentity_t* saberEnt, gentity_t* hit_ent,
 	const int saberNum, const int blade_num,
 	vec3_t hit_pos, vec3_t hit_dir, vec3_t uaxis, const float size_time_scale)
 {
@@ -7131,8 +7131,8 @@ void cg_saber_do_weapon_hit_marks(const gclient_t* client, const gentity_t* sabe
 
 		if (weapon_mark_shader)
 		{
-			centity_t* splatter_on_cent = saber_ent && client->ps.saberInFlight
-				? &cg_entities[saber_ent->s.number]
+			centity_t* splatter_on_cent = saberEnt && client->ps.saberInFlight
+				? &cg_entities[saberEnt->s.number]
 				: &cg_entities[client->ps.clientNum];
 			float yaw_angle;
 			vec3_t back_dir;
@@ -14417,17 +14417,17 @@ void CG_Player(centity_t* cent)
 			//Deal with facial expressions
 			CG_G2PlayerHeadAnims(cent);
 
-			centity_t* veh_ent = &cg_entities[cent->gent->owner->s.number];
-			CG_CalcEntityLerpPositions(veh_ent);
+			centity_t* vehEnt = &cg_entities[cent->gent->owner->s.number];
+			CG_CalcEntityLerpPositions(vehEnt);
 			// Get the driver tag.
 			mdxaBone_t boltMatrix;
-			gi.G2API_GetBoltMatrix(veh_ent->gent->ghoul2, veh_ent->gent->playerModel, veh_ent->gent->crotchBolt,
-				&boltMatrix, veh_ent->lerpAngles, veh_ent->lerpOrigin,
-				cg.time ? cg.time : level.time, nullptr, veh_ent->currentState.modelScale);
+			gi.G2API_GetBoltMatrix(vehEnt->gent->ghoul2, vehEnt->gent->playerModel, vehEnt->gent->crotchBolt,
+				&boltMatrix, vehEnt->lerpAngles, vehEnt->lerpOrigin,
+				cg.time ? cg.time : level.time, nullptr, vehEnt->currentState.modelScale);
 			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent.origin);
 
 			float savPitch = cent->lerpAngles[PITCH];
-			VectorCopy(veh_ent->lerpAngles, cent->lerpAngles);
+			VectorCopy(vehEnt->lerpAngles, cent->lerpAngles);
 			AnglesToAxis(cent->lerpAngles, ent.axis);
 
 			VectorCopy(ent.origin, ent.oldorigin);
@@ -14917,7 +14917,7 @@ void CG_Player(centity_t* cent)
 								}
 								else
 								{
-									switch (cent->gent->client->ps.saber_anim_level)
+									switch (cent->gent->client->ps.saberAnimLevel)
 									{
 									case SS_FAST:
 										cent->gent->client->ps.saber[saberNum].blade[blade_num].length += cent->gent->

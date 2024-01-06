@@ -535,7 +535,7 @@ void EnablePlayerCameraPos(gentity_t* player)
 	player->client->ps.zoomMode = 0;
 
 	//holster sabers
-	player->client->ps.saber_holstered = 2;
+	player->client->ps.saberHolstered = 2;
 
 	if (player->client->ps.saberInFlight && player->client->ps.saberEntityNum)
 	{

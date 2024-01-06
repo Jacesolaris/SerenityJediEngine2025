@@ -3366,7 +3366,7 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, const qboo
 
 	s->otherentity_num2 = ps->emplacedIndex;
 
-	s->saber_holstered = ps->saber_holstered;
+	s->saberHolstered = ps->saberHolstered;
 
 	if (ps->genericEnemyIndex != -1)
 	{
@@ -3467,7 +3467,7 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, const qboo
 
 	s->time2 = ps->holocronBits;
 
-	s->fireflag = ps->fd.saber_anim_level;
+	s->fireflag = ps->fd.saberAnimLevel;
 
 	s->heldByClient = ps->heldByClient;
 	s->ragAttach = ps->ragAttach;
@@ -3575,7 +3575,7 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
 
 	s->otherentity_num2 = ps->emplacedIndex;
 
-	s->saber_holstered = ps->saber_holstered;
+	s->saberHolstered = ps->saberHolstered;
 
 	if (ps->genericEnemyIndex != -1)
 	{
@@ -3675,7 +3675,7 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
 
 	s->time2 = ps->holocronBits;
 
-	s->fireflag = ps->fd.saber_anim_level;
+	s->fireflag = ps->fd.saberAnimLevel;
 
 	s->heldByClient = ps->heldByClient;
 	s->ragAttach = ps->ragAttach;

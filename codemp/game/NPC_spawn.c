@@ -443,7 +443,7 @@ static void NPC_SetMiscDefaultData(gentity_t* ent)
 	{
 		//if I'm equipped with a saber, initialize it (them)
 		wp_saber_init_blade_data(ent);
-		ent->client->ps.saber_holstered = 2;
+		ent->client->ps.saberHolstered = 2;
 		Jedi_ClearTimers(ent);
 		ent->client->ps.fd.blockPoints = BLOCK_POINTS_MAX;
 	}
@@ -1537,12 +1537,12 @@ void NPC_Begin(gentity_t* ent)
 	//set saber_anim_levelBase
 	if (ent->client->saber[0].model[0] && ent->client->saber[1].model[0])
 	{
-		ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saber_anim_level = SS_DUAL;
+		ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saberAnimLevel = SS_DUAL;
 	}
 	else if (ent->client->saber[0].numBlades > 1
 		&& WP_SaberCanTurnOffSomeBlades(&ent->client->saber[0]))
 	{
-		ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saber_anim_level = SS_STAFF;
+		ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saberAnimLevel = SS_STAFF;
 	}
 	else
 	{
@@ -1582,7 +1582,7 @@ void NPC_Begin(gentity_t* ent)
 			}
 		}
 
-		ent->client->ps.fd.saber_anim_level = newLevel;
+		ent->client->ps.fd.saberAnimLevel = newLevel;
 	}
 
 	if (!(ent->spawnflags & SFB_STARTINSOLID))

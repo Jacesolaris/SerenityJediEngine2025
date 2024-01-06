@@ -3173,7 +3173,7 @@ int pm_power_level_for_saber_anims(const playerState_t* ps)
 		|| anim >= BOTH_P7_S7_T_ && anim <= BOTH_P7_S7_BR)
 	{
 		//parries
-		switch (ps->fd.saber_anim_level)
+		switch (ps->fd.saberAnimLevel)
 		{
 		case SS_STRONG:
 		case SS_DESANN:
@@ -5962,7 +5962,7 @@ void BG_SetTorsoAnimTimer(playerState_t* ps, const int time)
 #endif
 }
 
-void pm_saber_start_trans_anim(const int clientNum, const int saber_anim_level, const int weapon, const int anim, float* animSpeed, const int fatigued)
+void pm_saber_start_trans_anim(const int clientNum, const int saberAnimLevel, const int weapon, const int anim, float* animSpeed, const int fatigued)
 {
 	char buf[128];
 
@@ -6064,7 +6064,7 @@ void pm_saber_start_trans_anim(const int clientNum, const int saber_anim_level, 
 		}
 		else
 		{
-			if (saber_anim_level == SS_DUAL)
+			if (saberAnimLevel == SS_DUAL)
 			{
 				//slow down broken parries
 				if (anim >= BOTH_H6_S6_T_ && anim <= BOTH_H6_S6_BR)
@@ -6078,7 +6078,7 @@ void pm_saber_start_trans_anim(const int clientNum, const int saber_anim_level, 
 					*animSpeed *= dualanimscale;
 				}
 			}
-			else if (saber_anim_level == SS_STAFF)
+			else if (saberAnimLevel == SS_STAFF)
 			{
 				if (anim >= BOTH_H7_S7_T_ && anim <= BOTH_H7_S7_BR)
 				{
@@ -6091,12 +6091,12 @@ void pm_saber_start_trans_anim(const int clientNum, const int saber_anim_level, 
 					*animSpeed *= staffanimscale;
 				}
 			}
-			else if (saber_anim_level == SS_FAST)
+			else if (saberAnimLevel == SS_FAST)
 			{
 				const float blueanimscale = 1.0f;
 				*animSpeed *= blueanimscale;
 			}
-			else if (saber_anim_level == SS_MEDIUM)
+			else if (saberAnimLevel == SS_MEDIUM)
 			{
 				if (fatigued & 1 << FLAG_SLIGHTFATIGUE)
 				{//Slow down saber moves...
@@ -6109,17 +6109,17 @@ void pm_saber_start_trans_anim(const int clientNum, const int saber_anim_level, 
 					*animSpeed *= realisticanimscale;
 				}
 			}
-			else if (saber_anim_level == SS_STRONG)
+			else if (saberAnimLevel == SS_STRONG)
 			{
 				const float redanimscale = 1.0f;
 				*animSpeed *= redanimscale;
 			}
-			else if (saber_anim_level == SS_DESANN)
+			else if (saberAnimLevel == SS_DESANN)
 			{
 				const float heavyanimscale = 1.0f;
 				*animSpeed *= heavyanimscale;
 			}
-			else if (saber_anim_level == SS_TAVION)
+			else if (saberAnimLevel == SS_TAVION)
 			{
 				const float tavionanimscale = 0.9f;
 				*animSpeed *= tavionanimscale;
@@ -6152,7 +6152,7 @@ static void BG_SetAnimFinal(playerState_t* ps, const animation_t* animations, co
 	assert(anim > -1);
 	assert(animations[anim].firstFrame > 0 || animations[anim].numFrames > 0);
 
-	pm_saber_start_trans_anim(ps->clientNum, ps->fd.saber_anim_level, ps->weapon, anim, &editAnimSpeed, ps->userInt3);
+	pm_saber_start_trans_anim(ps->clientNum, ps->fd.saberAnimLevel, ps->weapon, anim, &editAnimSpeed, ps->userInt3);
 
 	// Set torso anim
 	if (setAnimParts & SETANIM_TORSO)
@@ -6366,7 +6366,7 @@ float bg_get_torso_anim_point(const playerState_t* ps, const int anim_index)
 	float anim_speed_factor = 1.0f;
 
 	//Be sure to scale by the proper anim speed just as if we were going to play the animation
-	pm_saber_start_trans_anim(ps->clientNum, ps->fd.saber_anim_level, ps->weapon, ps->torsoAnim, &anim_speed_factor,
+	pm_saber_start_trans_anim(ps->clientNum, ps->fd.saberAnimLevel, ps->weapon, ps->torsoAnim, &anim_speed_factor,
 		ps->userInt3);
 
 	if (anim_speed_factor > 0)
@@ -6402,7 +6402,7 @@ float BG_GetLegsAnimPoint(const playerState_t* ps, const int anim_index)
 	float anim_speed_factor = 1.0f;
 
 	//Be sure to scale by the proper anim speed just as if we were going to play the animation
-	pm_saber_start_trans_anim(ps->clientNum, ps->fd.saber_anim_level, ps->weapon, ps->legsAnim, &anim_speed_factor,
+	pm_saber_start_trans_anim(ps->clientNum, ps->fd.saberAnimLevel, ps->weapon, ps->legsAnim, &anim_speed_factor,
 		ps->userInt3);
 
 	if (anim_speed_factor > 0)

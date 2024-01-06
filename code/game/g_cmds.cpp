@@ -1221,7 +1221,7 @@ static void G_Taunt(gentity_t* ent)
 	if (ent->client)
 	{
 		if (ent->client->ps.weapon == WP_SABER
-			&& (ent->client->ps.saber_anim_level == SS_STAFF
+			&& (ent->client->ps.saberAnimLevel == SS_STAFF
 				|| ent->client->ps.dualSabers))
 		{
 			ent->client->ps.taunting = level.time + 100;
@@ -1452,7 +1452,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
 				{
 					//TORSO ONLY
-					switch (ent->client->ps.saber_anim_level)
+					switch (ent->client->ps.saberAnimLevel)
 					{
 					case SS_FAST:
 					case SS_TAVION:
@@ -1524,7 +1524,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 				}
 				else
 				{
-					switch (ent->client->ps.saber_anim_level)
+					switch (ent->client->ps.saberAnimLevel)
 					{
 					case SS_FAST:
 					case SS_TAVION:
@@ -1789,7 +1789,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
 				{
 					//TORSO ONLY
-					switch (ent->client->ps.saber_anim_level)
+					switch (ent->client->ps.saberAnimLevel)
 					{
 					case SS_FAST:
 					case SS_TAVION:
@@ -1837,7 +1837,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 				}
 				else
 				{
-					switch (ent->client->ps.saber_anim_level)
+					switch (ent->client->ps.saberAnimLevel)
 					{
 					case SS_FAST:
 					case SS_TAVION:
@@ -1946,7 +1946,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
 				{
 					//TORSO ONLY
-					switch (ent->client->ps.saber_anim_level)
+					switch (ent->client->ps.saberAnimLevel)
 					{
 					case SS_FAST:
 					case SS_TAVION:
@@ -2005,7 +2005,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 				}
 				else
 				{
-					switch (ent->client->ps.saber_anim_level)
+					switch (ent->client->ps.saberAnimLevel)
 					{
 					case SS_FAST:
 					case SS_TAVION:
@@ -2168,7 +2168,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 			if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
 			{
 				//TORSO ONLY
-				switch (ent->client->ps.saber_anim_level)
+				switch (ent->client->ps.saberAnimLevel)
 				{
 				case SS_FAST:
 				case SS_TAVION:
@@ -2240,7 +2240,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 			}
 			else
 			{
-				switch (ent->client->ps.saber_anim_level)
+				switch (ent->client->ps.saberAnimLevel)
 				{
 				case SS_FAST:
 				case SS_TAVION:
@@ -2684,7 +2684,7 @@ void ClientCommand(const int clientNum)
 		if (setStyle > SS_NONE && setStyle < SS_STAFF)
 		{
 			ent->client->ps.saberStylesKnown = 1 << setStyle;
-			cg.saber_anim_levelPending = ent->client->ps.saber_anim_level = setStyle;
+			cg.saber_anim_levelPending = ent->client->ps.saberAnimLevel = setStyle;
 		}
 	}
 	else if (Q_stricmp(cmd, "saberdown") == 0)

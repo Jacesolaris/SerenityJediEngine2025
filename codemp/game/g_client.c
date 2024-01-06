@@ -50,8 +50,8 @@ extern qboolean WP_SaberCanTurnOffSomeBlades(const saberInfo_t* saber);
 extern qboolean G_ValidSaberStyle(const gentity_t* ent, int saber_style);
 extern void Player_CheckBurn(const gentity_t* self);
 extern void Player_CheckFreeze(const gentity_t* self);
-extern qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int saber_anim_level);
-extern qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int* saber_anim_level);
+extern qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saberHolstered, int saberAnimLevel);
+extern qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t* saber2, int saberHolstered, int* saberAnimLevel);
 
 forcedata_t Client_Force[MAX_CLIENTS];
 
@@ -6065,7 +6065,7 @@ void G_BreakArm(gentity_t* ent, const int arm)
 		return;
 	}
 
-	if (ent->client->ps.fd.saber_anim_level == SS_STAFF)
+	if (ent->client->ps.fd.saberAnimLevel == SS_STAFF)
 	{
 		//I'm too lazy to deal with this as well for now.
 		return;
@@ -6075,7 +6075,7 @@ void G_BreakArm(gentity_t* ent, const int arm)
 	{
 		if (ent->client->saber[1].model[0] &&
 			ent->client->ps.weapon == WP_SABER &&
-			!ent->client->ps.saber_holstered &&
+			!ent->client->ps.saberHolstered &&
 			ent->client->saber[1].soundOff)
 		{
 			//the left arm shuts off its saber upon being broken
@@ -6212,7 +6212,7 @@ tryTorso:
 
 		f = torsoAnim;
 
-		pm_saber_start_trans_anim(self->s.number, self->client->ps.fd.saber_anim_level, self->client->ps.weapon, f,
+		pm_saber_start_trans_anim(self->s.number, self->client->ps.fd.saberAnimLevel, self->client->ps.weapon, f,
 			&animSpeedScale, self->client->ps.userInt3);
 
 		animSpeed = 50.0f / bgAllAnims[self->localAnimIndex].anims[f].frameLerp;
@@ -6471,27 +6471,27 @@ void ClientSpawn(gentity_t* ent)
 
 		if (ent->client->saber[0].model[0] && ent->client->saber[1].model[0])
 		{ //dual
-			ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saber_anim_level = ent->client->ps.fd.saberDrawAnimLevel = SS_DUAL;
+			ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saberAnimLevel = ent->client->ps.fd.saberDrawAnimLevel = SS_DUAL;
 		}
 		else if ((ent->client->saber[0].saberFlags & SFL_TWO_HANDED))
 		{ //staff
-			ent->client->ps.fd.saber_anim_level = ent->client->ps.fd.saberDrawAnimLevel = SS_STAFF;
+			ent->client->ps.fd.saberAnimLevel = ent->client->ps.fd.saberDrawAnimLevel = SS_STAFF;
 		}
 		else
 		{
 			ent->client->sess.saberLevel = Com_Clampi(SS_FAST, SS_STRONG, ent->client->sess.saberLevel);
-			ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saber_anim_level = ent->client->ps.fd.saberDrawAnimLevel = ent->client->sess.saberLevel;
+			ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saberAnimLevel = ent->client->ps.fd.saberDrawAnimLevel = ent->client->sess.saberLevel;
 
 			// limit our saber style to our force points allocated to saber offense
-			if (level.gametype != GT_SIEGE && ent->client->ps.fd.saber_anim_level > ent->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE])
-				ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saber_anim_level = ent->client->ps.fd.saberDrawAnimLevel = ent->client->sess.saberLevel = ent->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE];
+			if (level.gametype != GT_SIEGE && ent->client->ps.fd.saberAnimLevel > ent->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE])
+				ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saberAnimLevel = ent->client->ps.fd.saberDrawAnimLevel = ent->client->sess.saberLevel = ent->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE];
 		}
 		if (level.gametype != GT_SIEGE)
 		{// let's just make sure the styles we chose are cool
-			if (!WP_SaberStyleValidForSaber(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saber_holstered, ent->client->ps.fd.saber_anim_level))
+			if (!WP_SaberStyleValidForSaber(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saberHolstered, ent->client->ps.fd.saberAnimLevel))
 			{
-				WP_UseFirstValidSaberStyle(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saber_holstered, &ent->client->ps.fd.saber_anim_level);
-				ent->client->ps.fd.saber_anim_levelBase = ent->client->saberCycleQueue = ent->client->ps.fd.saber_anim_level;
+				WP_UseFirstValidSaberStyle(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saberHolstered, &ent->client->ps.fd.saberAnimLevel);
+				ent->client->ps.fd.saber_anim_levelBase = ent->client->saberCycleQueue = ent->client->ps.fd.saberAnimLevel;
 			}
 		}
 	}
@@ -6503,8 +6503,8 @@ void ClientSpawn(gentity_t* ent)
 		client->ps.fd.forceDoInit = 0;
 	}
 	if (ent->r.svFlags & SVF_BOT
-		&& ent->client->ps.fd.saber_anim_level != SS_STAFF
-		&& ent->client->ps.fd.saber_anim_level != SS_DUAL)
+		&& ent->client->ps.fd.saberAnimLevel != SS_STAFF
+		&& ent->client->ps.fd.saberAnimLevel != SS_DUAL)
 	{
 		//Bots randomly switch styles on respawn if not using a staff or dual
 		int newLevel = Q_irand(SS_MEDIUM, SS_STAFF);
@@ -6534,7 +6534,7 @@ void ClientSpawn(gentity_t* ent)
 					{
 						if (ent->client->saber[0].model[0] && ent->client->saber[1].model[0]
 							&& WP_SaberCanTurnOffSomeBlades(&ent->client->saber[1])
-							&& ent->client->ps.fd.saber_anim_level != SS_DUAL)
+							&& ent->client->ps.fd.saberAnimLevel != SS_DUAL)
 						{
 							//using dual sabers, but not the dual style
 							newLevel = SS_TAVION;
@@ -6553,38 +6553,38 @@ void ClientSpawn(gentity_t* ent)
 			}
 		}
 
-		ent->client->ps.fd.saber_anim_level = newLevel;
+		ent->client->ps.fd.saberAnimLevel = newLevel;
 	}
 
-	ent->client->ps.fd.saber_anim_level = ent->client->ps.fd.saberDrawAnimLevel = ent->client->sess.saberLevel;
+	ent->client->ps.fd.saberAnimLevel = ent->client->ps.fd.saberDrawAnimLevel = ent->client->sess.saberLevel;
 
 	if (g_gametype.integer != GT_SIEGE)
 	{
 		//let's just make sure the styles we chose are cool
-		if (!G_ValidSaberStyle(ent, ent->client->ps.fd.saber_anim_level))
+		if (!G_ValidSaberStyle(ent, ent->client->ps.fd.saberAnimLevel))
 		{
 			//had an illegal style, revert to default
 			if ((ent->client->saber[0].type == SABER_BACKHAND))
 			{
-				ent->client->ps.fd.saber_anim_level = SS_STAFF;
+				ent->client->ps.fd.saberAnimLevel = SS_STAFF;
 			}
 			else if ((ent->client->saber[0].type == SABER_ASBACKHAND))
 			{
-				ent->client->ps.fd.saber_anim_level = SS_STAFF;
+				ent->client->ps.fd.saberAnimLevel = SS_STAFF;
 			}
 			else if ((ent->client->saber[0].type == SABER_STAFF_MAUL))
 			{
-				ent->client->ps.fd.saber_anim_level = SS_STAFF;
+				ent->client->ps.fd.saberAnimLevel = SS_STAFF;
 			}
 			else if ((ent->client->saber[0].type == SABER_ELECTROSTAFF))
 			{
-				ent->client->ps.fd.saber_anim_level = SS_STAFF;
+				ent->client->ps.fd.saberAnimLevel = SS_STAFF;
 			}
 			else
 			{
-				ent->client->ps.fd.saber_anim_level = SS_MEDIUM;
+				ent->client->ps.fd.saberAnimLevel = SS_MEDIUM;
 			}
-			ent->client->saberCycleQueue = ent->client->ps.fd.saber_anim_level;
+			ent->client->saberCycleQueue = ent->client->ps.fd.saberAnimLevel;
 		}
 	}
 
@@ -8694,21 +8694,21 @@ void ClientSpawn(gentity_t* ent)
 	//set initial saber holstered mode
 	if (ent->client->saber[0].model[0] && ent->client->saber[1].model[0]
 		&& WP_SaberCanTurnOffSomeBlades(&ent->client->saber[1])
-		&& ent->client->ps.fd.saber_anim_level != SS_DUAL)
+		&& ent->client->ps.fd.saberAnimLevel != SS_DUAL)
 	{
 		//using dual sabers, but not the dual style, turn off blade
-		ent->client->ps.saber_holstered = 1;
+		ent->client->ps.saberHolstered = 1;
 	}
 	else if (ent->client->saber[0].numBlades > 1
 		&& WP_SaberCanTurnOffSomeBlades(&ent->client->saber[0])
-		&& ent->client->ps.fd.saber_anim_level != SS_STAFF)
+		&& ent->client->ps.fd.saberAnimLevel != SS_STAFF)
 	{
 		//using staff saber, but not the staff style, turn off blade
-		ent->client->ps.saber_holstered = 1;
+		ent->client->ps.saberHolstered = 1;
 	}
 	else
 	{
-		ent->client->ps.saber_holstered = 0;
+		ent->client->ps.saberHolstered = 0;
 	}
 
 	// health will count down towards max_health

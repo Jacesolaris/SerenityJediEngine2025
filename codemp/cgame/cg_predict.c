@@ -543,7 +543,7 @@ static void CG_InterpolatePlayerState(const qboolean grab_angles)
 		const int cmd_num = trap->GetCurrentCmdNumber();
 		trap->GetUserCmd(cmd_num, &cmd);
 
-		PM_UpdateViewAngles(out->fd.saber_anim_level, out, &cmd);
+		PM_UpdateViewAngles(out->fd.saberAnimLevel, out, &cmd);
 	}
 
 	// if the next frame is a teleport, we can't lerp to it
@@ -595,7 +595,7 @@ static void CG_InterpolateVehiclePlayerState(const qboolean grab_angles)
 		const int cmd_num = trap->GetCurrentCmdNumber();
 		trap->GetUserCmd(cmd_num, &cmd);
 
-		PM_UpdateViewAngles(out->fd.saber_anim_level, out, &cmd);
+		PM_UpdateViewAngles(out->fd.saberAnimLevel, out, &cmd);
 	}
 
 	// if the next frame is a teleport, we can't lerp to it
@@ -894,7 +894,7 @@ static QINLINE void CG_EntityStateToPlayerState(entityState_t* s, playerState_t*
 
 	ps->emplacedIndex = s->otherentity_num2;
 
-	ps->saber_holstered = s->saber_holstered; //reuse bool in entitystate for players differently
+	ps->saberHolstered = s->saberHolstered; //reuse bool in entitystate for players differently
 
 	ps->genericEnemyIndex = -1; //no real option for this
 
@@ -1216,7 +1216,7 @@ void CG_PredictPlayerState(void)
 
 		if (cg_pmove.pmove_fixed)
 		{
-			PM_UpdateViewAngles(ci->fd.saber_anim_level, cg_pmove.ps, &cg_pmove.cmd);
+			PM_UpdateViewAngles(ci->fd.saberAnimLevel, cg_pmove.ps, &cg_pmove.cmd);
 		}
 
 		// don't do anything if the time is before the snapshot player time
@@ -1402,8 +1402,8 @@ void CG_PredictPlayerState(void)
 		}
 
 		//THIS is pretty much bad, but...
-		cg_pmove.ps->fd.saber_anim_levelBase = cg_pmove.ps->fd.saber_anim_level;
-		if (cg_pmove.ps->saber_holstered == 1)
+		cg_pmove.ps->fd.saber_anim_levelBase = cg_pmove.ps->fd.saberAnimLevel;
+		if (cg_pmove.ps->saberHolstered == 1)
 		{
 			if (ci->saber[0].numBlades > 0)
 			{

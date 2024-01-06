@@ -1213,7 +1213,7 @@ int trap_BotGetMapLocationGoal(char* name, void* goal)
 	return Q_syscall(BOTLIB_AI_GET_MAP_LOCATION_GOAL, name, goal);
 }
 
-float trap_BotAvoidGoalTime(const int goalstate, const int number)
+static float trap_BotAvoidGoalTime(const int goalstate, const int number)
 {
 	byteAlias_t fi;
 	fi.i = Q_syscall(BOTLIB_AI_AVOID_GOAL_TIME, goalstate, number);
@@ -1230,7 +1230,7 @@ void trap_BotInitLevelItems(void)
 	Q_syscall(BOTLIB_AI_INIT_LEVEL_ITEMS);
 }
 
-void trap_BotUpdateEntityItems(void)
+static void trap_BotUpdateEntityItems(void)
 {
 	Q_syscall(BOTLIB_AI_UPDATE_ENTITY_ITEMS);
 }
@@ -1695,13 +1695,13 @@ int SVSyscall_FS_Write(const void* buffer, const int len, const fileHandle_t f)
 	return 0;
 }
 
-qboolean SVSyscall_EntityContact(const vec3_t mins, const vec3_t maxs, const sharedEntity_t* ent, const int capsule)
+static qboolean SVSyscall_EntityContact(const vec3_t mins, const vec3_t maxs, const sharedEntity_t* ent, const int capsule)
 {
 	if (capsule) return trap_EntityContactCapsule(mins, maxs, ent);
 	return trap_EntityContact(mins, maxs, ent);
 }
 
-void SVSyscall_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
+static void SVSyscall_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
 	const int pass_entity_num, const int contentmask, const int capsule, const int traceFlags,
 	const int useLod)
 {
@@ -1713,7 +1713,7 @@ void SVSyscall_Trace(trace_t* results, const vec3_t start, const vec3_t mins, co
 		trap_Trace(results, start, mins, maxs, end, pass_entity_num, contentmask);
 }
 
-void QDECL G_Error(int errorLevel, const char* error, ...)
+static void QDECL G_Error(int errorLevel, const char* error, ...)
 {
 	va_list argptr;
 	char text[1024];

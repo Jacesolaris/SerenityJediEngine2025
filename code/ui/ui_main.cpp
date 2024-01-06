@@ -5250,11 +5250,11 @@ static void UI_UpdateFightingStyleChoices()
 			}
 
 			// Determine current style
-			if (p_state->saber_anim_level == SS_FAST)
+			if (p_state->saberAnimLevel == SS_FAST)
 			{
 				Cvar_Set("ui_currentfightingstyle", "0"); // FAST
 			}
-			else if (p_state->saber_anim_level == SS_STRONG)
+			else if (p_state->saberAnimLevel == SS_STRONG)
 			{
 				Cvar_Set("ui_currentfightingstyle", "2"); // STRONG
 			}

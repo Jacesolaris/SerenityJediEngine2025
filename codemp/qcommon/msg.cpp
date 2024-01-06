@@ -1035,7 +1035,7 @@ netField_t entityStateFields[] =
 	{NETF(health), 10}, //if something's health exceeds 1024, then.. too bad!
 	// appears to have multiple means, could be eliminated by indicating a sound set differently
 	{NETF(loopIsSoundset), 1},
-	{NETF(saber_holstered), 2},
+	{NETF(saberHolstered), 2},
 	//NPC-SPECIFIC:
 	// both are used for NPCs sabers, though limited
 	{NETF(npcSaber1), 9},
@@ -1527,7 +1527,7 @@ netField_t playerStateFields[] =
 	{PSF(torsoTimer), 16},
 	{PSF(legsTimer), 16},
 	{PSF(viewheight), -8},
-	{PSF(fd.saber_anim_level), 4},
+	{PSF(fd.saberAnimLevel), 4},
 	{PSF(rocketLockIndex), GENTITYNUM_BITS},
 	{PSF(fd.saberDrawAnimLevel), 4},
 	{PSF(genericEnemyIndex), 32},
@@ -1599,7 +1599,7 @@ netField_t playerStateFields[] =
 	{PSF(damageType), 2},
 	{PSF(rocketLockTime), 32},
 	{PSF(forceHandExtend), 8},
-	{PSF(saber_holstered), 2},
+	{PSF(saberHolstered), 2},
 	{PSF(fd.forcePowersActive), 32},
 	{PSF(damagePitch), 8},
 	{PSF(m_iVehicleNum), GENTITYNUM_BITS}, // 10 bits fits all possible entity nums (2^10 = 1024). - AReis
@@ -1794,7 +1794,7 @@ netField_t pilotPlayerStateFields[] =
 	{PSF(speed), 0}, //sadly, the vehicles require negative speed values, so..
 	{PSF(groundEntityNum), GENTITYNUM_BITS},
 	{PSF(viewheight), -8},
-	{PSF(fd.saber_anim_level), 4},
+	{PSF(fd.saberAnimLevel), 4},
 	{PSF(fd.saberDrawAnimLevel), 4},
 	{PSF(genericEnemyIndex), 32},
 	//NOTE: This isn't just an index all the time, it's often used as a time value, and thus needs 32 bits
@@ -1836,7 +1836,7 @@ netField_t pilotPlayerStateFields[] =
 	{PSF(hasLookTarget), 1},
 	{PSF(saberBlocked), 8},
 	{PSF(forceHandExtend), 8},
-	{PSF(saber_holstered), 2},
+	{PSF(saberHolstered), 2},
 	{PSF(damagePitch), 8},
 	{PSF(jumppad_ent), GENTITYNUM_BITS},
 	{PSF(forceDodgeAnim), 16},
@@ -2108,7 +2108,7 @@ netField_t	playerStateFields[] =
 { PSF(torsoTimer), 16 },
 { PSF(legsTimer), 16 },
 { PSF(viewheight), -8 },
-{ PSF(fd.saber_anim_level), 4 },
+{ PSF(fd.saberAnimLevel), 4 },
 { PSF(rocketLockIndex), GENTITYNUM_BITS },
 { PSF(fd.saberDrawAnimLevel), 4 },
 { PSF(genericEnemyIndex), 32 }, //NOTE: This isn't just an index all the time, it's often used as a time value, and thus needs 32 bits
@@ -2175,7 +2175,7 @@ netField_t	playerStateFields[] =
 { PSF(damageType), 2 },
 { PSF(rocketLockTime), 32 },
 { PSF(forceHandExtend), 8 },
-{ PSF(saber_holstered), 2 },
+{ PSF(saberHolstered), 2 },
 { PSF(fd.forcePowersActive), 32 },
 { PSF(damagePitch), 8 },
 { PSF(m_iVehicleNum), GENTITYNUM_BITS }, // 10 bits fits all possible entity nums (2^10 = 1024). - AReis

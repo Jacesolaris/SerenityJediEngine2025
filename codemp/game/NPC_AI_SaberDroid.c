@@ -126,7 +126,7 @@ void NPC_BSSaberDroid_Patrol(void)
 		&& TIMER_Done(NPCS.NPC, "inactiveDelay"))
 	{
 		//we want to turn off our saber if we need to.
-		if (!NPCS.NPC->client->ps.saber_holstered)
+		if (!NPCS.NPC->client->ps.saberHolstered)
 		{
 			//saber is on.
 			WP_DeactivateSaber(NPCS.NPC);
@@ -152,22 +152,22 @@ void NPC_SaberDroid_PickAttack(void)
 	default:
 		attackAnim = BOTH_A2_TR_BL;
 		NPCS.NPC->client->ps.saber_move = LS_A_TR2BL;
-		NPCS.NPC->client->ps.fd.saber_anim_level = SS_MEDIUM;
+		NPCS.NPC->client->ps.fd.saberAnimLevel = SS_MEDIUM;
 		break;
 	case 1:
 		attackAnim = BOTH_A1_BL_TR;
 		NPCS.NPC->client->ps.saber_move = LS_A_BL2TR;
-		NPCS.NPC->client->ps.fd.saber_anim_level = SS_FAST;
+		NPCS.NPC->client->ps.fd.saberAnimLevel = SS_FAST;
 		break;
 	case 2:
 		attackAnim = BOTH_A1__L__R;
 		NPCS.NPC->client->ps.saber_move = LS_A_L2R;
-		NPCS.NPC->client->ps.fd.saber_anim_level = SS_FAST;
+		NPCS.NPC->client->ps.fd.saberAnimLevel = SS_FAST;
 		break;
 	case 3:
 		attackAnim = BOTH_A3__L__R;
 		NPCS.NPC->client->ps.saber_move = LS_A_L2R;
-		NPCS.NPC->client->ps.fd.saber_anim_level = SS_STRONG;
+		NPCS.NPC->client->ps.fd.saberAnimLevel = SS_STRONG;
 		break;
 	}
 	NPCS.NPC->client->ps.saberBlocking = saber_moveData[NPCS.NPC->client->ps.saber_move].blocking;
@@ -320,7 +320,7 @@ void NPC_BSSD_Default(void)
 	else //if ( NPC->enemy )
 	{
 		//have an enemy
-		if (NPCS.NPC->client->ps.saber_holstered == 2)
+		if (NPCS.NPC->client->ps.saberHolstered == 2)
 		{
 			//turn saber on
 			WP_ActivateSaber(NPCS.NPC);
@@ -340,7 +340,7 @@ void NPC_BSSD_Default(void)
 		NPCS.NPC->client->ps.saber_move = LS_READY;
 		NPCS.NPC->client->ps.saberBlocking = saber_moveData[LS_READY].blocking;
 		//RAFIXME - since this is saber trail code, I think this needs to be ported to cgame.
-		NPCS.NPC->client->ps.fd.saber_anim_level = SS_MEDIUM;
+		NPCS.NPC->client->ps.fd.saberAnimLevel = SS_MEDIUM;
 		NPCS.NPC->client->ps.weaponstate = WEAPON_READY;
 	}
 }

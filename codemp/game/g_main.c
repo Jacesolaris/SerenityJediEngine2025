@@ -2734,22 +2734,22 @@ Print to the logfile with a time stamp if it is open
 */
 void QDECL G_LogPrintf(const char* fmt, ...)
 {
-	va_list argptr;
-	char string[1024] = { 0 };
+	va_list		argptr;
+	char		string[1024] = { 0 };
+	int			mins, seconds, msec, l;
 
-	const int msec = level.time - level.startTime;
+	msec = level.time - level.startTime;
 
-	int seconds = msec / 1000;
-	const int mins = seconds / 60;
+	seconds = msec / 1000;
+	mins = seconds / 60;
 	seconds %= 60;
-	//	msec %= 1000;
 
-	Com_sprintf(string, sizeof string, "%i:%02i ", mins, seconds);
+	Com_sprintf(string, sizeof(string), "%i:%02i ", mins, seconds);
 
-	const int l = strlen(string);
+	l = strlen(string);
 
 	va_start(argptr, fmt);
-	Q_vsnprintf(string + l, sizeof string - l, fmt, argptr);
+	Q_vsnprintf(string + l, sizeof(string) - l, fmt, argptr);
 	va_end(argptr);
 
 	if (dedicated.integer)
@@ -3782,14 +3782,6 @@ static void CheckTournament(void)
 			return;
 		}
 
-		// if the warmup is changed at the console, restart it
-		/*
-		if ( g_warmup.modificationCount != level.warmupModificationCount ) {
-			level.warmupModificationCount = g_warmup.modificationCount;
-			level.warmupTime = -1;
-		}
-		*/
-
 		// if all players have arrived, start the countdown
 		if (level.warmupTime < 0)
 		{
@@ -4615,7 +4607,7 @@ void G_RunFrame(const int levelTime)
 			}
 			G_RunMover(ent);
 			continue;
-		}
+			}
 
 		//fix for self-deactivating areaportals in Siege
 		if (ent->s.eType == ET_MOVER && level.gametype == GT_SIEGE && level.intermissiontime)
@@ -4911,11 +4903,10 @@ void G_RunFrame(const int levelTime)
 				}
 			}
 
-			if (!level.intermissiontime && !(ent->client->ps.pm_flags & PMF_FOLLOW) && ent->client->sess.sessionTeam !=
-				TEAM_SPECTATOR)
+			if (!level.intermissiontime && !(ent->client->ps.pm_flags & PMF_FOLLOW) && ent->client->sess.sessionTeam != TEAM_SPECTATOR)
 			{
 				WP_ForcePowersUpdate(ent, &ent->client->pers.cmd);
-				wp_saber_position_update(ent, &ent->client->pers.cmd);
+				WP_SaberPositionUpdate(ent, &ent->client->pers.cmd);
 				wp_saber_start_missile_block_check(ent, &ent->client->pers.cmd);
 
 				if (ent->client->ps.fd.blockPoints < BLOCK_POINTS_MAX)
@@ -4950,7 +4941,7 @@ void G_RunFrame(const int levelTime)
 			}
 
 			WP_ForcePowersUpdate(ent, &ent->client->pers.cmd);
-			wp_saber_position_update(ent, &ent->client->pers.cmd);
+			WP_SaberPositionUpdate(ent, &ent->client->pers.cmd);
 			wp_saber_start_missile_block_check(ent, &ent->client->pers.cmd);
 
 			if (ent->client->ps.fd.blockPoints < BLOCK_POINTS_MAX)
@@ -4965,7 +4956,7 @@ void G_RunFrame(const int levelTime)
 		{
 			ClearNPCGlobals();
 		}
-			}
+		}
 #ifdef _G_FRAME_PERFANAL
 	iTimer_ItemRun = trap->PrecisionTimer_End(timer_ItemRun);
 #endif
@@ -4978,7 +4969,7 @@ void G_RunFrame(const int levelTime)
 	{
 		//if we're using DMS so we need to update the system.
 		G_DynamicMusicUpdate();
-	}
+}
 
 #ifdef _G_FRAME_PERFANAL
 	trap->PrecisionTimer_Start(&timer_ROFF);
@@ -4998,7 +4989,7 @@ void G_RunFrame(const int levelTime)
 		if (ent->inuse)
 		{
 			ClientEndFrame(ent);
-		}
+	}
 	}
 #ifdef _G_FRAME_PERFANAL
 	iTimer_ClientEndframe = trap->PrecisionTimer_End(timer_ClientEndframe);
@@ -5046,8 +5037,8 @@ void G_RunFrame(const int levelTime)
 
 			gQueueScoreMessageTime = 0;
 			gQueueScoreMessage = 0;
-		}
 	}
+}
 #ifdef _G_FRAME_PERFANAL
 	iTimer_Queues = trap->PrecisionTimer_End(timer_Queues);
 #endif
@@ -5062,7 +5053,7 @@ void G_RunFrame(const int levelTime)
 #endif
 
 	g_LastFrameTime = level.time;
-	}
+}
 
 const char* G_GetStringEdString(char* refSection, char* refName)
 {

@@ -225,7 +225,7 @@ static void CG_EntityEffects(const centity_t* cent)
 	}
 }
 
-void CG_AddRefEntWithTransportEffect(const centity_t* cent, refEntity_t* ent)
+static void CG_AddRefEntWithTransportEffect(const centity_t* cent, refEntity_t* ent)
 {
 	// We are a normal thing....
 	cgi_R_AddRefEntityToScene(ent);
@@ -274,7 +274,7 @@ void CG_SetGhoul2Info(refEntity_t* ent, const centity_t* cent)
 }
 
 // write in the axis and stuff
-void G2_BoltToGhoul2Model(const centity_t* cent, refEntity_t* ent)
+static void G2_BoltToGhoul2Model(const centity_t* cent, refEntity_t* ent)
 {
 	// extract the wraith ID from the bolt info
 	int model_num = cent->currentState.boltInfo >> MODEL_SHIFT;
@@ -1094,12 +1094,6 @@ static void CG_Item(centity_t* cent)
 		const float scale = 0.005f + cent->currentState.number * 0.00001f;
 		cent->lerpOrigin[2] += 4 + cos((cg.time + 1000) * scale) * 3 + 8; // just raised them up a bit
 	}
-
-	// autorotate at one of two speeds
-	//	if ( item->giType == IT_HEALTH ) {
-	//		VectorCopy( cg.autoAnglesFast, cent->lerpAngles );
-	//		AxisCopy( cg.autoAxisFast, ent.axis );
-	//	} else {
 	if (item->giType == IT_HOLOCRON)
 	{
 		VectorCopy(cg.autoAngles, cent->lerpAngles);
@@ -1120,13 +1114,7 @@ static void CG_Item(centity_t* cent)
 	{
 		ent.hModel = cg_items[es->modelindex].models;
 	}
-	/*
-	Ghoul2 Insert Start
-	*/
 	CG_SetGhoul2Info(&ent, cent);
-	/*
-	Ghoul2 Insert End
-	*/
 
 	VectorCopy(cent->lerpOrigin, ent.origin);
 	VectorCopy(cent->lerpOrigin, ent.oldorigin);
@@ -1838,7 +1826,7 @@ void G_TestLine(vec3_t start, vec3_t end, const int color, const int time)
 	te->svFlags |= SVF_BROADCAST;
 }
 
-void G_DebugBoxLines(vec3_t mins, vec3_t maxs, const int duration)
+static void G_DebugBoxLines(vec3_t mins, vec3_t maxs, const int duration)
 {
 	vec3_t start;
 	vec3_t end;
@@ -2017,26 +2005,6 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 			cent->lerpAngles[0] = LerpAngle(current[0], next[0], f);
 			cent->lerpAngles[1] = LerpAngle(current[1], next[1], f);
 			cent->lerpAngles[2] = LerpAngle(current[2], next[2], f);
-
-			/*
-			if(cent->gent && cent->currentState.clientNum != 0 && !VectorCompare(current, next))
-			{
-				Com_Printf("%s last/next/lerp apos %s/%s/%s, f = %4.2f\n", cent->gent->script_targetname, vtos(current), vtos(next), vtos(cent->lerpAngles), f);
-			}
-			*/
-			/*
-			Ghoul2 Insert Start
-			*/
-			// now the nasty stuff - this will interpolate all ghoul2 models bone angle overrides per model attached to this cent
-			/*
-			if (cent->gent->ghoul2.size())
-			{
-				LerpBoneAngleOverrides(cent);
-			}
-			*/
-			/*
-			Ghoul2 Insert End
-			*/
 		}
 		if (cent->currentState.pos.trType == TR_INTERPOLATE && cent->nextState)
 		{
@@ -2049,12 +2017,6 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 			cent->lerpOrigin[1] = current[1] + f * (next[1] - current[1]);
 			cent->lerpOrigin[2] = current[2] + f * (next[2] - current[2]);
 
-			/*
-			if ( cent->gent && cent->currentState.clientNum != 0 )
-			{
-				Com_Printf("%s last/next/lerp pos %s/%s/%s, f = %4.2f\n", cent->gent->script_targetname, vtos(current), vtos(next), vtos(cent->lerpOrigin), f);
-			}
-			*/
 			return; //FIXME: should this be outside this if?
 		}
 	}
@@ -2067,12 +2029,6 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 		if (cent->currentState.pos.trType == TR_INTERPOLATE)
 		{
 			EvaluateTrajectory(&cent->currentState.pos, cg.snap->serverTime, cent->lerpOrigin);
-			/*
-			if(cent->gent && cent->currentState.clientNum != 0 )
-			{
-				Com_Printf("%s last/next/lerp pos %s, f = 1.0\n", cent->gent->script_targetname, vtos(cent->lerpOrigin) );
-			}
-			*/
 			return;
 		}
 	}

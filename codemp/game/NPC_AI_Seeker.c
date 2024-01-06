@@ -480,7 +480,7 @@ void Seeker_FindEnemy(void)
 	float closestDist = SEEKER_SEEK_RADIUS * SEEKER_SEEK_RADIUS + 1;
 
 	if (NPCS.NPC->activator && NPCS.NPC->activator->client->ps.weapon == WP_SABER && !NPCS.NPC->activator->client->ps.
-		saber_holstered)
+		saberHolstered)
 	{
 		NPCS.NPC->enemy = NULL;
 		return;

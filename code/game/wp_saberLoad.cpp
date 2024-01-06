@@ -436,7 +436,7 @@ qboolean WP_SaberBladeDoTransitionDamage(const saberInfo_t* saber, const int bla
 	return qfalse;
 }
 
-qboolean WP_UseFirstValidSaberStyle(const gentity_t* ent, int* saber_anim_level)
+qboolean WP_UseFirstValidSaberStyle(const gentity_t* ent, int* saberAnimLevel)
 {
 	if (ent && ent->client)
 	{
@@ -452,7 +452,7 @@ qboolean WP_UseFirstValidSaberStyle(const gentity_t* ent, int* saber_anim_level)
 		if (ent->client->ps.saber[0].Active()
 			&& ent->client->ps.saber[0].stylesForbidden)
 		{
-			if (ent->client->ps.saber[0].stylesForbidden & 1 << *saber_anim_level)
+			if (ent->client->ps.saber[0].stylesForbidden & 1 << *saberAnimLevel)
 			{
 				//not a valid style for first saber!
 				style_invalid = qtrue;
@@ -465,7 +465,7 @@ qboolean WP_UseFirstValidSaberStyle(const gentity_t* ent, int* saber_anim_level)
 			if (ent->client->ps.saber[1].Active()
 				&& ent->client->ps.saber[1].stylesForbidden)
 			{
-				if (ent->client->ps.saber[1].stylesForbidden & 1 << *saber_anim_level)
+				if (ent->client->ps.saber[1].stylesForbidden & 1 << *saberAnimLevel)
 				{
 					//not a valid style for second saber!
 					style_invalid = qtrue;
@@ -483,7 +483,7 @@ qboolean WP_UseFirstValidSaberStyle(const gentity_t* ent, int* saber_anim_level)
 		{
 			//can't use dual style if not using 2 sabers
 			valid_styles &= ~(1 << SS_DUAL);
-			if (*saber_anim_level == SS_DUAL) // saber style switch bug fixed --eez
+			if (*saberAnimLevel == SS_DUAL) // saber style switch bug fixed --eez
 			{
 				style_invalid = qtrue;
 			}
@@ -495,7 +495,7 @@ qboolean WP_UseFirstValidSaberStyle(const gentity_t* ent, int* saber_anim_level)
 			{
 				if (valid_styles & 1 << style_num)
 				{
-					*saber_anim_level = style_num;
+					*saberAnimLevel = style_num;
 					return qtrue;
 				}
 			}
@@ -504,14 +504,14 @@ qboolean WP_UseFirstValidSaberStyle(const gentity_t* ent, int* saber_anim_level)
 	return qfalse;
 }
 
-qboolean WP_SaberStyleValidForSaber(const gentity_t* ent, const int saber_anim_level)
+qboolean WP_SaberStyleValidForSaber(const gentity_t* ent, const int saberAnimLevel)
 {
 	if (ent && ent->client)
 	{
 		if (ent->client->ps.saber[0].Active()
 			&& ent->client->ps.saber[0].stylesForbidden)
 		{
-			if (ent->client->ps.saber[0].stylesForbidden & 1 << saber_anim_level)
+			if (ent->client->ps.saber[0].stylesForbidden & 1 << saberAnimLevel)
 			{
 				//not a valid style for first saber!
 				return qfalse;
@@ -524,7 +524,7 @@ qboolean WP_SaberStyleValidForSaber(const gentity_t* ent, const int saber_anim_l
 			{
 				if (ent->client->ps.saber[1].stylesForbidden)
 				{
-					if (ent->client->ps.saber[1].stylesForbidden & 1 << saber_anim_level)
+					if (ent->client->ps.saber[1].stylesForbidden & 1 << saberAnimLevel)
 					{
 						//not a valid style for second saber!
 						return qfalse;
@@ -532,10 +532,10 @@ qboolean WP_SaberStyleValidForSaber(const gentity_t* ent, const int saber_anim_l
 				}
 
 				//now: if using dual sabers, only dual and tavion (if given with this saber) are allowed
-				if (saber_anim_level != SS_DUAL)
+				if (saberAnimLevel != SS_DUAL)
 				{
 					//dual is okay
-					if (saber_anim_level != SS_TAVION)
+					if (saberAnimLevel != SS_TAVION)
 					{
 						//tavion might be okay, all others are not
 						return qfalse;
@@ -557,13 +557,13 @@ qboolean WP_SaberStyleValidForSaber(const gentity_t* ent, const int saber_anim_l
 					}
 				}
 			}
-			else if (saber_anim_level == SS_DUAL)
+			else if (saberAnimLevel == SS_DUAL)
 			{
 				//can't use dual style if not using dualSabers
 				return qfalse;
 			}
 		}
-		else if (saber_anim_level == SS_DUAL)
+		else if (saberAnimLevel == SS_DUAL)
 		{
 			//can't use dual style if not using dualSabers
 			return qfalse;
@@ -2809,18 +2809,18 @@ void WP_RemoveSaber(gentity_t* ent, const int saberNum)
 		gi.G2API_RemoveGhoul2Model(ent->ghoul2, ent->weaponModel[saberNum]);
 		ent->weaponModel[saberNum] = -1;
 	}
-	if (ent->client->ps.saber_anim_level == SS_DUAL
-		|| ent->client->ps.saber_anim_level == SS_STAFF)
+	if (ent->client->ps.saberAnimLevel == SS_DUAL
+		|| ent->client->ps.saberAnimLevel == SS_STAFF)
 	{
 		//change to the style to the default
 		for (int i = SS_NONE + 1; i < SS_NUM_SABER_STYLES; i++)
 		{
 			if (ent->client->ps.saberStylesKnown & 1 << i)
 			{
-				ent->client->ps.saber_anim_level = i;
+				ent->client->ps.saberAnimLevel = i;
 				if (ent->s.number < MAX_CLIENTS)
 				{
-					cg.saber_anim_levelPending = ent->client->ps.saber_anim_level;
+					cg.saber_anim_levelPending = ent->client->ps.saberAnimLevel;
 				}
 				break;
 			}
@@ -2846,18 +2846,18 @@ void WP_RemoveSecondSaber(gentity_t* ent, const int saberNum)
 		gi.G2API_RemoveGhoul2Model(ent->ghoul2, ent->weaponModel[saberNum]);
 		ent->weaponModel[saberNum] = -1;
 	}
-	if (ent->client->ps.saber_anim_level == SS_DUAL
-		|| ent->client->ps.saber_anim_level == SS_STAFF)
+	if (ent->client->ps.saberAnimLevel == SS_DUAL
+		|| ent->client->ps.saberAnimLevel == SS_STAFF)
 	{
 		//change to the style to the default
 		for (int i = SS_NONE + 1; i < SS_NUM_SABER_STYLES; i++)
 		{
 			if (ent->client->ps.saberStylesKnown & 1 << i)
 			{
-				ent->client->ps.saber_anim_level = i;
+				ent->client->ps.saberAnimLevel = i;
 				if (ent->s.number < MAX_CLIENTS)
 				{
-					cg.saber_anim_levelPending = ent->client->ps.saber_anim_level;
+					cg.saber_anim_levelPending = ent->client->ps.saberAnimLevel;
 				}
 				break;
 			}
@@ -2924,10 +2924,10 @@ void WP_SetSaber(gentity_t* ent, const int saberNum, const char* saber_name)
 	{
 		ent->client->ps.saberStylesKnown |= ent->client->ps.saber[saberNum].singleBladeStyle;
 	}
-	WP_UseFirstValidSaberStyle(ent, &ent->client->ps.saber_anim_level);
+	WP_UseFirstValidSaberStyle(ent, &ent->client->ps.saberAnimLevel);
 	if (ent->s.number < MAX_CLIENTS)
 	{
-		cg.saber_anim_levelPending = ent->client->ps.saber_anim_level;
+		cg.saber_anim_levelPending = ent->client->ps.saberAnimLevel;
 	}
 }
 

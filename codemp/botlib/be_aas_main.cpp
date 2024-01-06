@@ -62,11 +62,11 @@ libvar_t* saveroutingcache;
 void QDECL AAS_Error(char* fmt, ...)
 {
 	char str[1024];
-	va_list arglist;
+	va_list argptr;
 
-	va_start(arglist, fmt);
-	Q_vsnprintf(str, sizeof str, fmt, arglist);
-	va_end(arglist);
+	va_start(argptr, fmt);
+	Q_vsnprintf(str, sizeof str, fmt, argptr);
+	va_end(argptr);
 	botimport.Print(PRT_FATAL, "%s", str);
 } //end of the function AAS_Error
 //===========================================================================

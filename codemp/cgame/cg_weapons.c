@@ -2251,7 +2251,7 @@ void CG_Weapon_f(void)
 	{
 		if (cg.snap->ps.weaponTime < 1)
 		{
-			if (!cg.snap->ps.saber_holstered && CG_WeaponSelectable(WP_MELEE))
+			if (!cg.snap->ps.saberHolstered && CG_WeaponSelectable(WP_MELEE))
 			{
 				num = WP_MELEE;
 
@@ -3505,10 +3505,10 @@ void CG_CheckPlayerG2Weapons(const playerState_t* ps, centity_t* cent)
 		{
 			cent->ghoul2weapon2 = NULL;
 		}
-		if (cent->weapon == WP_SABER && cent->weapon != ps->weapon && !ps->saber_holstered)
+		if (cent->weapon == WP_SABER && cent->weapon != ps->weapon && !ps->saberHolstered)
 		{
 			//switching away from the saber
-			if (cgs.clientinfo[ps->clientNum].saber[0].soundOff && !ps->saber_holstered)
+			if (cgs.clientinfo[ps->clientNum].saber[0].soundOff && !ps->saberHolstered)
 			{
 				trap->S_StartSound(cent->lerpOrigin, cent->currentState.number, CHAN_AUTO,
 					cgs.clientinfo[ps->clientNum].saber[0].soundOff);
@@ -3516,7 +3516,7 @@ void CG_CheckPlayerG2Weapons(const playerState_t* ps, centity_t* cent)
 
 			if (cgs.clientinfo[ps->clientNum].saber[1].soundOff &&
 				cgs.clientinfo[ps->clientNum].saber[1].model[0] &&
-				!ps->saber_holstered)
+				!ps->saberHolstered)
 			{
 				trap->S_StartSound(cent->lerpOrigin, cent->currentState.number, CHAN_AUTO,
 					cgs.clientinfo[ps->clientNum].saber[1].soundOff);

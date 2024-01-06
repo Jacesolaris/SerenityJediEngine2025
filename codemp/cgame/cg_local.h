@@ -329,7 +329,7 @@ typedef struct clientInfo_s {
 
 	//Primary Saber
 	qhandle_t	holster_saber;
-	qboolean	saber_holstered;
+	qboolean	saberHolstered;
 
 	//Secondary Saber
 	qhandle_t	holster_saber2;
@@ -365,7 +365,7 @@ typedef struct clientInfo_s {
 	int         saberFatigueChainCount;
 	int			BlasterAttackChainCount;
 	int			blockPoints;
-	int			saber_anim_level;
+	int			saberAnimLevel;
 
 	forcedata_t	fd;
 } clientInfo_t;

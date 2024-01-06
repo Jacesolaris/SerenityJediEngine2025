@@ -274,7 +274,7 @@ void SV_Player_EndOfLevelSave()
 			p_state->forcePowersKnown,
 			p_state->forcePower,
 			p_state->saberActive,
-			p_state->saber_anim_level,
+			p_state->saberAnimLevel,
 			p_state->saberLockEnemy,
 			p_state->saberLockTime
 		);
@@ -336,7 +336,7 @@ void SV_Player_EndOfLevelSave()
 			p_state->saber[1].blade[7].color,
 			//general saber data
 			p_state->saberStylesKnown,
-			p_state->saber_anim_level,
+			p_state->saberAnimLevel,
 			p_state->saberLockEnemy,
 			p_state->saberLockTime
 		);

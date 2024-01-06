@@ -96,7 +96,7 @@ int AI_GetGroupSize2(gentity_t* ent, const int radius)
 
 extern int NAV_FindClosestWaypointForPoint(const gentity_t* ent, vec3_t point);
 
-int AI_ClosestGroupentity_numToPoint(const AIGroupInfo_t* group, vec3_t point)
+static int AI_ClosestGroupentity_numToPoint(const AIGroupInfo_t* group, vec3_t point)
 {
 	int best_cost = Q3_INFINITE;
 	int closest = ENTITYNUM_NONE;
@@ -126,7 +126,7 @@ int AI_ClosestGroupentity_numToPoint(const AIGroupInfo_t* group, vec3_t point)
 	return closest;
 }
 
-void AI_SetClosestBuddy(AIGroupInfo_t* group)
+static void AI_SetClosestBuddy(AIGroupInfo_t* group)
 {
 	for (int i = 0; i < group->numGroup; i++)
 	{
@@ -146,7 +146,7 @@ void AI_SetClosestBuddy(AIGroupInfo_t* group)
 	}
 }
 
-void AI_SortGroupByPathCostToEnemy(AIGroupInfo_t* group)
+static void AI_SortGroupByPathCostToEnemy(AIGroupInfo_t* group)
 {
 	AIGroupMember_t best_members[MAX_GROUP_MEMBERS];
 	int i;
@@ -231,7 +231,7 @@ void AI_SortGroupByPathCostToEnemy(AIGroupInfo_t* group)
 	}
 }
 
-qboolean AI_FindSelfInPreviousGroup(const gentity_t* self)
+static qboolean AI_FindSelfInPreviousGroup(const gentity_t* self)
 {
 	//go through other groups made this frame and see if any of those contain me already
 	for (int i = 0; i < MAX_FRAME_GROUPS; i++)
@@ -252,7 +252,7 @@ qboolean AI_FindSelfInPreviousGroup(const gentity_t* self)
 	return qfalse;
 }
 
-void AI_InsertGroupMember(AIGroupInfo_t* group, gentity_t* member)
+static void AI_InsertGroupMember(AIGroupInfo_t* group, gentity_t* member)
 {
 	int i;
 
@@ -283,7 +283,7 @@ void AI_InsertGroupMember(AIGroupInfo_t* group, gentity_t* member)
 	member->NPC->group = group;
 }
 
-qboolean AI_TryJoinPreviousGroup(gentity_t* self)
+static qboolean AI_TryJoinPreviousGroup(gentity_t* self)
 {
 	//go through other groups made this frame and see if any of those have the same enemy as me... if so, add me in!
 	for (int i = 0; i < MAX_FRAME_GROUPS; i++)
@@ -305,7 +305,7 @@ qboolean AI_TryJoinPreviousGroup(gentity_t* self)
 	return qfalse;
 }
 
-qboolean AI_GetNextEmptyGroup(gentity_t* self)
+static qboolean AI_GetNextEmptyGroup(gentity_t* self)
 {
 	if (AI_FindSelfInPreviousGroup(self))
 	{
@@ -338,7 +338,7 @@ qboolean AI_GetNextEmptyGroup(gentity_t* self)
 	}
 }
 
-qboolean AI_ValidateNoEnemyGroupMember(const AIGroupInfo_t* group, const gentity_t* member)
+static qboolean AI_ValidateNoEnemyGroupMember(const AIGroupInfo_t* group, const gentity_t* member)
 {
 	vec3_t center;
 
@@ -590,7 +590,7 @@ void AI_GetGroup(gentity_t* self)
 	AI_SetClosestBuddy(self->NPC->group);
 }
 
-void AI_SetNewGroupCommander(AIGroupInfo_t* group)
+static void AI_SetNewGroupCommander(AIGroupInfo_t* group)
 {
 	group->commander = NULL;
 	for (int i = 0; i < group->numGroup; i++)
@@ -606,7 +606,7 @@ void AI_SetNewGroupCommander(AIGroupInfo_t* group)
 	}
 }
 
-void AI_DeleteGroupMember(AIGroupInfo_t* group, const int member_num)
+static void AI_DeleteGroupMember(AIGroupInfo_t* group, const int member_num)
 {
 	//added additional sanity checks to fix some crashing problems.
 	if (member_num >= MAX_GROUP_MEMBERS || member_num >= group->numGroup)

@@ -1822,7 +1822,7 @@ void g_load_sp_arenas(void);
 gentity_t* G_PreDefSound(vec3_t org, int pdSound);
 qboolean HasSetSaberOnly(void);
 void WP_ForcePowerStop(gentity_t* self, forcePowers_t forcePower);
-void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd);
+void WP_SaberPositionUpdate(gentity_t* self, usercmd_t* ucmd);
 void wp_saber_init_blade_data(const gentity_t* ent);
 void WP_InitForcePowers(const gentity_t* ent);
 void WP_SpawnInitForcePowers(gentity_t* ent);

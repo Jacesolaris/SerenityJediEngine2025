@@ -106,7 +106,7 @@ extern qboolean G_HasKnockdownAnims(const gentity_t* ent);
 extern int G_GetEntsNearBolt(gentity_t* self, gentity_t** radius_ents, float radius, int boltIndex, vec3_t bolt_org);
 extern qboolean PM_InOnGroundAnim(playerState_t* ps);
 extern qboolean PM_LockedAnim(int anim);
-extern qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defender, saberslock_mode_t lock_mode);
+extern qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defender, saberslock_mode_t lockMode);
 extern qboolean G_JediInNormalAI(const gentity_t* ent);
 extern void WP_SaberFatigueRegenerate(int override_amt);
 extern void bg_reduce_blaster_mishap_level_advanced(playerState_t* ps);
@@ -1851,7 +1851,7 @@ void G_MatchPlayerWeapon(gentity_t* ent)
 							[blade_num].length;
 					}
 				}
-				ent->client->ps.saber_anim_level = g_entities[0].client->ps.saber_anim_level;
+				ent->client->ps.saberAnimLevel = g_entities[0].client->ps.saberAnimLevel;
 				ent->client->ps.saberStylesKnown = g_entities[0].client->ps.saberStylesKnown;
 			}
 			else
@@ -2815,7 +2815,7 @@ gentity_t* G_KickTrace(gentity_t* ent, vec3_t kick_dir, const float kick_dist, v
 							&& !(hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
 						{
 							//knockdown
-							if (hit_ent->client->ps.saber_anim_level == SS_STAFF)
+							if (hit_ent->client->ps.saberAnimLevel == SS_STAFF)
 							{
 								sab_beh_animate_slow_bounce_blocker(hit_ent);
 							}
@@ -2831,7 +2831,7 @@ gentity_t* G_KickTrace(gentity_t* ent, vec3_t kick_dir, const float kick_dist, v
 								}
 							}
 						}
-						else if (ent->client->ps.saber_anim_level == SS_DESANN
+						else if (ent->client->ps.saberAnimLevel == SS_DESANN
 							&& (hit_ent->client->ps.saberFatigueChainCount >= MISHAPLEVEL_HEAVY ||
 								hit_ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HEAVY)
 							&& !(hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
@@ -6817,7 +6817,7 @@ void ClientAlterSpeed(gentity_t* ent, usercmd_t* ucmd, const qboolean controlled
 		else if (PM_SaberInAttack(client->ps.saber_move) && ucmd->forwardmove < 0)
 		{
 			//if running backwards while attacking, don't run as fast.
-			switch (client->ps.saber_anim_level)
+			switch (client->ps.saberAnimLevel)
 			{
 			case SS_TAVION:
 			case SS_FAST:
@@ -6855,7 +6855,7 @@ void ClientAlterSpeed(gentity_t* ent, usercmd_t* ucmd, const qboolean controlled
 		else if (client->ps.weapon == WP_SABER && ucmd->buttons & BUTTON_ATTACK)
 		{
 			//if attacking with saber while running, drop your speed
-			switch (client->ps.saber_anim_level)
+			switch (client->ps.saberAnimLevel)
 			{
 			case SS_TAVION:
 			case SS_FAST:
@@ -6877,7 +6877,7 @@ void ClientAlterSpeed(gentity_t* ent, usercmd_t* ucmd, const qboolean controlled
 				client->ps.speed *= g_saberMoveSpeed->value;
 			}
 		}
-		else if (client->ps.weapon == WP_SABER && client->ps.saber_anim_level == FORCE_LEVEL_3 &&
+		else if (client->ps.weapon == WP_SABER && client->ps.saberAnimLevel == FORCE_LEVEL_3 &&
 			PM_SaberInTransition(client->ps.saber_move))
 		{
 			//Now, we want to even slow down in transitions for level 3 (since it has chains and stuff)

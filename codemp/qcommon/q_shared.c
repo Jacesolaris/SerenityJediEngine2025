@@ -206,7 +206,7 @@ void COM_ParseError(char* format, ...)
 	static char string[4096];
 
 	va_start(argptr, format);
-	Q_vsnprintf(string, sizeof string, format, argptr);
+	Q_vsnprintf(string, sizeof(string), format, argptr);
 	va_end(argptr);
 
 	Com_Printf("ERROR: %s, line %d: %s\n", com_parsename, COM_GetCurrentParseLine(), string);
@@ -218,7 +218,7 @@ void COM_ParseWarning(char* format, ...)
 	static char string[4096];
 
 	va_start(argptr, format);
-	Q_vsnprintf(string, sizeof string, format, argptr);
+	Q_vsnprintf(string, sizeof(string), format, argptr);
 	va_end(argptr);
 
 	Com_Printf("WARNING: %s, line %d: %s\n", com_parsename, COM_GetCurrentParseLine(), string);
@@ -648,11 +648,12 @@ int Com_HexStrToInt(const char* str)
 ============================================================================
 */
 
-int QDECL Com_sprintf(char* dest, const int size, const char* fmt, ...) {
+int QDECL Com_sprintf(char* dest, int size, const char* fmt, ...) {
+	int		len;
 	va_list		argptr;
 
 	va_start(argptr, fmt);
-	const int len = Q_vsnprintf(dest, size, fmt, argptr);
+	len = Q_vsnprintf(dest, size, fmt, argptr);
 	va_end(argptr);
 
 	if (len >= size)
@@ -661,7 +662,7 @@ int QDECL Com_sprintf(char* dest, const int size, const char* fmt, ...) {
 	return len;
 }
 
-int FloatAsInt(const float f) {
+int FloatAsInt(float f) {
 	byteAlias_t fi;
 	fi.f = f;
 	return fi.i;
@@ -684,10 +685,11 @@ char* QDECL va(const char* format, ...)
 	va_list		argptr;
 	static char	string[MAX_VA_BUFFERS][MAX_VA_STRING];	// in case va is called by nested functions
 	static int	index = 0;
+	char* buf;
 
 	va_start(argptr, format);
-	char* buf = (char*)&string[index++ & 3];
-	Q_vsnprintf(buf, sizeof * string, format, argptr);
+	buf = (char*)&string[index++ & 3];
+	Q_vsnprintf(buf, sizeof(*string), format, argptr);
 	va_end(argptr);
 
 	return buf;

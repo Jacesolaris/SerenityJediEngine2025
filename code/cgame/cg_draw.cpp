@@ -390,7 +390,7 @@ static void CG_DrawCusSaberStyle(const centity_t* cent, const float hud_ratio)
 	if (!cg.saber_anim_levelPending && cent->gent->client)
 	{
 		//uninitialized after a loadgame, cheat across and get it
-		cg.saber_anim_levelPending = cent->gent->client->ps.saber_anim_level;
+		cg.saber_anim_levelPending = cent->gent->client->ps.saberAnimLevel;
 	}
 
 	// don't need to draw ammo, but we will draw the current saber style in this window
@@ -1560,7 +1560,7 @@ void CG_DrawJK2Ammo(const centity_t* cent, const int x, const int y)
 		if (!cg.saber_anim_levelPending && cent->gent->client)
 		{
 			//uninitialized after a loadgame, cheat across and get it
-			cg.saber_anim_levelPending = cent->gent->client->ps.saber_anim_level;
+			cg.saber_anim_levelPending = cent->gent->client->ps.saberAnimLevel;
 		}
 		// don't need to draw ammo, but we will draw the current saber style in this window
 		switch (cg.saber_anim_levelPending)
@@ -2983,7 +2983,7 @@ static void CG_DrawSimpleSaberStyle(const centity_t* cent)
 	if (!cg.saber_anim_levelPending && cent->gent && cent->gent->client)
 	{
 		//uninitialized after a loadgame, cheat across and get it
-		cg.saber_anim_levelPending = cent->gent->client->ps.saber_anim_level;
+		cg.saber_anim_levelPending = cent->gent->client->ps.saberAnimLevel;
 	}
 
 	switch (cg.saber_anim_levelPending)
@@ -3771,7 +3771,7 @@ static void CG_DrawDataPadAmmo(const centity_t* cent, const int x, const int y)
 		if (!cg.saber_anim_levelPending && cent->gent->client)
 		{
 			//uninitialized after a loadgame, cheat across and get it
-			cg.saber_anim_levelPending = cent->gent->client->ps.saber_anim_level;
+			cg.saber_anim_levelPending = cent->gent->client->ps.saberAnimLevel;
 		}
 		// don't need to draw ammo, but we will draw the current saber style in this window
 		switch (cg.saber_anim_levelPending)

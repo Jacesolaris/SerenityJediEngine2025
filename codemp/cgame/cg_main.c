@@ -1784,40 +1784,13 @@ static void CG_RegisterGraphics(void)
 
 const char* CG_GetStringEdString(char* refSection, char* refName)
 {
-#define	MAX_VA_STRING	32000
-	static char intext[MAX_VA_STRING];
-	static char translation[MAX_VA_STRING];
-	static char string[MAX_VA_STRING]; // in case va is called by nested functions
-	static int index = 0;
+	static char text[2][1024];	//just incase it's nested
+	static int		index = 0;
 
-	Com_sprintf(intext, sizeof intext, "%s_%s", refSection, refName);
-
-	trap->SE_GetStringTextString(intext, translation, sizeof translation);
-
-	const int len = strlen(translation);
-
-	if (len + index >= MAX_VA_STRING - 1)
-	{
-		index = 0;
-	}
-
-	char* buf = &string[index];
-	memcpy(buf, translation, len + 1);
-
-	index += len + 1;
-
-	return buf;
+	index ^= 1;
+	trap->SE_GetStringTextString(va("%s_%s", refSection, refName), text[index], sizeof(text[0]));
+	return text[index];
 }
-
-//const char* CG_GetStringEdString(char* refSection, char* refName)
-//{
-//	static char text[2][1024];	//just in case it's nested
-//	static int		index = 0;
-//
-//	index ^= 1;
-//	trap->SE_GetStringTextString(va("%s_%s", refSection, refName), text[index], sizeof text[0]);
-//	return text[index];
-//}
 
 int CG_GetClassCount(team_t team, int siegeClass);
 int CG_GetTeamNonScoreCount(team_t team);

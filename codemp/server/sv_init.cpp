@@ -238,7 +238,7 @@ to the clients -- only the fields that differ from the
 baseline will be transmitted
 ================
 */
-void SV_CreateBaseline(void)
+static void SV_CreateBaseline(void)
 {
 	for (int entnum = 1; entnum < sv.num_entities; entnum++)
 	{
@@ -262,7 +262,7 @@ SV_BoundMaxClients
 
 ===============
 */
-void SV_BoundMaxClients(const int minimum)
+static void SV_BoundMaxClients(const int minimum)
 {
 	// get the current maxclients value
 	Cvar_Get("sv_maxclients", "8", 0);
@@ -289,7 +289,7 @@ NOT cause this to be called, unless the game is exited to
 the menu system first.
 ===============
 */
-void SV_Startup(void)
+static void SV_Startup(void)
 {
 	if (svs.initialized)
 	{
@@ -325,7 +325,7 @@ void SV_Startup(void)
 Ghoul2 Insert Start
 */
 
-void SV_InitSV(void)
+static void SV_InitSV(void)
 {
 	// clear out most of the sv struct
 	memset(&sv, 0, sizeof sv);
@@ -416,7 +416,7 @@ void SV_ChangeMaxClients(void)
 SV_ClearServer
 ================
 */
-void SV_ClearServer(void)
+static void SV_ClearServer(void)
 {
 	for (int i = 0; i < MAX_CONFIGSTRINGS; i++)
 	{
@@ -425,20 +425,7 @@ void SV_ClearServer(void)
 			Z_Free(sv.configstrings[i]);
 		}
 	}
-
-	//	CM_ClearMap();
-
-	/*
-Ghoul2 Insert Start
-*/
-
-// nope, can't do this anymore.. sv contains entitystates with STL in them.
-//	memset (&sv, 0, sizeof(sv));
 	SV_InitSV();
-	/*
-	Ghoul2 Insert End
-	*/
-	//	Com_Memset (&sv, 0, sizeof(sv));
 }
 
 /*
@@ -448,7 +435,7 @@ SV_TouchCGame
   touch the cgame.vm so that a pure client can load it if it's in a seperate pk3
 ================
 */
-void SV_TouchCGame(void)
+static void SV_TouchCGame(void)
 {
 	fileHandle_t f;
 	char filename[MAX_QPATH];
@@ -462,7 +449,7 @@ void SV_TouchCGame(void)
 	}
 }
 
-void SV_SendMapChange(void)
+static void SV_SendMapChange(void)
 {
 	if (svs.clients)
 	{
@@ -825,26 +812,22 @@ CL_RefPrintf
 DLL glue
 ================
 */
-void QDECL SV_RefPrintf(const int print_level, const char* fmt, ...)
-{
-	va_list argptr;
-	char msg[MAXPRINTMSG];
+static void QDECL SV_RefPrintf(int print_level, const char* fmt, ...) {
+	va_list		argptr;
+	char		msg[MAXPRINTMSG];
 
 	va_start(argptr, fmt);
-	Q_vsnprintf(msg, sizeof msg, fmt, argptr);
+	Q_vsnprintf(msg, sizeof(msg), fmt, argptr);
 	va_end(argptr);
 
-	if (print_level == PRINT_ALL)
-	{
+	if (print_level == PRINT_ALL) {
 		Com_Printf("%s", msg);
 	}
-	else if (print_level == PRINT_WARNING)
-	{
-		Com_Printf(S_COLOR_YELLOW "%s", msg); // yellow
+	else if (print_level == PRINT_WARNING) {
+		Com_Printf(S_COLOR_YELLOW "%s", msg);		// yellow
 	}
-	else if (print_level == PRINT_DEVELOPER)
-	{
-		Com_DPrintf(S_COLOR_RED "%s", msg); // red
+	else if (print_level == PRINT_DEVELOPER) {
+		Com_DPrintf(S_COLOR_RED "%s", msg);		// red
 	}
 }
 

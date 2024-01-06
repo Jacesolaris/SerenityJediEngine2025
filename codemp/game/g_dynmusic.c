@@ -482,7 +482,7 @@ void G_DynamicMusicUpdate(void)
 				{
 					//alive
 					//FIXME: do I really need this check?
-					if (ent->s.weapon == WP_SABER && ent->client && ent->client->ps.saber_holstered == 2 && ent->enemy !=
+					if (ent->s.weapon == WP_SABER && ent->client && ent->client->ps.saberHolstered == 2 && ent->enemy !=
 						player)
 					{
 						//a Jedi who has not yet gotten mad at me

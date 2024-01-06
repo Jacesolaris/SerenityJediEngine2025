@@ -571,7 +571,7 @@ qboolean NET_GetLoopPacket(const netsrc_t sock, netadr_t* net_from, msg_t* net_m
 	return qtrue;
 }
 
-void NET_SendLoopPacket(const netsrc_t sock, const int length, const void* data, netadr_t to)
+static void NET_SendLoopPacket(const netsrc_t sock, const int length, const void* data, netadr_t to)
 {
 	loopback_t* loop = &loopbacks[sock ^ 1];
 
@@ -616,10 +616,10 @@ NET_OutOfBandPrint
 Sends a text message in an out-of-band datagram
 ================
 */
-void QDECL NET_OutOfBandPrint(const netsrc_t sock, const netadr_t adr, const char* format, ...)
-{
-	va_list argptr;
-	char string[MAX_MSGLEN]{};
+void QDECL NET_OutOfBandPrint(netsrc_t sock, netadr_t adr, const char* format, ...) {
+	va_list		argptr;
+	char		string[MAX_MSGLEN];
+
 
 	// set the header
 	string[0] = -1;
@@ -628,7 +628,7 @@ void QDECL NET_OutOfBandPrint(const netsrc_t sock, const netadr_t adr, const cha
 	string[3] = -1;
 
 	va_start(argptr, format);
-	Q_vsnprintf(string + 4, sizeof string - 4, format, argptr);
+	Q_vsnprintf(string + 4, sizeof(string) - 4, format, argptr);
 	va_end(argptr);
 
 	// send the datagram

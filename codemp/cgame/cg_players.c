@@ -754,7 +754,7 @@ retryModel:
 
 	//Initialize the holster bolts
 	ci->holster_saber = trap->G2API_AddBolt(ci->ghoul2Model, 0, "*holster_saber");
-	ci->saber_holstered = qfalse;
+	ci->saberHolstered = qfalse;
 
 	ci->holster_saber2 = trap->G2API_AddBolt(ci->ghoul2Model, 0, "*holster_saber2");
 	ci->saber2_holstered = qfalse;
@@ -1413,7 +1413,7 @@ static void CG_CopyClientInfoModel(const clientInfo_t* from, clientInfo_t* to)
 	to->siegeIndex = from->siegeIndex;
 
 	to->holster_saber = from->holster_saber;
-	to->saber_holstered = from->saber_holstered;
+	to->saberHolstered = from->saberHolstered;
 
 	to->holster_saber2 = from->holster_saber2;
 	to->saber2_holstered = from->saber2_holstered;
@@ -1509,7 +1509,7 @@ static qboolean CG_ScanForExistingClientInfo(clientInfo_t* ci, const int clientN
 					ci->siegeIndex = match->siegeIndex;
 
 					ci->holster_saber = match->holster_saber;
-					ci->saber_holstered = match->saber_holstered;
+					ci->saberHolstered = match->saberHolstered;
 
 					ci->holster_saber2 = match->holster_saber2;
 					ci->saber2_holstered = match->saber2_holstered;
@@ -2232,7 +2232,7 @@ void CG_NewClientInfo(int clientNum, qboolean entities_initialized)
 					cg_entities[clientNum].ghoul2weapon2 = NULL;
 				}
 			}
-			if (!cg_entities[clientNum].currentState.saber_holstered)
+			if (!cg_entities[clientNum].currentState.saberHolstered)
 			{
 				//if not holstered set length and desired length for both blades to full right now.
 				int j;
@@ -12015,7 +12015,7 @@ void CG_AddSaberBlade(centity_t* cent, centity_t* scent, int renderfx, int saber
 	trace_t trace;
 	float saber_len;
 	clientInfo_t* client;
-	centity_t* saber_ent;
+	centity_t* saberEnt;
 	saberTrail_t* saber_trail;
 	mdxaBone_t boltMatrix;
 	vec3_t future_angles;
@@ -12033,7 +12033,7 @@ void CG_AddSaberBlade(centity_t* cent, centity_t* scent, int renderfx, int saber
 		client = &cgs.clientinfo[cent->currentState.number];
 	}
 
-	saber_ent = &cg_entities[cent->currentState.saberEntityNum];
+	saberEnt = &cg_entities[cent->currentState.saberEntityNum];
 	saber_len = client->saber[saberNum].blade[blade_num].length;
 
 	if (saber_len <= 0 && !dont_draw)
@@ -12076,11 +12076,11 @@ void CG_AddSaberBlade(centity_t* cent, centity_t* scent, int renderfx, int saber
 	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, org);
 	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, axis[0]);
 
-	if (!from_saber && saber_ent && !cent->currentState.saberInFlight)
+	if (!from_saber && saberEnt && !cent->currentState.saberInFlight)
 	{
-		VectorCopy(org, saber_ent->currentState.pos.trBase);
+		VectorCopy(org, saberEnt->currentState.pos.trBase);
 
-		VectorCopy(axis[0], saber_ent->currentState.apos.trBase);
+		VectorCopy(axis[0], saberEnt->currentState.apos.trBase);
 	}
 
 	VectorMA(org, saber_len, axis[0], end);
@@ -16195,13 +16195,13 @@ void CG_VisualWeaponsUpdate(centity_t* cent, clientInfo_t* ci)
 						if (ci->holster_saber != -1)
 						{
 							//have specialized holster surface tag for single sabers
-							if (!ci->saber_holstered)
+							if (!ci->saberHolstered)
 							{
 								//we haven't bolted the saber to the model yet. Do it now.
 								trap->G2API_CopySpecificGhoul2Model(CG_G2WeaponInstance(cent, WP_SABER), 0,
 									cent->ghoul2, G2MODEL_SABER_HOLSTERED);
 								trap->G2API_SetBoltInfo(cent->ghoul2, G2MODEL_SABER_HOLSTERED, ci->holster_saber);
-								ci->saber_holstered = qtrue;
+								ci->saberHolstered = qtrue;
 							}
 						}
 						else
@@ -16242,7 +16242,7 @@ void CG_VisualWeaponsUpdate(centity_t* cent, clientInfo_t* ci)
 							if (ci->holster_staff != -1)
 							{
 								//have specialized holster surface tag for single sabers
-								if (!ci->saber_holstered)
+								if (!ci->saberHolstered)
 								{
 									//we haven't bolted the saber to the model yet. Do it now.
 									trap->G2API_CopySpecificGhoul2Model(CG_G2WeaponInstance(cent, WP_SABER), 0,
@@ -16272,7 +16272,7 @@ void CG_VisualWeaponsUpdate(centity_t* cent, clientInfo_t* ci)
 					{
 						trap->G2API_RemoveGhoul2Model(&cent->ghoul2, G2MODEL_SABER_HOLSTERED);
 					}
-					ci->saber_holstered = qfalse;
+					ci->saberHolstered = qfalse;
 				}
 
 				if (ci->staff_holstered)
@@ -16306,7 +16306,7 @@ void CG_VisualWeaponsUpdate(centity_t* cent, clientInfo_t* ci)
 				{
 					trap->G2API_RemoveGhoul2Model(&cent->ghoul2, G2MODEL_SABER_HOLSTERED);
 				}
-				ci->saber_holstered = qfalse;
+				ci->saberHolstered = qfalse;
 			}
 
 			if (ci->staff_holstered)
@@ -17658,11 +17658,11 @@ void CG_Player(centity_t* cent)
 			{
 				if (cent->weapon == WP_SABER
 					&& cent->weapon != cent->currentState.weapon
-					&& !cent->currentState.saber_holstered)
+					&& !cent->currentState.saberHolstered)
 				{
 					//switching away from the saber
 					if (ci->saber[0].soundOff
-						&& !cent->currentState.saber_holstered)
+						&& !cent->currentState.saberHolstered)
 					{
 						trap->S_StartSound(cent->lerpOrigin, cent->currentState.number, CHAN_AUTO,
 							ci->saber[0].soundOff);
@@ -17670,7 +17670,7 @@ void CG_Player(centity_t* cent)
 
 					if (ci->saber[1].soundOff &&
 						ci->saber[1].model[0] &&
-						!cent->currentState.saber_holstered)
+						!cent->currentState.saberHolstered)
 					{
 						trap->S_StartSound(cent->lerpOrigin, cent->currentState.number, CHAN_AUTO,
 							ci->saber[1].soundOff);
@@ -18924,7 +18924,7 @@ stillDoSaber:
 	}
 	else if (cent->currentState.weapon == WP_SABER)
 	{
-		if (cent->currentState.saber_holstered < 2 &&
+		if (cent->currentState.saberHolstered < 2 &&
 			(!cent->currentState.saberInFlight //saber not in flight
 				|| ci->saber[1].soundLoop) //??? //racc - or we have dual sabers
 			&& !(cent->currentState.eFlags & EF_DEAD)) //still alive
@@ -19018,12 +19018,12 @@ stillDoSaber:
 		if (cent->currentState.saberInFlight
 			&& cent->currentState.saberEntityNum)
 		{
-			centity_t* saber_ent;
+			centity_t* saberEnt;
 
-			saber_ent = &cg_entities[cent->currentState.saberEntityNum];
+			saberEnt = &cg_entities[cent->currentState.saberEntityNum];
 
 			if (g2_has_weapon || !cent->bolt3 ||
-				saber_ent->serverSaberHitIndex != saber_ent->currentState.modelIndex)
+				saberEnt->serverSaberHitIndex != saberEnt->currentState.modelIndex)
 			{
 				//saber is in flight, do not have it as a standard weapon model
 				qboolean add_bolts = qfalse;
@@ -19035,67 +19035,67 @@ stillDoSaber:
 					trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_rhand, &bolt_mat, cent->turAngles,
 						cent->lerpOrigin,
 						cg.time, cgs.game_models, cent->modelScale);
-					BG_GiveMeVectorFromMatrix(&bolt_mat, ORIGIN, saber_ent->currentState.pos.trBase);
+					BG_GiveMeVectorFromMatrix(&bolt_mat, ORIGIN, saberEnt->currentState.pos.trBase);
 
 					trap->G2API_RemoveGhoul2Model(&cent->ghoul2, 1);
 					g2_has_weapon = qfalse;
 				}
 
-				saber_ent->currentState.pos.trTime = cg.time;
-				saber_ent->currentState.apos.trTime = cg.time;
+				saberEnt->currentState.pos.trTime = cg.time;
+				saberEnt->currentState.apos.trTime = cg.time;
 
-				VectorCopy(saber_ent->currentState.pos.trBase, saber_ent->lerpOrigin);
-				VectorCopy(saber_ent->currentState.apos.trBase, saber_ent->lerpAngles);
+				VectorCopy(saberEnt->currentState.pos.trBase, saberEnt->lerpOrigin);
+				VectorCopy(saberEnt->currentState.apos.trBase, saberEnt->lerpAngles);
 
-				cent->bolt3 = saber_ent->currentState.apos.trBase[0];
+				cent->bolt3 = saberEnt->currentState.apos.trBase[0];
 				if (!cent->bolt3)
 				{
 					cent->bolt3 = 1;
 				}
 				cent->bolt2 = 0;
 
-				saber_ent->currentState.bolt2 = 123;
+				saberEnt->currentState.bolt2 = 123;
 
-				if (saber_ent->ghoul2 &&
-					saber_ent->serverSaberHitIndex == saber_ent->currentState.modelIndex)
+				if (saberEnt->ghoul2 &&
+					saberEnt->serverSaberHitIndex == saberEnt->currentState.modelIndex)
 				{
 					// now set up the gun bolt on it
 					add_bolts = qtrue;
 				}
 				else
 				{
-					const char* saber_model = CG_ConfigString(CS_MODELS + saber_ent->currentState.modelIndex);
+					const char* saber_model = CG_ConfigString(CS_MODELS + saberEnt->currentState.modelIndex);
 
-					saber_ent->serverSaberHitIndex = saber_ent->currentState.modelIndex;
+					saberEnt->serverSaberHitIndex = saberEnt->currentState.modelIndex;
 
-					if (saber_ent->ghoul2)
+					if (saberEnt->ghoul2)
 					{
 						//clean if we already have one (because server changed model string index)
-						trap->G2API_CleanGhoul2Models(&saber_ent->ghoul2);
-						saber_ent->ghoul2 = 0;
+						trap->G2API_CleanGhoul2Models(&saberEnt->ghoul2);
+						saberEnt->ghoul2 = 0;
 					}
 
 					if (saber_model && saber_model[0])
 					{
-						trap->G2API_InitGhoul2Model(&saber_ent->ghoul2, saber_model, 0, 0, 0, 0, 0);
+						trap->G2API_InitGhoul2Model(&saberEnt->ghoul2, saber_model, 0, 0, 0, 0, 0);
 					}
 					else if (ci->saber[0].model[0])
 					{
-						trap->G2API_InitGhoul2Model(&saber_ent->ghoul2, ci->saber[0].model, 0, 0, 0, 0, 0);
+						trap->G2API_InitGhoul2Model(&saberEnt->ghoul2, ci->saber[0].model, 0, 0, 0, 0, 0);
 					}
 					else
 					{
-						trap->G2API_InitGhoul2Model(&saber_ent->ghoul2, DEFAULT_SABER_MODEL, 0, 0, 0, 0, 0);
+						trap->G2API_InitGhoul2Model(&saberEnt->ghoul2, DEFAULT_SABER_MODEL, 0, 0, 0, 0, 0);
 					}
 
-					if (saber_ent->ghoul2)
+					if (saberEnt->ghoul2)
 					{
 						add_bolts = qtrue;
 
-						VectorCopy(saber_ent->currentState.pos.trBase, saber_ent->lerpOrigin);
-						VectorCopy(saber_ent->currentState.apos.trBase, saber_ent->lerpAngles);
-						saber_ent->currentState.pos.trTime = cg.time;
-						saber_ent->currentState.apos.trTime = cg.time;
+						VectorCopy(saberEnt->currentState.pos.trBase, saberEnt->lerpOrigin);
+						VectorCopy(saberEnt->currentState.apos.trBase, saberEnt->lerpAngles);
+						saberEnt->currentState.pos.trTime = cg.time;
+						saberEnt->currentState.apos.trTime = cg.time;
 					}
 				}
 
@@ -19108,14 +19108,14 @@ stillDoSaber:
 					while (m < ci->saber[0].numBlades)
 					{
 						tag_name = va("*blade%i", m + 1);
-						tag_bolt = trap->G2API_AddBolt(saber_ent->ghoul2, 0, tag_name);
+						tag_bolt = trap->G2API_AddBolt(saberEnt->ghoul2, 0, tag_name);
 
 						if (tag_bolt == -1)
 						{
 							if (m == 0)
 							{
 								//guess this is an 0ldsk3wl saber
-								tag_bolt = trap->G2API_AddBolt(saber_ent->ghoul2, 0, "*flash");
+								tag_bolt = trap->G2API_AddBolt(saberEnt->ghoul2, 0, "*flash");
 
 								if (tag_bolt == -1)
 								{
@@ -19136,7 +19136,7 @@ stillDoSaber:
 				}
 			}
 
-			if (saber_ent && saber_ent->ghoul2)
+			if (saberEnt && saberEnt->ghoul2)
 			{
 				vec3_t blade_angles;
 				vec3_t t_ang;
@@ -19173,30 +19173,30 @@ stillDoSaber:
 
 				cent->bolt2 = cg.time;
 
-				saber_ent->currentState.apos.trBase[0] = cent->bolt3;
-				saber_ent->lerpAngles[0] = cent->bolt3;
+				saberEnt->currentState.apos.trBase[0] = cent->bolt3;
+				saberEnt->lerpAngles[0] = cent->bolt3;
 
-				if (!saber_ent->currentState.saberInFlight && saber_ent->currentState.bolt2 != 123)
+				if (!saberEnt->currentState.saberInFlight && saberEnt->currentState.bolt2 != 123)
 				{
 					//owner is pulling is back
 					if (!(ci->saber[0].saberFlags & SFL_RETURN_DAMAGE)
-						|| cent->currentState.saber_holstered)
+						|| cent->currentState.saberHolstered)
 					{
 						vec3_t owndir;
 
-						VectorSubtract(saber_ent->lerpOrigin, cent->lerpOrigin, owndir);
+						VectorSubtract(saberEnt->lerpOrigin, cent->lerpOrigin, owndir);
 						VectorNormalize(owndir);
 
 						vectoangles(owndir, owndir);
 
 						owndir[0] += 90;
 
-						if (!(saber_ent->currentState.eFlags & EF_MISSILE_STICK))
+						if (!(saberEnt->currentState.eFlags & EF_MISSILE_STICK))
 						{
 							//As long as your not stuck orient towards the player
-							VectorCopy(owndir, saber_ent->currentState.apos.trBase);
-							VectorCopy(owndir, saber_ent->lerpAngles);
-							VectorClear(saber_ent->currentState.apos.trDelta);
+							VectorCopy(owndir, saberEnt->currentState.apos.trBase);
+							VectorCopy(owndir, saberEnt->lerpAngles);
+							VectorClear(saberEnt->currentState.apos.trDelta);
 						}
 					}
 				}
@@ -19204,22 +19204,22 @@ stillDoSaber:
 				//We don't actually want to rely entirely on server updates to render the position of the saber, because we actually know generally where
 				//it's going to be before the first position update even gets here, and it needs to start getting rendered the instant the saber model is
 				//removed from the player hand. So we'll just render it manually and let normal rendering for the entity be ignored.
-				if (!saber_ent->currentState.saberInFlight && saber_ent->currentState.bolt2 != 123)
+				if (!saberEnt->currentState.saberInFlight && saberEnt->currentState.bolt2 != 123)
 				{
 					//tell it that we're a saber and to render the glow around our handle because we're being pulled back
-					saber_ent->bolt3 = 999;
+					saberEnt->bolt3 = 999;
 				}
 
-				saber_ent->currentState.modelGhoul2 = 1;
-				CG_ManualEntityRender(saber_ent);
-				saber_ent->bolt3 = 0;
-				saber_ent->currentState.modelGhoul2 = 127;
+				saberEnt->currentState.modelGhoul2 = 1;
+				CG_ManualEntityRender(saberEnt);
+				saberEnt->bolt3 = 0;
+				saberEnt->currentState.modelGhoul2 = 127;
 
-				VectorCopy(saber_ent->lerpAngles, blade_angles);
+				VectorCopy(saberEnt->lerpAngles, blade_angles);
 				blade_angles[ROLL] = 0;
 
 				//racc - set blade length of first saber for rendering
-				if (cent->currentState.saber_holstered == 0)
+				if (cent->currentState.saberHolstered == 0)
 				{
 					BG_SI_SetDesiredLength(&ci->saber[0], -1, -1);
 				}
@@ -19230,7 +19230,7 @@ stillDoSaber:
 
 				// basejka code
 				if (ci->saber[0].numBlades > 1 //staff
-					&& cent->currentState.saber_holstered == 1) //extra blades off
+					&& cent->currentState.saberHolstered == 1) //extra blades off
 				{
 					//only first blade should be on
 					BG_SI_SetDesiredLength(&ci->saber[0], 0, -1);
@@ -19243,7 +19243,7 @@ stillDoSaber:
 
 				//racc - set render for the second saber's blade as needed
 				if (ci->saber[1].model //dual sabers
-					&& cent->currentState.saber_holstered == 1) //second one off
+					&& cent->currentState.saberHolstered == 1) //second one off
 				{
 					BG_SI_SetDesiredLength(&ci->saber[1], 0, -1);
 				}
@@ -19251,7 +19251,7 @@ stillDoSaber:
 				{
 					BG_SI_SetDesiredLength(&ci->saber[1], -1, -1);
 				}
-				if (cent->currentState.saber_holstered < 2)
+				if (cent->currentState.saberHolstered < 2)
 				{
 					int l = 0;
 					int k = 0;
@@ -19268,17 +19268,17 @@ stillDoSaber:
 						while (k < ci->saber[l].numBlades)
 						{
 							if (l == 0 //first saber
-								&& cent->currentState.saber_holstered == 1 //extra blades should be off
+								&& cent->currentState.saberHolstered == 1 //extra blades should be off
 								&& k > 0) //this is an extra blade
 							{
 								//extra blades off
 								//don't draw them
-								CG_AddSaberBlade(cent, saber_ent, 0, l, k, saber_ent->lerpOrigin, blade_angles, qtrue,
+								CG_AddSaberBlade(cent, saberEnt, 0, l, k, saberEnt->lerpOrigin, blade_angles, qtrue,
 									qtrue);
 							}
 							else
 							{
-								CG_AddSaberBlade(cent, saber_ent, 0, l, k, saber_ent->lerpOrigin, blade_angles, qtrue,
+								CG_AddSaberBlade(cent, saberEnt, 0, l, k, saberEnt->lerpOrigin, blade_angles, qtrue,
 									qfalse);
 							}
 
@@ -19325,7 +19325,7 @@ stillDoSaber:
 		else
 		{
 			//saber is not in a throw.
-			if (cent->currentState.saber_holstered == 2)
+			if (cent->currentState.saberHolstered == 2)
 			{
 				//all blades off
 				BG_SI_SetDesiredLength(&ci->saber[0], 0, -1);
@@ -19335,7 +19335,7 @@ stillDoSaber:
 			{
 				//racc - at least some of our blades are active.
 				if (ci->saber[0].numBlades > 1 //staff
-					&& cent->currentState.saber_holstered == 1) //extra blades off
+					&& cent->currentState.saberHolstered == 1) //extra blades off
 				{
 					//only first blade should be on
 					BG_SI_SetDesiredLength(&ci->saber[0], 0, -1);
@@ -19346,7 +19346,7 @@ stillDoSaber:
 					BG_SI_SetDesiredLength(&ci->saber[0], -1, -1);
 				}
 				if (ci->saber[1].model //dual sabers
-					&& cent->currentState.saber_holstered == 1) //second one off
+					&& cent->currentState.saberHolstered == 1) //second one off
 				{
 					if (cent->currentState.saberInFlight && !cent->currentState.saberEntityNum)
 					{
@@ -19396,7 +19396,7 @@ stillDoSaber:
 
 	if (draw_player_saber)
 	{
-		centity_t* saber_ent;
+		centity_t* saberEnt;
 		int k = 0;
 		int l = 0;
 
@@ -19406,20 +19406,20 @@ stillDoSaber:
 		}
 		else if (!cent->currentState.saberInFlight)
 		{
-			saber_ent = &cg_entities[cent->currentState.saberEntityNum];
+			saberEnt = &cg_entities[cent->currentState.saberEntityNum];
 
 			if (!g2_has_weapon)
 			{
 				trap->G2API_CopySpecificGhoul2Model(CG_G2WeaponInstance(cent, WP_SABER), 0, cent->ghoul2, 1);
 
-				if (saber_ent && saber_ent->ghoul2)
+				if (saberEnt && saberEnt->ghoul2)
 				{
-					trap->G2API_CleanGhoul2Models(&saber_ent->ghoul2);
+					trap->G2API_CleanGhoul2Models(&saberEnt->ghoul2);
 				}
 
-				saber_ent->currentState.modelIndex = 0;
-				saber_ent->ghoul2 = NULL;
-				VectorClear(saber_ent->currentState.pos.trBase);
+				saberEnt->currentState.modelIndex = 0;
+				saberEnt->ghoul2 = NULL;
+				VectorClear(saberEnt->currentState.pos.trBase);
 			}
 
 			cent->bolt3 = 0;
@@ -19466,7 +19466,7 @@ stillDoSaber:
 
 			while (k < ci->saber[l].numBlades)
 			{
-				if (cent->currentState.saber_holstered == 1 //extra blades should be off
+				if (cent->currentState.saberHolstered == 1 //extra blades should be off
 					&& k > 0 //this is an extra blade
 					&& ci->saber[l].blade[k].length <= 0) //it's completely off
 				{
@@ -19475,7 +19475,7 @@ stillDoSaber:
 					CG_AddSaberBlade(cent, cent, 0, l, k, legs.origin, root_angles, qfalse, qtrue);
 				}
 				else if (ci->saber[1].model[0] //we have a second saber
-					&& cent->currentState.saber_holstered == 1 //it should be off
+					&& cent->currentState.saberHolstered == 1 //it should be off
 					&& l > 0 //and this is the second one
 					&& ci->saber[l].blade[k].length <= 0) //it's completely off
 				{
@@ -20503,7 +20503,7 @@ void CG_ResetPlayerEntity(centity_t* cent)
 			CG_CopyG2WeaponInstance(cent, cent->currentState.weapon, cent->ghoul2);
 			cent->ghoul2weapon = CG_G2WeaponInstance(cent, cent->currentState.weapon);
 		}
-		if (!cent->currentState.saber_holstered)
+		if (!cent->currentState.saberHolstered)
 		{
 			//if not holstered set length and desired length for both blades to full right now.
 			BG_SI_SetDesiredLength(&ci->saber[0], 0, -1);

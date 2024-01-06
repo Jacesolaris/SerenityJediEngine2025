@@ -751,12 +751,12 @@ int Q_parseSaberColor(const char* p, float* color)
 ============================================================================
 */
 
-int QDECL Com_sprintf(char* dest, const int size, const char* fmt, ...)
-{
-	va_list argptr;
+int QDECL Com_sprintf(char* dest, int size, const char* fmt, ...) {
+	int		len;
+	va_list		argptr;
 
 	va_start(argptr, fmt);
-	const int len = Q_vsnprintf(dest, size, fmt, argptr);
+	len = Q_vsnprintf(dest, size, fmt, argptr);
 	va_end(argptr);
 
 	if (len >= size)

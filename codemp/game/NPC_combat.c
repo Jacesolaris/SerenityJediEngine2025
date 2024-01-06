@@ -426,7 +426,7 @@ void G_ForceSaberOn(gentity_t* ent)
 		return;
 	}
 
-	if (!ent->client->ps.saber_holstered)
+	if (!ent->client->ps.saberHolstered)
 	{
 		//it's already on!
 		return;
@@ -439,7 +439,7 @@ void G_ForceSaberOn(gentity_t* ent)
 	}
 
 	//Well then, turn it on.
-	ent->client->ps.saber_holstered = 0;
+	ent->client->ps.saberHolstered = 0;
 
 	if (ent->client->saber[0].soundOn)
 	{

@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-24,Month-01,Day-03,BuildNum-02" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-24,Month-01,Day-06,BuildNum-03" // build date
 
 #define	STEPSIZE		18
 
@@ -642,7 +642,7 @@ extern	pmove_t* pm;
 #define	AFLAG_LEDGE (SETANIM_FLAG_OVERRIDE|SETANIM_FLAG_HOLD|SETANIM_FLAG_HOLDLESS|SETANIM_FLAG_PACE)
 
 // if a full pmove isn't done on the client, you can just update the angles
-void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_t* cmd);
+void PM_UpdateViewAngles(int saberAnimLevel, playerState_t* ps, const usercmd_t* cmd);
 void Pmove(pmove_t* pmove);
 
 //===================================================================================
@@ -1992,7 +1992,7 @@ qboolean BG_InDeathAnim(int anim);
 qboolean BG_InSaberLockOld(int anim);
 qboolean PM_InSaberLock(int anim);
 
-void pm_saber_start_trans_anim(int clientNum, int saber_anim_level, int weapon, int anim, float* animSpeed, int
+void pm_saber_start_trans_anim(int clientNum, int saberAnimLevel, int weapon, int anim, float* animSpeed, int
 	fatigued);
 
 void WP_ForcePowerDrain(playerState_t* ps, forcePowers_t force_power, int override_amt);

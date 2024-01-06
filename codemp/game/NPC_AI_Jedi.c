@@ -1945,7 +1945,7 @@ void Jedi_Cloak(gentity_t* self)
 				G_Sound(self, CHAN_ITEM, G_SoundIndex("sound/chars/shadowtrooper/cloak.wav"));
 				self->client->ps.cloakFuel -= 15;
 
-				if (self->client->ps.saber_holstered > 1)
+				if (self->client->ps.saberHolstered > 1)
 				{
 					NPC_SetAnim(self, SETANIM_TORSO, BOTH_FORCE_PROTECT_FAST,
 						SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -2012,7 +2012,7 @@ static void Jedi_CheckCloak(void)
 		&& NPCS.NPC->client->NPC_class == CLASS_SHADOWTROOPER
 		&& Q_stricmpn("shadowtrooper", NPCS.NPC->NPC_type, 13) == 0)
 	{
-		if ( // !NPCS.NPC->client->ps.saber_holstered ||
+		if ( // !NPCS.NPC->client->ps.saberHolstered ||
 			NPCS.NPC->health <= 0 ||
 			NPCS.NPC->client->ps.saberInFlight ||
 			NPCS.NPC->client->ps.fd.forceGripBeingGripped > level.time ||
@@ -2597,14 +2597,14 @@ static void jedi_adjust_saber_anim_level(const gentity_t* self, int new_level)
 	if (self->client->saber[0].model[0] && self->client->saber[1].model[0]
 		&& !G_ValidSaberStyle(self, SS_DUAL))
 	{
-		self->client->ps.fd.saber_anim_level = SS_DUAL;
+		self->client->ps.fd.saberAnimLevel = SS_DUAL;
 		return;
 	}
 	if (self->client->saber[0].numBlades > 1
 		&& WP_SaberCanTurnOffSomeBlades(&self->client->saber[0])
 		&& !G_ValidSaberStyle(self, SS_STAFF))
 	{
-		self->client->ps.fd.saber_anim_level = SS_STAFF;
+		self->client->ps.fd.saberAnimLevel = SS_STAFF;
 		return;
 	}
 
@@ -2621,19 +2621,19 @@ static void jedi_adjust_saber_anim_level(const gentity_t* self, int new_level)
 			|| !Q_stricmp("cultist_saber_throw", self->NPC_type))
 		{
 			//fast only
-			self->client->ps.fd.saber_anim_level = SS_FAST;
+			self->client->ps.fd.saberAnimLevel = SS_FAST;
 		}
 		else if (!Q_stricmp("cultist_saber_med", self->NPC_type)
 			|| !Q_stricmp("cultist_saber_med_throw", self->NPC_type))
 		{
 			//med only
-			self->client->ps.fd.saber_anim_level = SS_MEDIUM;
+			self->client->ps.fd.saberAnimLevel = SS_MEDIUM;
 		}
 		else if (!Q_stricmp("cultist_saber_strong", self->NPC_type)
 			|| !Q_stricmp("cultist_saber_strong_throw", self->NPC_type))
 		{
 			//strong only
-			self->client->ps.fd.saber_anim_level = SS_STRONG;
+			self->client->ps.fd.saberAnimLevel = SS_STRONG;
 		}
 		else if (!Q_stricmp("md_grievous", self->NPC_type)
 			|| !Q_stricmp("md_grievous4", self->NPC_type)
@@ -2683,7 +2683,7 @@ static void jedi_adjust_saber_anim_level(const gentity_t* self, int new_level)
 			|| !Q_stricmp("md_serra_jt", self->NPC_type))
 		{
 			//dual only
-			self->client->ps.fd.saber_anim_level = SS_DUAL;
+			self->client->ps.fd.saberAnimLevel = SS_DUAL;
 		}
 		else if (!Q_stricmp("md_magnaguard", self->NPC_type)
 			|| !Q_stricmp("md_inquisitor", self->NPC_type)
@@ -2752,7 +2752,7 @@ static void jedi_adjust_saber_anim_level(const gentity_t* self, int new_level)
 			|| !Q_stricmp("md_maul_wots", self->NPC_type))
 		{
 			//staff only
-			self->client->ps.fd.saber_anim_level = SS_STAFF;
+			self->client->ps.fd.saberAnimLevel = SS_STAFF;
 		}
 		else
 		{
@@ -2772,19 +2772,19 @@ static void jedi_adjust_saber_anim_level(const gentity_t* self, int new_level)
 			|| !Q_stricmp("cultist_saber_throw", self->NPC_type))
 		{
 			//fast only
-			self->client->ps.fd.saber_anim_level = SS_FAST;
+			self->client->ps.fd.saberAnimLevel = SS_FAST;
 		}
 		else if (!Q_stricmp("cultist_saber_med", self->NPC_type)
 			|| !Q_stricmp("cultist_saber_med_throw", self->NPC_type))
 		{
 			//med only
-			self->client->ps.fd.saber_anim_level = SS_MEDIUM;
+			self->client->ps.fd.saberAnimLevel = SS_MEDIUM;
 		}
 		else if (!Q_stricmp("cultist_saber_strong", self->NPC_type)
 			|| !Q_stricmp("cultist_saber_strong_throw", self->NPC_type))
 		{
 			//strong only
-			self->client->ps.fd.saber_anim_level = SS_STRONG;
+			self->client->ps.fd.saberAnimLevel = SS_STRONG;
 		}
 		else if (!Q_stricmp("md_grievous", self->NPC_type)
 			|| !Q_stricmp("md_grievous4", self->NPC_type)
@@ -2834,7 +2834,7 @@ static void jedi_adjust_saber_anim_level(const gentity_t* self, int new_level)
 			|| !Q_stricmp("md_serra_jt", self->NPC_type))
 		{
 			//dual only
-			self->client->ps.fd.saber_anim_level = SS_DUAL;
+			self->client->ps.fd.saberAnimLevel = SS_DUAL;
 		}
 		else if (!Q_stricmp("md_magnaguard", self->NPC_type)
 			|| !Q_stricmp("md_inquisitor", self->NPC_type)
@@ -2903,7 +2903,7 @@ static void jedi_adjust_saber_anim_level(const gentity_t* self, int new_level)
 			|| !Q_stricmp("md_maul_wots", self->NPC_type))
 		{
 			//staff only
-			self->client->ps.fd.saber_anim_level = SS_STAFF;
+			self->client->ps.fd.saberAnimLevel = SS_STAFF;
 		}
 		else
 		{
@@ -2928,11 +2928,11 @@ static void jedi_adjust_saber_anim_level(const gentity_t* self, int new_level)
 	}
 
 	//set stance
-	self->client->ps.fd.saber_anim_level = new_level;
+	self->client->ps.fd.saberAnimLevel = new_level;
 
 	if (d_JediAI.integer || g_DebugSaberCombat.integer)
 	{
-		switch (self->client->ps.fd.saber_anim_level)
+		switch (self->client->ps.fd.saberAnimLevel)
 		{
 		case SS_FAST:
 			Com_Printf(S_COLOR_GREEN"%s Saber Attack Set: fast\n", self->NPC_type);
@@ -2962,8 +2962,8 @@ static void jedi_adjust_saber_anim_level(const gentity_t* self, int new_level)
 
 static void Jedi_CheckDecreasesaber_anim_level(void)
 {
-	if (NPCS.NPC->client->ps.fd.saber_anim_level == SS_DUAL
-		|| NPCS.NPC->client->ps.fd.saber_anim_level == SS_STAFF)
+	if (NPCS.NPC->client->ps.fd.saberAnimLevel == SS_DUAL
+		|| NPCS.NPC->client->ps.fd.saberAnimLevel == SS_STAFF)
 	{
 		return;
 	}
@@ -3060,7 +3060,7 @@ void Kyle_TryGrab(void)
 	VectorClear(NPCS.NPC->client->ps.moveDir);
 	NPCS.ucmd.rightmove = NPCS.ucmd.forwardmove = NPCS.ucmd.upmove = 0;
 	NPCS.NPC->painDebounceTime = level.time + NPCS.NPC->client->ps.torsoTimer;
-	NPCS.NPC->client->ps.saber_holstered = 2;
+	NPCS.NPC->client->ps.saberHolstered = 2;
 }
 
 extern qboolean PM_InOnGroundAnim(const int anim);
@@ -3158,8 +3158,8 @@ static void Jedi_CombatDistance(const int enemy_dist)
 		&& NPCS.NPC->enemy->s.weapon == WP_SABER
 		&& NPCS.NPC->enemy->client)
 	{
-		if (enemy_dist <= 150 && (NPCS.NPC->client->ps.fd.saber_anim_level == SS_DUAL || NPCS.NPC->client->ps.fd.
-			saber_anim_level == SS_STAFF))
+		if (enemy_dist <= 150 && (NPCS.NPC->client->ps.fd.saberAnimLevel == SS_DUAL || NPCS.NPC->client->ps.fd.
+			saberAnimLevel == SS_STAFF))
 		{
 			NPCS.NPC->client->ps.speed = NPCS.NPCInfo->stats.walkSpeed;
 			NPCS.ucmd.buttons |= BUTTON_WALKING;
@@ -4812,7 +4812,7 @@ qboolean Jedi_QuickReactions(gentity_t* self)
 qboolean Jedi_SaberBusy(const gentity_t* self)
 {
 	if (self->client->ps.torsoTimer > 300
-		&& (PM_SaberInAttack(self->client->ps.saber_move) && self->client->ps.fd.saber_anim_level == FORCE_LEVEL_3
+		&& (PM_SaberInAttack(self->client->ps.saber_move) && self->client->ps.fd.saberAnimLevel == FORCE_LEVEL_3
 			|| PM_SpinningSaberAnim(self->client->ps.torsoAnim)
 			|| pm_saber_in_special_attack(self->client->ps.torsoAnim)
 			|| PM_SaberInBrokenParry(self->client->ps.saber_move)
@@ -6359,7 +6359,7 @@ static void Jedi_EvasionSaber(vec3_t enemy_movedir, const float enemy_dist, vec3
 	{
 		if ((!NPCS.NPC->client->ps.saberInFlight || //their saber isn't in the air
 			NPCS.NPC->client->saber[1].model && NPCS.NPC->client->saber[1].model[0]
-			&& NPCS.NPC->client->ps.saber_holstered != 2) //or they still have their second saber
+			&& NPCS.NPC->client->ps.saberHolstered != 2) //or they still have their second saber
 			&& Jedi_SaberBlock())
 		{
 			//blocked/evaded
@@ -7341,7 +7341,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			{
 				//advance!
 				Jedi_Aggression(NPCS.NPC, 1); //get closer
-				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1); //use a faster attack
+				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saberAnimLevel - 1); //use a faster attack
 			}
 			else
 			{
@@ -7352,7 +7352,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 				}
 				if (!Q_irand(0, 1))
 				{
-					jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
+					jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saberAnimLevel - 1);
 				}
 			}
 			if (d_JediAI.integer || g_DebugSaberCombat.integer)
@@ -7393,7 +7393,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			}
 			if (!Q_irand(0, 2))
 			{
-				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
+				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saberAnimLevel + 1);
 			}
 			newFlags &= ~SEF_HITENEMY;
 		}
@@ -7413,7 +7413,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 				{
 					Jedi_Aggression(NPCS.NPC, -2); //really should back off!
 				}
-				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
+				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saberAnimLevel + 1);
 				//use a stronger attack
 				if (d_JediAI.integer || g_DebugSaberCombat.integer)
 				{
@@ -7433,7 +7433,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 				}
 				if (!Q_irand(0, 1))
 				{
-					jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
+					jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saberAnimLevel + 1);
 				}
 			}
 			newFlags &= ~SEF_BLOCKED;
@@ -7448,7 +7448,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			newFlags &= ~SEF_DEFLECTED;
 			if (!Q_irand(0, 3))
 			{
-				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
+				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saberAnimLevel - 1);
 			}
 		}
 		if (NPCS.NPC->client->ps.saberEventFlags & SEF_HITWALL)
@@ -7461,7 +7461,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			//hit some other damagable object
 			if (!Q_irand(0, 3))
 			{
-				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
+				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saberAnimLevel - 1);
 			}
 			newFlags &= ~SEF_HITOBJECT;
 		}
@@ -7515,13 +7515,13 @@ static void Jedi_CombatIdle(const int enemy_dist)
 					|| NPCS.NPC->client->pers.nextbotclass != BCLASS_BOBAFETT
 					|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN1
 					|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN2
-					&& !NPCS.NPC->client->ps.saber_holstered
+					&& !NPCS.NPC->client->ps.saberHolstered
 					&& !Q_irand(0, 5))
 				{
 					//taunt even more, turn off the saber
 					//some taunts leave the saber on, otherwise turn it off
-					if (NPCS.NPC->client->ps.fd.saber_anim_level != SS_STAFF
-						&& NPCS.NPC->client->ps.fd.saber_anim_level != SS_DUAL)
+					if (NPCS.NPC->client->ps.fd.saberAnimLevel != SS_STAFF
+						&& NPCS.NPC->client->ps.fd.saberAnimLevel != SS_DUAL)
 					{
 						//those taunts leave saber on
 						WP_DeactivateSaber(NPCS.NPC);
@@ -8655,8 +8655,8 @@ static void Jedi_Combat(void)
 	{
 		//not holding back
 		if ((!NPCS.NPC->client->ps.saberInFlight //saber in had
-			|| NPCS.NPC->client->ps.fd.saber_anim_level == SS_DUAL
-			&& NPCS.NPC->client->ps.saber_holstered != 2) //or we have another saber in our hands
+			|| NPCS.NPC->client->ps.fd.saberAnimLevel == SS_DUAL
+			&& NPCS.NPC->client->ps.saberHolstered != 2) //or we have another saber in our hands
 			&& (!(NPCS.NPC->client->ps.fd.forcePowersActive & 1 << FP_GRIP)
 				|| NPCS.NPC->client->ps.fd.forcePowerLevel[FP_GRIP] < FORCE_LEVEL_2))
 		{
@@ -9053,13 +9053,13 @@ static void Jedi_Patrol(void)
 						//if the enemy is close enough, or threw his saber, take him as the enemy
 						//FIXME: what if he throws a thermal detonator?
 						if (enemy_dist < 220 * 220 || NPCS.NPCInfo->investigateCount >= 3 && !NPCS.NPC->client->ps.
-							saber_holstered)
+							saberHolstered)
 						{
 							G_SetEnemy(NPCS.NPC, enemy);
 							NPCS.NPCInfo->stats.aggression = 3;
 							break;
 						}
-						if (enemy->client->ps.saberInFlight && !enemy->client->ps.saber_holstered)
+						if (enemy->client->ps.saberInFlight && !enemy->client->ps.saberHolstered)
 						{
 							vec3_t saberDir2Me;
 							vec3_t saberMoveDir;
@@ -9615,7 +9615,7 @@ static void Jedi_Attack(void)
 				NPCS.NPC->client->ps.fd.forcePowerDebounce[FP_SABER_DEFENSE] = level.time + 500;
 			}
 			NPCS.NPC->client->ps.saberBlocked = BLOCKED_NONE;
-			if (!NPCS.NPC->client->ps.saber_holstered && NPCS.NPC->client->ps.saberInFlight)
+			if (!NPCS.NPC->client->ps.saberHolstered && NPCS.NPC->client->ps.saberInFlight)
 			{
 				//saber is still on (or we're trying to pull it back), count down erosion and keep facing the enemy
 				Jedi_AggressionErosion(-3);
@@ -9630,7 +9630,7 @@ static void Jedi_Attack(void)
 				}
 				TIMER_Set(NPCS.NPC, "gloatTime", 10000);
 			}
-			if (!NPCS.NPC->client->ps.saber_holstered || NPCS.NPC->client->ps.saberInFlight || !TIMER_Done(
+			if (!NPCS.NPC->client->ps.saberHolstered || NPCS.NPC->client->ps.saberInFlight || !TIMER_Done(
 				NPCS.NPC, "gloatTime"))
 			{
 				//keep walking
@@ -9809,7 +9809,7 @@ static void Jedi_Attack(void)
 
 	if (NPCS.ucmd.buttons & BUTTON_ATTACK && NPCS.NPC->client->playerTeam == NPCTEAM_ENEMY)
 	{
-		if (Q_irand(0, NPCS.NPC->client->ps.fd.saber_anim_level) > 0
+		if (Q_irand(0, NPCS.NPC->client->ps.fd.saberAnimLevel) > 0
 			&& Q_irand(0, NPCS.NPC->client->pers.maxHealth + 10) > NPCS.NPC->health
 			&& !Q_irand(0, 3))
 		{
@@ -9871,7 +9871,7 @@ static void Jedi_Attack(void)
 			if (NPCS.ucmd.buttons & BUTTON_ALT_ATTACK)
 			{
 				//chance of doing a special dual saber throw
-				if (NPCS.NPC->client->ps.fd.saber_anim_level == SS_DUAL
+				if (NPCS.NPC->client->ps.fd.saberAnimLevel == SS_DUAL
 					&& !NPCS.NPC->client->ps.saberInFlight)
 				{
 					//has dual sabers and haven't already tossed the saber.
@@ -10457,7 +10457,7 @@ qboolean Jedi_InSpecialMove(void)
 									SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 								NPCS.NPC->client->ps.torsoTimer = NPCS.NPC->client->ps.legsTimer = -1;
 								//hold the animation
-								NPCS.NPC->client->ps.saber_holstered = 2; //turn saber off.
+								NPCS.NPC->client->ps.saberHolstered = 2; //turn saber off.
 								NPCS.NPCInfo->ignorePain = qtrue;
 							}
 						}

@@ -308,7 +308,7 @@ using pmove_t = struct
 };
 
 // if a full pmove isn't done on the client, you can just update the angles
-void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd, gentity_t* gent);
+void PM_UpdateViewAngles(int saberAnimLevel, playerState_t* ps, usercmd_t* cmd, gentity_t* gent);
 void Pmove(pmove_t* pmove);
 
 constexpr auto SETANIM_TORSO = 1;

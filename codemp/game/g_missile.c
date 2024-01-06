@@ -51,8 +51,8 @@ qboolean PM_SaberInStart(int move);
 extern qboolean PM_SaberInReturn(int move);
 extern qboolean wp_saber_block_non_random_missile(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 extern int wp_saber_must_bolt_block(gentity_t* self, const gentity_t* atk, qboolean check_b_box_block, vec3_t point,
-	int r_saber_num,
-	int r_blade_num);
+	int rSaberNum,
+	int rBladeNum);
 void wp_flechette_alt_blow(gentity_t* ent);
 extern qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int hit_loc, int* dmg, int mod);
 extern qboolean WP_DoingForcedAnimationForForcePowers(const gentity_t* self);
@@ -1404,7 +1404,7 @@ G_RunMissile
 ================
 */
 extern int g_real_trace(gentity_t* attacker, trace_t* tr, vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end,
-	int pass_entity_num, int contentmask, int r_saber_num, int r_blade_num);
+	int pass_entity_num, int contentmask, int rSaberNum, int rBladeNum);
 
 void g_run_missile(gentity_t* ent)
 {

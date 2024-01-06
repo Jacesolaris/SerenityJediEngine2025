@@ -137,11 +137,11 @@ qboolean	addGlobalDefine = qfalse;
 void QDECL SourceError(source_t* source, char* str, ...)
 {
 	char text[1024];
-	va_list ap;
+	va_list argptr;
 
-	va_start(ap, str);
-	Q_vsnprintf(text, sizeof text, str, ap);
-	va_end(ap);
+	va_start(argptr, str);
+	Q_vsnprintf(text, sizeof text, str, argptr);
+	va_end(argptr);
 #ifdef BOTLIB
 	botimport.Print(PRT_ERROR, "file %s, line %d: %s\n", source->scriptstack->filename, source->scriptstack->line, text);
 #endif	//BOTLIB
@@ -161,11 +161,11 @@ void QDECL SourceError(source_t* source, char* str, ...)
 void QDECL SourceWarning(source_t* source, char* str, ...)
 {
 	char text[1024];
-	va_list ap;
+	va_list argptr;
 
-	va_start(ap, str);
-	Q_vsnprintf(text, sizeof text, str, ap);
-	va_end(ap);
+	va_start(argptr, str);
+	Q_vsnprintf(text, sizeof text, str, argptr);
+	va_end(argptr);
 #ifdef BOTLIB
 	botimport.Print(PRT_WARNING, "file %s, line %d: %s\n", source->scriptstack->filename, source->scriptstack->line, text);
 #endif //BOTLIB

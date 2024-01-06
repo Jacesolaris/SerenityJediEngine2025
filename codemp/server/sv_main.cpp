@@ -158,40 +158,36 @@ A NULL client will broadcast to all clients
 */
 void QDECL SV_SendServerCommand(client_t* cl, const char* fmt, ...)
 {
-	va_list argptr;
-	byte message[MAX_MSGLEN]{};
+	va_list		argptr;
+	byte		message[MAX_MSGLEN];
 	client_t* client;
-	int j;
+	int			j;
 
 	va_start(argptr, fmt);
-	Q_vsnprintf(reinterpret_cast<char*>(message), sizeof message, fmt, argptr);
+	Q_vsnprintf((char*)message, sizeof(message), fmt, argptr);
 	va_end(argptr);
 
 	// Fix to http://aluigi.altervista.org/adv/q3msgboom-adv.txt
 	// The actual cause of the bug is probably further downstream
 	// and should maybe be addressed later, but this certainly
 	// fixes the problem for now
-	if (strlen(reinterpret_cast<char*>(message)) > 1022)
-	{
+	if (strlen((char*)message) > 1022) {
 		return;
 	}
 
-	if (cl != nullptr)
-	{
-		SV_AddServerCommand(cl, reinterpret_cast<char*>(message));
+	if (cl != NULL) {
+		SV_AddServerCommand(cl, (char*)message);
 		return;
 	}
 
 	// hack to echo broadcast prints to console
-	if (com_dedicated->integer && !Q_strncmp(reinterpret_cast<char*>(message), "print", 5))
-	{
-		Com_Printf("broadcast: %s\n", SV_ExpandNewlines(reinterpret_cast<char*>(message)));
+	if (com_dedicated->integer && !Q_strncmp((char*)message, "print", 5)) {
+		Com_Printf("broadcast: %s\n", SV_ExpandNewlines((char*)message));
 	}
 
 	// send the data to all relevent clients
-	for (j = 0, client = svs.clients; j < sv_maxclients->integer; j++, client++)
-	{
-		SV_AddServerCommand(client, reinterpret_cast<char*>(message));
+	for (j = 0, client = svs.clients; j < sv_maxclients->integer; j++, client++) {
+		SV_AddServerCommand(client, (char*)message);
 	}
 }
 

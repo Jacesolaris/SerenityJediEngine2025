@@ -17,8 +17,8 @@ extern "C" {
 
 	// portable case insensitive compare
 	int Q_stricmp(const char* s1, const char* s2);
-	int Q_strncmp(const char* s1, const char* s2, int n);
-	int Q_stricmpn(const char* s1, const char* s2, int n);
+	int	Q_strncmp(const char* s1, const char* s2, int n);
+	int	Q_stricmpn(const char* s1, const char* s2, int n);
 	char* Q_strlwr(char* s1);
 	char* Q_strupr(char* s1);
 	char* Q_strrchr(const char* string, int c);
@@ -42,7 +42,7 @@ extern "C" {
 #if defined (_MSC_VER)
 	// vsnprintf is ISO/IEC 9899:1999
 	// abstracting this to make it portable
-	int Q_vsnprintf(char* str, size_t size, const char* format, va_list ap);
+	int Q_vsnprintf(char* str, size_t size, const char* format, va_list argptr);
 #else // not using MSVC
 #define Q_vsnprintf vsnprintf
 #endif

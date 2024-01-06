@@ -364,10 +364,10 @@ void WP_InitForcePowers(const gentity_t* ent)
 	if (!ent || !ent->client)
 		return;
 
-	ent->client->ps.fd.saber_anim_level = ent->client->sess.saberLevel;
+	ent->client->ps.fd.saberAnimLevel = ent->client->sess.saberLevel;
 
-	if (ent->client->ps.fd.saber_anim_level < FORCE_LEVEL_1 || ent->client->ps.fd.saber_anim_level > FORCE_LEVEL_3)
-		ent->client->ps.fd.saber_anim_level = FORCE_LEVEL_1;
+	if (ent->client->ps.fd.saberAnimLevel < FORCE_LEVEL_1 || ent->client->ps.fd.saberAnimLevel > FORCE_LEVEL_3)
+		ent->client->ps.fd.saberAnimLevel = FORCE_LEVEL_1;
 
 	// so that the client configstring is already modified with this when we need it
 	if (!speedLoopSound)
@@ -1001,7 +1001,7 @@ int ForcePowerUsableOn(const gentity_t* attacker, const gentity_t* other, const 
 		return 0;
 	}
 
-	if (other && other->client && (other->client->ps.fd.saber_anim_level == SS_DESANN && other->client->ps.
+	if (other && other->client && (other->client->ps.fd.saberAnimLevel == SS_DESANN && other->client->ps.
 		saberFatigueChainCount >=
 		MISHAPLEVEL_HEAVY))
 	{
@@ -1229,7 +1229,7 @@ qboolean WP_ForcePowerUsable(const gentity_t* self, const forcePowers_t forcePow
 		}
 	}
 
-	if (!self->client->ps.saber_holstered)
+	if (!self->client->ps.saberHolstered)
 	{
 		if (self->client->saber[0].saberFlags & SFL_TWO_HANDED)
 		{
@@ -2180,7 +2180,7 @@ static qboolean WP_CounterForce(const gentity_t* attacker, const gentity_t* defe
 		return qfalse;
 	}
 	if (defender->client->ps.saberFatigueChainCount >= MISHAPLEVEL_LIGHT
-		&& attacker->client->ps.fd.saber_anim_level == SS_DESANN)
+		&& attacker->client->ps.fd.saberAnimLevel == SS_DESANN)
 	{
 		//can't block if we're too off balance and they are using Juyo's perk
 		return qfalse;
@@ -2954,7 +2954,7 @@ static qboolean melee_block_lightning(gentity_t* attacker, gentity_t* defender)
 	const qboolean melee_light_block = qtrue;
 
 	if (defender->client->ps.weapon == WP_SABER
-		|| defender->client->ps.saber_holstered == 2
+		|| defender->client->ps.saberHolstered == 2
 		|| defender->client->ps.saberInFlight)
 	{
 		return qfalse;
@@ -3251,7 +3251,7 @@ static void force_lightning_damage(gentity_t* self, gentity_t* traceEnt, vec3_t 
 					{
 						if (manual_saberblocking(traceEnt)
 							&& traceEnt->client->ps.fd.forcePower > 20
-							&& !traceEnt->client->ps.saber_holstered
+							&& !traceEnt->client->ps.saberHolstered
 							&& !traceEnt->client->ps.saberInFlight //saber in hand
 							&& InFOV3(self->r.currentOrigin, traceEnt->r.currentOrigin,
 								traceEnt->client->ps.viewangles,
@@ -3285,7 +3285,7 @@ static void force_lightning_damage(gentity_t* self, gentity_t* traceEnt, vec3_t 
 										G_PlayEffectID(G_EffectIndex("saber/fizz.efx"), end2, ang);
 									}
 								}
-								switch (traceEnt->client->ps.fd.saber_anim_level)
+								switch (traceEnt->client->ps.fd.saberAnimLevel)
 								{
 								case SS_DUAL:
 									G_SetAnim(traceEnt, &traceEnt->client->pers.cmd, SETANIM_TORSO, BOTH_P6_S6_T_,
@@ -3345,7 +3345,7 @@ static void force_lightning_damage(gentity_t* self, gentity_t* traceEnt, vec3_t 
 									G_PlayEffectID(G_EffectIndex("saber/fizz.efx"), end2, ang);
 								}
 							}
-							switch (traceEnt->client->ps.fd.saber_anim_level)
+							switch (traceEnt->client->ps.fd.saberAnimLevel)
 							{
 							case SS_DUAL:
 								G_SetAnim(traceEnt, &traceEnt->client->pers.cmd, SETANIM_TORSO, BOTH_P6_S6_T_,
@@ -5333,7 +5333,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 		FORCE_LEVEL_2
 		&& (self->s.weapon == WP_MELEE ||
 			self->s.weapon == WP_NONE ||
-			self->s.weapon == WP_SABER && self->client->ps.saber_holstered))
+			self->s.weapon == WP_SABER && self->client->ps.saberHolstered))
 	{
 		damage_level = FORCE_LEVEL_3;
 	}
@@ -5341,7 +5341,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 		FORCE_LEVEL_3
 		&& (self->s.weapon == WP_MELEE ||
 			self->s.weapon == WP_NONE ||
-			self->s.weapon == WP_SABER && self->client->ps.saber_holstered))
+			self->s.weapon == WP_SABER && self->client->ps.saberHolstered))
 	{
 		damage_level = FORCE_LEVEL_2;
 	}
@@ -5417,7 +5417,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 		//RACC - Force Push
 		if (self->client->ps.weapon == WP_MELEE ||
 			self->client->ps.weapon == WP_NONE ||
-			self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered)
+			self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered)
 		{
 			//2-handed PUSH
 			if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
@@ -6286,7 +6286,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 					{
 						if (self->client->ps.weapon == WP_MELEE ||
 							self->client->ps.weapon == WP_NONE ||
-							self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered)
+							self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered)
 						{
 							//2-handed PUSH
 							if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
@@ -6435,7 +6435,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6455,16 +6455,16 @@ void ForceThrow(gentity_t* self, qboolean pull)
 						else if (push_target[x]->client->ps.m_iVehicleNum && dir_len <= 128.0f)
 						{
 							//a player on a vehicle
-							gentity_t* veh_ent = &g_entities[push_target[x]->client->ps.m_iVehicleNum];
+							gentity_t* vehEnt = &g_entities[push_target[x]->client->ps.m_iVehicleNum];
 
-							if (veh_ent->inuse && veh_ent->client && veh_ent->m_pVehicle)
+							if (vehEnt->inuse && vehEnt->client && vehEnt->m_pVehicle)
 							{
-								if (veh_ent->m_pVehicle->m_pVehicleInfo->type == VH_SPEEDER ||
-									veh_ent->m_pVehicle->m_pVehicleInfo->type == VH_ANIMAL)
+								if (vehEnt->m_pVehicle->m_pVehicleInfo->type == VH_SPEEDER ||
+									vehEnt->m_pVehicle->m_pVehicleInfo->type == VH_ANIMAL)
 								{
 									//push the guy off
-									veh_ent->m_pVehicle->m_pVehicleInfo->Eject(
-										veh_ent->m_pVehicle, (bgEntity_t*)push_target[x], qfalse);
+									vehEnt->m_pVehicle->m_pVehicleInfo->Eject(
+										vehEnt->m_pVehicle, (bgEntity_t*)push_target[x], qfalse);
 								}
 							}
 						}
@@ -6496,7 +6496,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6523,7 +6523,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6549,7 +6549,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6574,7 +6574,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6616,7 +6616,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6643,7 +6643,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6669,7 +6669,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6694,7 +6694,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -8120,17 +8120,17 @@ static void HolocronUpdate(gentity_t* self)
 				if (self->client->saber[0].model[0] && self->client->saber[1].model[0])
 				{
 					//dual
-					self->client->ps.fd.saber_anim_levelBase = self->client->ps.fd.saber_anim_level = self->client->ps.fd.
+					self->client->ps.fd.saber_anim_levelBase = self->client->ps.fd.saberAnimLevel = self->client->ps.fd.
 						saberDrawAnimLevel = SS_DUAL;
 				}
 				else if (self->client->saber[0].saberFlags & SFL_TWO_HANDED)
 				{
 					//staff
-					self->client->ps.fd.saber_anim_level = self->client->ps.fd.saberDrawAnimLevel = SS_STAFF;
+					self->client->ps.fd.saberAnimLevel = self->client->ps.fd.saberDrawAnimLevel = SS_STAFF;
 				}
 				else
 				{
-					self->client->ps.fd.saber_anim_levelBase = self->client->ps.fd.saber_anim_level = self->client->ps.fd.
+					self->client->ps.fd.saber_anim_levelBase = self->client->ps.fd.saberAnimLevel = self->client->ps.fd.
 						saberDrawAnimLevel = SS_MEDIUM;
 				}
 			}
@@ -8331,9 +8331,9 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 	}
 
 	//The stance in relation to power level is no longer applicable with the crazy new akimbo/staff stances.
-	if (!self->client->ps.fd.saber_anim_level)
+	if (!self->client->ps.fd.saberAnimLevel)
 	{
-		self->client->ps.fd.saber_anim_level = FORCE_LEVEL_1;
+		self->client->ps.fd.saberAnimLevel = FORCE_LEVEL_1;
 	}
 
 	if (level.gametype != GT_SIEGE)
@@ -8361,7 +8361,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 	}
 
 	if ((self->client->sess.selectedFP != self->client->ps.fd.forcePowerSelected ||
-		self->client->sess.saberLevel != self->client->ps.fd.saber_anim_level) &&
+		self->client->sess.saberLevel != self->client->ps.fd.saberAnimLevel) &&
 		!(self->r.svFlags & SVF_BOT))
 	{
 		if (self->client->sess.updateUITime < level.time)
@@ -8370,7 +8370,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 			//through their force powers or saber attack levels
 
 			self->client->sess.selectedFP = self->client->ps.fd.forcePowerSelected;
-			self->client->sess.saberLevel = self->client->ps.fd.saber_anim_level;
+			self->client->sess.saberLevel = self->client->ps.fd.saberAnimLevel;
 		}
 	}
 
@@ -8616,7 +8616,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		self->client->ps.fd.forceGripCripple = 1;
 
 		//keep the saber off during this period
-		if (self->client->ps.weapon == WP_SABER && !self->client->ps.saber_holstered)
+		if (self->client->ps.weapon == WP_SABER && !self->client->ps.saberHolstered)
 		{
 			Cmd_ToggleSaber_f(self);
 		}
@@ -9030,7 +9030,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		if (self->client->ps.weapon == WP_SABER)
 		{
 			//saberer regens slower since they use MP differently
-			if (self->client->ps.fd.saber_anim_level == SS_MEDIUM)
+			if (self->client->ps.fd.saberAnimLevel == SS_MEDIUM)
 			{
 				//yellow style is more "centered" and recovers MP faster.
 				self->client->MishapDebounce = level.time + g_mishapRegenTime.integer * .75;

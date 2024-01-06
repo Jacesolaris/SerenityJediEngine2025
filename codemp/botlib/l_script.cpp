@@ -233,13 +233,13 @@ const char* PunctuationFromNum(script_t* script, const int num)
 void QDECL ScriptError(script_t* script, char* str, ...)
 {
 	char text[1024];
-	va_list ap;
+	va_list argptr;
 
 	if (script->flags & SCFL_NOERRORS) return;
 
-	va_start(ap, str);
-	Q_vsnprintf(text, sizeof text, str, ap);
-	va_end(ap);
+	va_start(argptr, str);
+	Q_vsnprintf(text, sizeof text, str, argptr);
+	va_end(argptr);
 #ifdef BOTLIB
 	botimport.Print(PRT_ERROR, "file %s, line %d: %s\n", script->filename, script->line, text);
 #endif //BOTLIB
@@ -259,13 +259,13 @@ void QDECL ScriptError(script_t* script, char* str, ...)
 void QDECL ScriptWarning(script_t* script, char* str, ...)
 {
 	char text[1024];
-	va_list ap;
+	va_list argptr;
 
 	if (script->flags & SCFL_NOWARNINGS) return;
 
-	va_start(ap, str);
-	Q_vsnprintf(text, sizeof text, str, ap);
-	va_end(ap);
+	va_start(argptr, str);
+	Q_vsnprintf(text, sizeof text, str, argptr);
+	va_end(argptr);
 #ifdef BOTLIB
 	botimport.Print(PRT_WARNING, "file %s, line %d: %s\n", script->filename, script->line, text);
 #endif //BOTLIB
@@ -812,13 +812,13 @@ int PS_ReadPunctuation(script_t* script, token_t* token)
 		} //end if
 	} //end for
 	return 0;
-	} //end of the function PS_ReadPunctuation
-	//============================================================================
-	//
-	// Parameter:				-
-	// Returns:					-
-	// Changes Globals:		-
-	//============================================================================
+} //end of the function PS_ReadPunctuation
+//============================================================================
+//
+// Parameter:				-
+// Returns:					-
+// Changes Globals:		-
+//============================================================================
 int PS_ReadPrimitive(script_t * script, token_t * token)
 {
 	int len = 0;

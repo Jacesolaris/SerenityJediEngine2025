@@ -3182,7 +3182,7 @@ static void CG_Missile(centity_t* cent)
 				{
 					int l = 0;
 					if (l == 0 //first saber
-						&& saber_own->currentState.saber_holstered == 1 //extra blades should be off
+						&& saber_own->currentState.saberHolstered == 1 //extra blades should be off
 						&& k > 0) //this is an extra blade
 					{
 						//extra blades off

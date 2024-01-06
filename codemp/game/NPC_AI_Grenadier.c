@@ -520,7 +520,7 @@ void NPC_BSGrenadier_Attack(void)
 		}
 	}
 	else if (enemyDist3 > 65536 || NPCS.NPC->enemy->client && NPCS.NPC->enemy->client->ps.weapon == WP_SABER && !NPCS.
-		NPC->enemy->client->ps.saber_holstered) //256
+		NPC->enemy->client->ps.saberHolstered) //256
 	{
 		//enemy is far or using saber
 		if (NPCS.NPC->client->ps.weapon == WP_MELEE && NPCS.NPC->client->ps.stats[STAT_WEAPONS] & 1 << WP_THERMAL)

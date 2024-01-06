@@ -53,7 +53,7 @@ const int FROZEN_TIME = 5000;
 
 extern qboolean WP_DoingForcedAnimationForForcePowers(const gentity_t* self);
 extern int wp_saber_must_bolt_block(gentity_t* self, const gentity_t* atk, qboolean check_b_box_block, vec3_t point,
-	int r_saber_num, int r_blade_num);
+	int rSaberNum, int rBladeNum);
 extern int wp_player_must_dodge(const gentity_t* self, const gentity_t* shooter);
 extern qboolean WP_SaberBlockBolt(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 extern void g_missile_reflect_effect(const gentity_t* ent, vec3_t dir);
@@ -5503,11 +5503,11 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	{
 		//riding a vehicle...with blaster selected
 		vec3_t veh_turn_angles;
-		const gentity_t* veh_ent = &g_entities[ent->client->ps.m_iVehicleNum];
+		const gentity_t* vehEnt = &g_entities[ent->client->ps.m_iVehicleNum];
 
-		if (veh_ent->inuse && veh_ent->client && veh_ent->m_pVehicle)
+		if (vehEnt->inuse && vehEnt->client && vehEnt->m_pVehicle)
 		{
-			VectorCopy(veh_ent->m_pVehicle->m_vOrientation, veh_turn_angles);
+			VectorCopy(vehEnt->m_pVehicle->m_vOrientation, veh_turn_angles);
 			veh_turn_angles[PITCH] = ent->client->ps.viewangles[PITCH];
 		}
 		else
@@ -6000,7 +6000,7 @@ static void emplaced_gun_update(gentity_t* self)
 		if (self->activator->client->pers.cmd.buttons & BUTTON_USE && !self->genericValue1)
 		{
 			self->activator->client->ps.emplacedIndex = 0;
-			self->activator->client->ps.saber_holstered = 0;
+			self->activator->client->ps.saberHolstered = 0;
 			self->nextthink = level.time + 50;
 			return;
 		}
@@ -6020,7 +6020,7 @@ static void emplaced_gun_update(gentity_t* self)
 		self->activator->r.ownerNum = ENTITYNUM_NONE;
 		self->activator->client->ps.emplacedTime = level.time + 1000;
 		self->activator->client->ps.emplacedIndex = 0;
-		self->activator->client->ps.saber_holstered = 0;
+		self->activator->client->ps.saberHolstered = 0;
 		self->activator = NULL;
 
 		self->s.activeForcePass = 0;
