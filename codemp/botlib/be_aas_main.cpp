@@ -112,7 +112,7 @@ void AAS_SetInitialized(void)
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void AAS_ContinueInit(const float time)
+static void AAS_ContinueInit(const float time)
 {
 	//if no AAS file loaded
 	if (!aasworld.loaded) return;
@@ -222,7 +222,7 @@ void AAS_ProjectPointOntoVector(vec3_t point, vec3_t vStart, vec3_t vEnd, vec3_t
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-int AAS_LoadFiles(const char* mapname)
+static int AAS_LoadFiles(const char* mapname)
 {
 	char aasfile[MAX_PATH];
 	//	char bspfile[MAX_PATH];

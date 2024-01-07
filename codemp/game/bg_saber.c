@@ -7438,7 +7438,7 @@ void PM_SaberPerfectBlockUpdate(const int new_move)
 
 extern float bg_get_torso_anim_point(const playerState_t* ps, int anim_index);
 
-qboolean BG_SaberInFullDamageMove(const playerState_t* ps, const int anim_index)
+qboolean PM_SaberInFullDamageMove(const playerState_t* ps, const int anim_index)
 {
 	//The player is attacking with a saber attack that does full damage
 	const float torso_anim_point = bg_get_torso_anim_point(ps, anim_index);
@@ -7534,7 +7534,7 @@ qboolean BG_SaberInTransitionDamageMove(const playerState_t* ps)
 qboolean BG_SaberInNonIdleDamageMove(const playerState_t* ps, const int anim_index)
 {
 	//player is in a saber move that does something more than idle saber damage
-	return BG_SaberInFullDamageMove(ps, anim_index);
+	return PM_SaberInFullDamageMove(ps, anim_index);
 }
 
 qboolean BG_InSlowBounce(const playerState_t* ps)

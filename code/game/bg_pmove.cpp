@@ -21688,7 +21688,7 @@ void PM_SaberPerfectBlockUpdate(const int new_move)
 }
 
 //saber status utility tools
-static qboolean BG_SaberInFullDamageMove(const playerState_t* ps)
+static qboolean PM_SaberInFullDamageMove(const playerState_t* ps)
 {
 	//The player is attacking with a saber attack that does full damage
 	if (PM_SaberInAttack(ps->saber_move)
@@ -21726,7 +21726,7 @@ qboolean BG_SaberInTransitionDamageMove(const playerState_t* ps)
 qboolean BG_SaberInNonIdleDamageMove(const playerState_t* ps)
 {
 	//player is in a saber move that does something more than idle saber damage
-	return BG_SaberInFullDamageMove(ps);
+	return PM_SaberInFullDamageMove(ps);
 }
 
 extern qboolean PM_BounceAnim(int anim);

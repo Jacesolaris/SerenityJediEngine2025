@@ -123,7 +123,7 @@ int BotCanAbsorbKick(const gentity_t* defender, const vec3_t push_dir);
 extern qboolean PM_Dyinganim(const playerState_t* ps);
 extern int SabBeh_AnimateMassiveDualSlowBounce(int anim);
 extern int SabBeh_AnimateMassiveStaffSlowBounce(int anim);
-extern qboolean BG_SaberInFullDamageMove(const playerState_t* ps, int anim_index);
+extern qboolean PM_SaberInFullDamageMove(const playerState_t* ps, int anim_index);
 extern void G_ClearEnemy(gentity_t* self);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 extern void wp_block_points_regenerate(const gentity_t* self, int override_amt);
@@ -6714,7 +6714,7 @@ void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, const int entityNum,
 }
 
 static QINLINE qboolean CheckSaberDamage(gentity_t* self, const int rSaberNum, const int rBladeNum,
-	vec3_t saber_start, vec3_t saber_end, const int tr_mask)
+	vec3_t saber_start, vec3_t saber_end, const int trMask)
 {
 	static trace_t tr;
 	static vec3_t dir;
@@ -6772,7 +6772,7 @@ static QINLINE qboolean CheckSaberDamage(gentity_t* self, const int rSaberNum, c
 		VectorClear(saber_tr_maxs); //
 	} //
 	else if (self_is_holding_block_button || self_active_blocking || self_m_blocking || //
-		BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex)) //
+		PM_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex)) //
 	{
 		//Setting things up so the game always does realistic box traces for the sabers.    //
 		saber_box_size += (d_saberBoxTraceSize.value + hilt_radius * 0.5f) * 3.0f; //
@@ -6791,7 +6791,7 @@ static QINLINE qboolean CheckSaberDamage(gentity_t* self, const int rSaberNum, c
 	/////////////////////////////SABERBLADE BOX SIZE///////////////////////////////////////
 
 	const int real_trace_result = g_real_trace(self, &tr, saber_start, saber_tr_mins, saber_tr_maxs, saber_end,
-		self->s.number, tr_mask, rSaberNum, rBladeNum);
+		self->s.number, trMask, rSaberNum, rBladeNum);
 
 	if (real_trace_result == REALTRACE_MISS || real_trace_result == REALTRACE_HIT_WORLD)
 	{
@@ -6808,7 +6808,7 @@ static QINLINE qboolean CheckSaberDamage(gentity_t* self, const int rSaberNum, c
 	{
 		dmg = SABER_NORHITDAMAGE;
 	}
-	else if (BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex))
+	else if (PM_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex))
 	{
 		//full damage moves
 		if (g_saberRealisticCombat.integer)
@@ -12562,9 +12562,9 @@ nextStep:
 					}
 					else if (d_saberInterpolate.integer == 1)
 					{
-						int tr_mask = CONTENTS_LIGHTSABER | CONTENTS_BODY;
+						int trMask = CONTENTS_LIGHTSABER | CONTENTS_BODY;
 						int s_n = 0;
-						qboolean got_hit = qfalse;
+						qboolean gotHit = qfalse;
 						qboolean clientUnlinked[MAX_CLIENTS];
 						qboolean skipSaberTrace = qfalse;
 
@@ -12584,7 +12584,7 @@ nextStep:
 						if (skipSaberTrace)
 						{
 							//skip the saber-contents-only trace and get right to the full trace
-							tr_mask = MASK_PLAYERSOLID | CONTENTS_LIGHTSABER | MASK_SHOT;
+							trMask = MASK_PLAYERSOLID | CONTENTS_LIGHTSABER | MASK_SHOT;
 						}
 						else
 						{
@@ -12605,9 +12605,9 @@ nextStep:
 							}
 						}
 
-						while (!got_hit)
+						while (!gotHit)
 						{
-							if (!CheckSaberDamage(self, rSaberNum, rBladeNum, boltOrigin, end, tr_mask))
+							if (!CheckSaberDamage(self, rSaberNum, rBladeNum, boltOrigin, end, trMask))
 							{
 								vec3_t oldSaberStart;
 								vec3_t oldSaberEnd;
@@ -12668,15 +12668,15 @@ nextStep:
 									saber_mid_end[2] = saber_mid_point[2] + saber_mid_dir[2] * self->client->saber[rSaberNum].blade[rBladeNum].lengthMax;
 
 									//I'll just trace straight out and not even trace between positions to save speed.
-									if (CheckSaberDamage(self, rSaberNum, rBladeNum, saber_mid_point, saber_mid_end, tr_mask))
+									if (CheckSaberDamage(self, rSaberNum, rBladeNum, saber_mid_point, saber_mid_end, trMask))
 									{
-										got_hit = qtrue;
+										gotHit = qtrue;
 									}
 								}
 							}
 							else
 							{
-								got_hit = qtrue;
+								gotHit = qtrue;
 							}
 
 							if (g_saberTraceSaberFirst.integer)
@@ -12696,15 +12696,15 @@ nextStep:
 								}
 							}
 
-							if (!got_hit)
+							if (!gotHit)
 							{
-								if (tr_mask != (MASK_PLAYERSOLID | CONTENTS_LIGHTSABER | MASK_SHOT))
+								if (trMask != (MASK_PLAYERSOLID | CONTENTS_LIGHTSABER | MASK_SHOT))
 								{
-									tr_mask = MASK_PLAYERSOLID | CONTENTS_LIGHTSABER | MASK_SHOT;
+									trMask = MASK_PLAYERSOLID | CONTENTS_LIGHTSABER | MASK_SHOT;
 								}
 								else
 								{
-									got_hit = qtrue; //break out of the loop
+									gotHit = qtrue; //break out of the loop
 								}
 							}
 						}
@@ -12721,7 +12721,7 @@ nextStep:
 				{
 					//Super duper interplotation system
 					if (level.time - self->client->saber[rSaberNum].blade[rBladeNum].trail.lastTime < 100 &&
-						(BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex) || self_is_holding_block_button))
+						(PM_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex) || self_is_holding_block_button))
 					{
 						vec3_t olddir;
 						float dist = (d_saberBoxTraceSize.value + self->client->saber[rSaberNum].blade[rBladeNum].radius) * 0.5f;

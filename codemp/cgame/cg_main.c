@@ -1795,7 +1795,7 @@ const char* CG_GetStringEdString(char* refSection, char* refName)
 int CG_GetClassCount(team_t team, int siegeClass);
 int CG_GetTeamNonScoreCount(team_t team);
 
-void CG_SiegeCountCvars(void)
+static void CG_SiegeCountCvars(void)
 {
 	int classGfx[6];
 
@@ -1928,7 +1928,7 @@ void CG_StartMusic(const qboolean bForceStart)
 	}
 }
 
-char* CG_GetMenuBuffer(const char* filename)
+static char* CG_GetMenuBuffer(const char* filename)
 {
 	fileHandle_t f;
 	static char buf[MAX_MENUFILE];
@@ -1958,7 +1958,7 @@ char* CG_GetMenuBuffer(const char* filename)
 // new hud stuff ( mission pack )
 // ==============================
 //
-qboolean CG_Asset_Parse(const int handle)
+static qboolean CG_Asset_Parse(const int handle)
 {
 	pc_token_t token;
 
@@ -2153,7 +2153,7 @@ qboolean CG_Asset_Parse(const int handle)
 	}
 }
 
-void CG_ParseMenu(const char* menuFile)
+static void CG_ParseMenu(const char* menuFile)
 {
 	pc_token_t token;
 
@@ -2169,16 +2169,6 @@ void CG_ParseMenu(const char* menuFile)
 		{
 			break;
 		}
-
-		//if ( Q_stricmp( token, "{" ) ) {
-		//	Com_Printf( "Missing { in menu file\n" );
-		//	break;
-		//}
-
-		//if ( menuCount == MAX_MENUS ) {
-		//	Com_Printf( "Too many menus!\n" );
-		//	break;
-		//}
 
 		if (token.string[0] == '}')
 		{
@@ -2203,7 +2193,7 @@ void CG_ParseMenu(const char* menuFile)
 	trap->PC_FreeSource(handle);
 }
 
-qboolean CG_Load_Menu(const char** p)
+static qboolean CG_Load_Menu(const char** p)
 {
 	const char* token = COM_ParseExt(p, qtrue);
 
@@ -2474,7 +2464,7 @@ static float CG_Cvar_Get(const char* cvar)
 	return atof(buff);
 }
 
-void CG_Text_PaintWithCursor(const float x, const float y, const float scale, vec4_t color, const char* text, int cursorPos, char cursor,
+static void CG_Text_PaintWithCursor(const float x, const float y, const float scale, vec4_t color, const char* text, int cursorPos, char cursor,
 	const int limit, const int style, const int i_menu_font)
 {
 	CG_Text_Paint(x, y, scale, color, text, 0, limit, style, i_menu_font);
@@ -2663,7 +2653,7 @@ void CG_LoadHudMenu()
 	CG_LoadMenus(hudSet);
 }
 
-void CG_AssetCache()
+static void CG_AssetCache()
 {
 	cgDC.Assets.gradientBar = trap->R_RegisterShaderNoMip(ASSET_GRADIENTBAR);
 	cgDC.Assets.fxBasePic = trap->R_RegisterShaderNoMip(ART_FX_BASE);
@@ -2708,7 +2698,7 @@ void CG_InitItems(void)
 }
 //jk2 hud
 
-void CG_TransitionPermanent(void)
+static void CG_TransitionPermanent(void)
 {
 	centity_t* cent = cg_entities;
 
@@ -3020,7 +3010,7 @@ const char* CG_GetLocationString(const char* loc)
 //clean up all the ghoul2 allocations, the nice and non-hackly way -rww
 void CG_KillCEntityG2(int entNum);
 
-void CG_DestroyAllGhoul2(void)
+static void CG_DestroyAllGhoul2(void)
 {
 	int i = 0;
 
