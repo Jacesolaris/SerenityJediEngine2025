@@ -364,8 +364,7 @@ CG_CalcIdealThirdPersonViewTarget
 static void CG_CalcIdealThirdPersonViewTarget()
 {
 	// Initialize IdealTarget
-	const auto uses_view_entity = static_cast<qboolean>(cg.snap->ps.viewEntity && cg.snap->ps.viewEntity <
-		ENTITYNUM_WORLD);
+	const auto uses_view_entity = static_cast<qboolean>(cg.snap->ps.viewEntity && cg.snap->ps.viewEntity < ENTITYNUM_WORLD);
 	VectorCopy(cg.refdef.vieworg, cameraFocusLoc);
 
 	if (uses_view_entity)

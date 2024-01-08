@@ -10359,8 +10359,8 @@ static QINLINE void CG_ChatBox_DrawStrings(void)
 	i = 0;
 	while (i < num_to_draw)
 	{
-		const int x = 30;
-		CG_Text_Paint(x, y, font_scale, colorWhite, draw_these[i]->string, 0, 0, ITEM_TEXTSTYLE_OUTLINED, FONT_SMALL);
+		const int x = 10;
+		CG_Text_Paint(x, y - 50, font_scale, colorWhite, draw_these[i]->string, 0, 0, ITEM_TEXTSTYLE_OUTLINED, FONT_SMALL);
 		y += CHATBOX_FONT_HEIGHT * font_scale * draw_these[i]->lines;
 		i++;
 	}

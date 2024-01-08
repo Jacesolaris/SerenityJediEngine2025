@@ -3240,7 +3240,7 @@ bool G2_NeedsRecalc(CGhoul2Info* ghlInfo, const int frameNum)
 			G2API_OverrideServerWithClientData(ghlInfo))
 		{ //if we can manage this, then we don't have to reconstruct
 			return false;
-}
+		}
 #endif
 		ghlInfo->mSkelFrameNum = frameNum;
 		return true;
@@ -4345,7 +4345,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 
 				weights += stride;
 				bonerefs += stride;
-				}
+			}
 
 			// Texture coordinates
 			mdxmVertexTexCoord_t* tc = (mdxmVertexTexCoord_t*)(v + surf->numVerts);
@@ -4364,7 +4364,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 			}
 
 			surf = (mdxmSurface_t*)((byte*)surf + surf->ofsEnd);
-			}
+		}
 
 		assert((byte*)verts == (data + dataSize));
 
@@ -4424,10 +4424,10 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 		ri->Hunk_FreeTempMemory(baseVertexes);
 
 		lod = (mdxmLOD_t*)((byte*)lod + lod->ofsEnd);
-		}
+	}
 
 	return qtrue;
-	}
+}
 
 //#define CREATE_LIMB_HIERARCHY
 
@@ -4726,7 +4726,7 @@ qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 		LL(mdxa->numBones);
 		LL(mdxa->ofsFrames);
 		LL(mdxa->ofsEnd);
-}
+	}
 
 #ifdef CREATE_LIMB_HIERARCHY
 	if (!bAlreadyFound)

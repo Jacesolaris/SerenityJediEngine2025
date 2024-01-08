@@ -2498,7 +2498,7 @@ static	void R_SetParent(mnode_t* node, mnode_t* parent)
 R_LoadNodesAndLeafs
 =================
 */
-static void R_LoadNodesAndLeafs(world_t* worldData, lump_t* nodeLump, lump_t* leafLump) 
+static void R_LoadNodesAndLeafs(world_t* worldData, lump_t* nodeLump, lump_t* leafLump)
 {
 	int			i, j, p;
 	dnode_t* in;

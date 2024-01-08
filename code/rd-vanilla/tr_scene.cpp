@@ -206,13 +206,13 @@ RE_AddRefEntityToScene
 
 =====================
 */
-void RE_AddRefEntityToScene(const refEntity_t* ent) 
+void RE_AddRefEntityToScene(const refEntity_t* ent)
 {
 	if (!tr.registered)
 	{
 		return;
 	}
-	if (r_numentities >= MAX_REFENTITIES) 
+	if (r_numentities >= MAX_REFENTITIES)
 	{
 #ifndef FINAL_BUILD
 		ri.Printf(PRINT_WARNING, "WARNING: RE_AddRefEntityToScene: too many entities\n");

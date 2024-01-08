@@ -413,7 +413,7 @@ skin_t* R_GetSkinByHandle(const qhandle_t hSkin) {
 R_SkinList_f
 ===============
 */
-void R_SkinList_f(void) 
+void R_SkinList_f(void)
 {
 	ri->Printf(PRINT_ALL, "------------------\n");
 

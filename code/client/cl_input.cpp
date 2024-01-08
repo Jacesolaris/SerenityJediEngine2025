@@ -668,7 +668,7 @@ static void CL_JoystickMove(usercmd_t* cmd)
 	else
 	{
 		cmd->forwardmove = ClampChar(cmd->forwardmove + cl.joystickAxis[AXIS_FORWARD]);
-}
+	}
 
 	cmd->upmove = ClampChar(cmd->upmove + cl.joystickAxis[AXIS_UP]);
 #endif

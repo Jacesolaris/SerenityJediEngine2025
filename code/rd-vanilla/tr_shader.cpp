@@ -238,7 +238,7 @@ void R_RemapShader(const char *shaderName, const char *newShaderName, const char
 ParseVector
 ===============
 */
-static qboolean ParseVector(const char** text, const int count, float* v) 
+static qboolean ParseVector(const char** text, const int count, float* v)
 {
 	const char* token = COM_ParseExt(text, qfalse);
 	if (strcmp(token, "(") != 0) {
@@ -1753,7 +1753,7 @@ deformVertexes autoSprite2
 deformVertexes text[0-7]
 ===============
 */
-static void ParseDeform(const char** text) 
+static void ParseDeform(const char** text)
 {
 	char* token = COM_ParseExt(text, qfalse);
 	if (token[0] == 0)
@@ -2733,7 +2733,7 @@ static void SortNewShader(void) {
 GeneratePermanentShader
 ====================
 */
-static shader_t* GeneratePermanentShader(void) 
+static shader_t* GeneratePermanentShader(void)
 {
 	if (tr.numShaders == MAX_SHADERS) {
 		tr.iNumDeniedShaders++;
@@ -2911,7 +2911,7 @@ Returns a freshly allocated shader with all the needed info
 from the current global working shader
 =========================
 */
-static shader_t* FinishShader(void) 
+static shader_t* FinishShader(void)
 {
 	int				stage, lm_stage;
 

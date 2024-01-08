@@ -2653,7 +2653,7 @@ static float calc_trace_fraction(vec3_t start, vec3_t end, vec3_t endpos)
 	return 1;
 }
 
-static QINLINE qboolean g_g2_trace_collide(trace_t* tr, vec3_t last_valid_start, vec3_t last_valid_end,
+static QINLINE qboolean G_G2TraceCollide(trace_t* tr, vec3_t last_valid_start, vec3_t last_valid_end,
 	vec3_t trace_mins,
 	vec3_t trace_maxs)
 {
@@ -4721,7 +4721,7 @@ int g_real_trace(gentity_t* attacker, trace_t* tr, vec3_t start, vec3_t mins, ve
 			}
 
 			//ok, no bbox block this time.  So, try a ghoul2 trace then.
-			g_g2_trace_collide(tr, current_start, end, mins, maxs);
+			G_G2TraceCollide(tr, current_start, end, mins, maxs);
 		}
 		else if (current_ent->r.contents & CONTENTS_LIGHTSABER &&
 			current_ent->r.contents != -1 &&
@@ -4737,7 +4737,7 @@ int g_real_trace(gentity_t* attacker, trace_t* tr, vec3_t start, vec3_t mins, ve
 			if (current_ent->inuse && current_ent->ghoul2)
 			{
 				//hit a non-client entity with a g2 instance
-				g_g2_trace_collide(tr, current_start, end, mins, maxs);
+				G_G2TraceCollide(tr, current_start, end, mins, maxs);
 			}
 			else
 			{

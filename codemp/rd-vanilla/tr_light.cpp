@@ -392,7 +392,7 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent)
 	float d = VectorLength(ent->directedLight);
 	VectorScale(ent->lightDir, d, lightDir);
 
-	for (i = 0; i < refdef->num_dlights; i++) 
+	for (i = 0; i < refdef->num_dlights; i++)
 	{
 		vec3_t dir;
 		const dlight_t* dl = &refdef->dlights[i];

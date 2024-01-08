@@ -3945,7 +3945,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 		VectorCopy(tr.endpos, start);
 		skip = tr.entityNum;
 		hit_dodged = qfalse;
-		}
+	}
 
 	// now go along the trail and make sight events
 	VectorSubtract(tr.endpos, muzzle, dir);

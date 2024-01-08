@@ -1490,7 +1490,7 @@ void TeamplayInfoMessage(const gentity_t* ent)
 					oldOverLayData[i].powerups = player->s.powerups;
 				}
 
-				Com_sprintf(entry, sizeof entry," %i %i %i %i %i %i",i, 0, h, a, 0, 0);
+				Com_sprintf(entry, sizeof entry, " %i %i %i %i %i %i", i, 0, h, a, 0, 0);
 			}
 			else
 			{

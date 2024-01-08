@@ -33,7 +33,7 @@ extern void G_ChangePlayerModel(gentity_t* ent, const char* newModel);
 extern void G_InitPlayerFromCvars(gentity_t* ent);
 extern void Q3_SetViewEntity(int ent_id, const char* name);
 extern qboolean G_ClearViewEntity(gentity_t* ent);
-extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,qboolean break_saber_lock);
+extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength, qboolean break_saber_lock);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 extern void WP_SetSaber(gentity_t* ent, int saberNum, const char* saber_name);
 extern void WP_RemoveSaber(gentity_t* ent, int saberNum);

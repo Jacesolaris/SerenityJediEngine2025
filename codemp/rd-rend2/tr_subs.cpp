@@ -75,7 +75,7 @@ void* Hunk_Alloc(const int size, const ha_pref preference)
 	return ri->Hunk_Alloc(size, preference);
 }
 
-int Hunk_MemoryRemaining(void) 
+int Hunk_MemoryRemaining(void)
 {
 	return ri->Hunk_MemoryRemaining();
 }

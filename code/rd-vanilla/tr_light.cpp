@@ -61,7 +61,7 @@ R_DlightBmodel
 Determine which dynamic lights may effect this bmodel
 =============
 */
-void R_DlightBmodel(const bmodel_t* bmodel, const qboolean NoLight) 
+void R_DlightBmodel(const bmodel_t* bmodel, const qboolean NoLight)
 {
 	int			i;
 

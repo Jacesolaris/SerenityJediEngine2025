@@ -779,14 +779,16 @@ FIXME: make this buffer size safe someday
 
 char* QDECL va(const char* format, ...)
 {
-	va_list argptr;
-	static char string[MAX_VA_BUFFERS][MAX_VA_STRING]; // in case va is called by nested functions
-	static int index = 0;
+	va_list		argptr;
+	static char	string[MAX_VA_BUFFERS][MAX_VA_STRING];	// in case va is called by nested functions
+	static int	index = 0;
+	char* buf;
 
 	va_start(argptr, format);
-	const auto buf = reinterpret_cast<char*>(&string[index++ & 3]);
-	Q_vsnprintf(buf, sizeof * string, format, argptr);
+	buf = (char*)&string[index++ & 3];
+	Q_vsnprintf(buf, sizeof(*string), format, argptr);
 	va_end(argptr);
+
 	return buf;
 }
 

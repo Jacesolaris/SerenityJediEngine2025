@@ -316,7 +316,7 @@ static void RB_TestFlare(flare_t* f)
 RB_RenderFlare
 ==================
 */
-static void RB_RenderFlare(flare_t* f) 
+static void RB_RenderFlare(flare_t* f)
 {
 	vec4_t			color{};
 

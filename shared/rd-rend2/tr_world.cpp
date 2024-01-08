@@ -758,7 +758,7 @@ R_inPVS
 qboolean R_inPVS(const vec3_t p1, const vec3_t p2, byte* mask)
 {
 #else
-qboolean R_inPVS(const vec3_t p1, const vec3_t p2) 
+qboolean R_inPVS(const vec3_t p1, const vec3_t p2)
 {
 	byte* mask;
 #endif

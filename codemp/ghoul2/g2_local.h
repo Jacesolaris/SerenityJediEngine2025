@@ -250,7 +250,6 @@ void G2_List_Model_Surfaces(const char* fileName);
 void G2_List_Model_Bones(const char* fileName, int frame);
 qboolean G2_GetAnimFileName(const char* fileName, char** filename);
 
-
 #ifdef _G2_GORE
 void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CollisionRecord_t* collRecMap, int entNum, int eG2TraceType, int useLod, float fRadius, float ssize, float tsize, float theta, int shader, SSkinGoreData* gore, qboolean skipIfLODNotMatch);
 #else

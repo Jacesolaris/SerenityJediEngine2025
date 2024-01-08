@@ -6036,6 +6036,15 @@ static int CheckArmor(const gentity_t* ent, const int damage, const int dflags, 
 		}
 		return damage;
 	}
+
+	if (client->NPC_class == CLASS_VADER) // Vader takes half fire damage
+	{
+		if (mod == MOD_LAVA)
+		{
+			return damage / 2;
+		}
+	}
+
 	if (G_ControlledByPlayer(ent) && ent->client->ps.powerups[PW_GALAK_SHIELD])
 	{
 		//special case
@@ -7299,6 +7308,14 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, const 
 					damage = 5;
 				}
 			}
+		}
+	}
+
+	if (targ && targ->client && targ->client->NPC_class == CLASS_VADER) // Vader takes half fire damage
+	{
+		if (mod == MOD_LAVA)
+		{
+			damage = ceil(damage * 0.50f);
 		}
 	}
 
@@ -8714,7 +8731,7 @@ void G_RadiusDamage(const vec3_t origin, gentity_t* attacker, const float damage
 {
 	gentity_t* entity_list[MAX_GENTITIES];
 	vec3_t mins{}, maxs{};
-	vec3_t v;
+	vec3_t v{};
 	vec3_t dir;
 	int i;
 	int d_flags = DAMAGE_RADIUS;

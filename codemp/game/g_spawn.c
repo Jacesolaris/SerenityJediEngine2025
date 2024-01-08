@@ -1926,7 +1926,7 @@ void SP_worldspawn(void)
 
 		if (lengthRed != lengthGreen || lengthGreen != lengthBlue)
 		{
-			Com_Error(ERR_DROP, "Style %d has inconsistent lengths: R %d, G %d, B %d",	i, lengthRed, lengthGreen, lengthBlue);
+			Com_Error(ERR_DROP, "Style %d has inconsistent lengths: R %d, G %d, B %d", i, lengthRed, lengthGreen, lengthBlue);
 		}
 	}
 }

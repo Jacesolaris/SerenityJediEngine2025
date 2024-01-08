@@ -620,7 +620,6 @@ void QDECL NET_OutOfBandPrint(netsrc_t sock, netadr_t adr, const char* format, .
 	va_list		argptr;
 	char		string[MAX_MSGLEN];
 
-
 	// set the header
 	string[0] = -1;
 	string[1] = -1;

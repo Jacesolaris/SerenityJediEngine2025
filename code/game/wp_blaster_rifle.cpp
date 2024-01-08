@@ -238,7 +238,7 @@ static void WP_FireJangoWristMissile(gentity_t* ent, vec3_t start, vec3_t dir, c
 	missile->s.weapon = WP_WRIST_BLASTER;
 
 	// Do the damages
-	if(ent->client && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->NPC_class != CLASS_MANDO && ent->s.number != 0)
+	if (ent->client && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->NPC_class != CLASS_MANDO && ent->s.number != 0)
 	{
 		if (g_spskill->integer == 0)
 		{

@@ -4024,9 +4024,9 @@ static int CheckArmor(const gentity_t* ent, const int damage, const int dflags, 
 		// The Assassin Always Completely Ignores These Damage Types
 		//-----------------------------------------------------------
 		if (mod == MOD_GAS || mod == MOD_BURNING || mod == MOD_LAVA || mod == MOD_SLIME || mod == MOD_WATER ||
-			/*mod==MOD_FORCE_GRIP || mod==MOD_FORCE_DRAIN ||*/ mod == MOD_SEEKER || mod == MOD_MELEE ||
-			mod == MOD_BOWCASTER || mod == MOD_BRYAR_PISTOL || mod == MOD_BRYAR_PISTOL_ALT || mod == MOD_BLASTER ||
-			mod == MOD_DISRUPTOR_SNIPER || mod == MOD_BOWCASTER || mod == MOD_REPEATER || mod == MOD_REPEATER_ALT)
+			mod == MOD_SEEKER || mod == MOD_MELEE || mod == MOD_BOWCASTER || mod == MOD_BRYAR_PISTOL ||
+			mod == MOD_BRYAR_PISTOL_ALT || mod == MOD_BLASTER || mod == MOD_DISRUPTOR_SNIPER ||
+			mod == MOD_BOWCASTER || mod == MOD_REPEATER || mod == MOD_REPEATER_ALT)
 		{
 			return damage;
 		}
@@ -4095,6 +4095,15 @@ static int CheckArmor(const gentity_t* ent, const int damage, const int dflags, 
 		}
 		return damage;
 	}
+
+	if (client->pers.botclass == BCLASS_VADER) // Vader takes half fire damage
+	{
+		if (mod == MOD_BURNING || mod == MOD_LAVA)
+		{
+			return damage / 2;
+		}
+	}
+
 	if (client->NPC_class == CLASS_VEHICLE
 		&& ent->m_pVehicle
 		&& ent->client->ps.electrifyTime > level.time)
@@ -6587,6 +6596,14 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 				//let classes with heavy melee ability damage breakable brushes with fists
 				return;
 			}
+		}
+	}
+
+	if (targ && targ->client && targ->client->pers.botclass == BCLASS_VADER) // Vader takes half fire damage
+	{
+		if (mod == MOD_BURNING || mod == MOD_LAVA)
+		{
+			damage = ceil(damage * 0.50f);
 		}
 	}
 

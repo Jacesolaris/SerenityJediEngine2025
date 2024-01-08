@@ -1460,7 +1460,7 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 		fogging = 0;
 	}
 
-		//Check if this is a new entity transformation (incl. world entity), and update the appropriate vectors if so.
+	//Check if this is a new entity transformation (incl. world entity), and update the appropriate vectors if so.
 	if (backEnd.currentEntity != ssLastEntityDrawn)
 	{
 		if (backEnd.currentEntity == &tr.worldEntity)

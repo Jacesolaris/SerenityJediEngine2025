@@ -384,7 +384,7 @@ void R_AddMD3Surfaces(trRefEntity_t* ent) {
 			if (!personalModel
 				&& r_shadows->integer == 2
 				&& fogNum == 0
-				&& !(ent->e.renderfx & ( RF_DEPTHHACK))
+				&& !(ent->e.renderfx & (RF_DEPTHHACK))
 				&& shader->sort == SS_OPAQUE)
 			{
 				R_AddDrawSurf(reinterpret_cast<surfaceType_t*>(surface), tr.shadowShader, 0, qfalse);

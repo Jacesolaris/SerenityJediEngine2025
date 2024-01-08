@@ -1383,7 +1383,7 @@ static void RB_SurfaceLightningBolt()
 * The inputs to this routing seem to always be close to length = 1.0 (about 0.6 to 2.0)
 * This means that we don't have to worry about zero length or enormously long vectors.
 */
-static void VectorArrayNormalize(vec4_t * normals, unsigned int count)
+static void VectorArrayNormalize(vec4_t* normals, unsigned int count)
 {
 	//    assert(count);
 
@@ -1438,7 +1438,7 @@ static void VectorArrayNormalize(vec4_t * normals, unsigned int count)
 */
 #if 0
 #if idppc_altivec
-static void LerpMeshVertexes_altivec(md3Surface_t * surf, float backlerp)
+static void LerpMeshVertexes_altivec(md3Surface_t* surf, float backlerp)
 {
 	short* oldXyz, * newXyz, * oldNormals, * newNormals;
 	float* outXyz, * outNormal;
@@ -1569,7 +1569,7 @@ static void LerpMeshVertexes_altivec(md3Surface_t * surf, float backlerp)
 #endif
 #endif
 
-static void LerpMeshVertexes_scalar(mdvSurface_t * surf, const float backlerp)
+static void LerpMeshVertexes_scalar(mdvSurface_t* surf, const float backlerp)
 {
 #if 0
 	short* oldXyz, * newXyz, * oldNormals, * newNormals;
@@ -1725,7 +1725,7 @@ static void LerpMeshVertexes_scalar(mdvSurface_t * surf, const float backlerp)
 	}
 }
 
-static void LerpMeshVertexes(mdvSurface_t * surf, const float backlerp)
+static void LerpMeshVertexes(mdvSurface_t* surf, const float backlerp)
 {
 #if 0
 #if idppc_altivec
@@ -1744,7 +1744,7 @@ static void LerpMeshVertexes(mdvSurface_t * surf, const float backlerp)
 RB_SurfaceMesh
 =============
 */
-static void RB_SurfaceMesh(mdvSurface_t * surface) {
+static void RB_SurfaceMesh(mdvSurface_t* surface) {
 	int				j;
 	float			backlerp;
 	mdvSt_t* texCoords;
@@ -1786,7 +1786,7 @@ static void RB_SurfaceMesh(mdvSurface_t * surface) {
 RB_SurfaceFace
 ==============
 */
-static void RB_SurfaceBSPFace(srfBspSurface_t * srf) {
+static void RB_SurfaceBSPFace(srfBspSurface_t* srf) {
 	if (RB_SurfaceVbo(srf->vbo, srf->ibo, srf->numVerts, srf->numIndexes,
 		srf->firstIndex, srf->minIndex, srf->maxIndex, srf->dlightBits, srf->pshadowBits, qtrue))
 	{
@@ -1835,7 +1835,7 @@ RB_SurfaceGrid
 Just copy the grid of points and triangulate
 =============
 */
-static void RB_SurfaceBSPGrid(srfBspSurface_t * srf) {
+static void RB_SurfaceBSPGrid(srfBspSurface_t* srf) {
 	int		i, j;
 	float* xyz;
 	float* texCoords, * lightCoords[MAXLIGHTMAPS]{};
@@ -2396,7 +2396,7 @@ RB_SurfaceEntity
 Entities that have a single procedurally generated surface
 ====================
 */
-static void RB_SurfaceEntity(surfaceType_t * surfType)
+static void RB_SurfaceEntity(surfaceType_t* surfType)
 {
 	switch (backEnd.currentEntity->e.reType)
 	{
@@ -2441,24 +2441,24 @@ static void RB_SurfaceEntity(surfaceType_t * surfType)
 	tess.shader->entityMergable = qtrue;
 }
 
-static void RB_SurfaceBad(surfaceType_t * surfType)
+static void RB_SurfaceBad(surfaceType_t* surfType)
 {
 	ri.Printf(PRINT_ALL, "Bad surface tesselated.\n");
 }
 
-static void RB_SurfaceFlare(srfFlare_t * surf)
+static void RB_SurfaceFlare(srfFlare_t* surf)
 {
 	if (r_flares->integer)
 		RB_AddFlare(surf, tess.fogNum, surf->origin, surf->color, surf->normal);
 }
 
-static void RB_SurfaceVBOMesh(srfBspSurface_t * srf)
+static void RB_SurfaceVBOMesh(srfBspSurface_t* srf)
 {
 	RB_SurfaceVbo(srf->vbo, srf->ibo, srf->numVerts, srf->numIndexes, srf->firstIndex,
 		srf->minIndex, srf->maxIndex, srf->dlightBits, srf->pshadowBits, qfalse);
 }
 
-static void RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t * surface)
+static void RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t* surface)
 {
 	int i, mergeForward, mergeBack;
 	GLvoid* firstIndexOffset, * lastIndexOffset;
@@ -2572,7 +2572,7 @@ static void RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t * surface)
 static void RB_SurfaceSkip(void* surf) {
 }
 
-static void RB_SurfaceSprites(srfSprites_t * surf)
+static void RB_SurfaceSprites(srfSprites_t* surf)
 {
 	if (!r_surfaceSprites->integer || surf->numSprites == 0)
 		return;

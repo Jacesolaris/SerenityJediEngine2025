@@ -274,7 +274,6 @@ CG_UseItem
 */
 static void CG_UseItem(const centity_t* cent)
 {
-
 	const entityState_t* es = &cent->currentState;
 
 	int itemNum = cg.inventorySelect;

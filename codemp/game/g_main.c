@@ -4607,7 +4607,7 @@ void G_RunFrame(const int levelTime)
 			}
 			G_RunMover(ent);
 			continue;
-			}
+		}
 
 		//fix for self-deactivating areaportals in Siege
 		if (ent->s.eType == ET_MOVER && level.gametype == GT_SIEGE && level.intermissiontime)
@@ -4956,7 +4956,7 @@ void G_RunFrame(const int levelTime)
 		{
 			ClearNPCGlobals();
 		}
-		}
+	}
 #ifdef _G_FRAME_PERFANAL
 	iTimer_ItemRun = trap->PrecisionTimer_End(timer_ItemRun);
 #endif
@@ -4969,7 +4969,7 @@ void G_RunFrame(const int levelTime)
 	{
 		//if we're using DMS so we need to update the system.
 		G_DynamicMusicUpdate();
-}
+	}
 
 #ifdef _G_FRAME_PERFANAL
 	trap->PrecisionTimer_Start(&timer_ROFF);
@@ -4989,7 +4989,7 @@ void G_RunFrame(const int levelTime)
 		if (ent->inuse)
 		{
 			ClientEndFrame(ent);
-	}
+		}
 	}
 #ifdef _G_FRAME_PERFANAL
 	iTimer_ClientEndframe = trap->PrecisionTimer_End(timer_ClientEndframe);
@@ -5037,8 +5037,8 @@ void G_RunFrame(const int levelTime)
 
 			gQueueScoreMessageTime = 0;
 			gQueueScoreMessage = 0;
+		}
 	}
-}
 #ifdef _G_FRAME_PERFANAL
 	iTimer_Queues = trap->PrecisionTimer_End(timer_Queues);
 #endif

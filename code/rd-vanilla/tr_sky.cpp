@@ -655,7 +655,7 @@ void R_InitSkyTexCoords(const float heightCloud)
 /*
 ** RB_DrawSun
 */
-void RB_DrawSun(void) 
+void RB_DrawSun(void)
 {
 	vec3_t		origin, vec1, vec2;
 	vec3_t		temp;

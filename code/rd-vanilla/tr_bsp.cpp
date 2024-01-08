@@ -840,7 +840,7 @@ static void R_LoadNodesAndLeafs(const lump_t* nodeLump, const lump_t* leafLump, 
 R_LoadShaders
 =================
 */
-static void R_LoadShaders(const lump_t* l, world_t& worldData) 
+static void R_LoadShaders(const lump_t* l, world_t& worldData)
 {
 	const dshader_t* in = reinterpret_cast<dshader_t*>(fileBase + l->fileofs);
 	if (l->filelen % sizeof * in)
@@ -919,7 +919,7 @@ R_LoadFogs
 
 =================
 */
-static void R_LoadFogs(const lump_t* l, const lump_t* brushesLump, const lump_t* sidesLump, world_t& worldData, const int index) 
+static void R_LoadFogs(const lump_t* l, const lump_t* brushesLump, const lump_t* sidesLump, world_t& worldData, const int index)
 {
 	fog_t* out;
 	int			side_num;

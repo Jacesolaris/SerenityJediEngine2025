@@ -38,7 +38,7 @@ Used by both the front end (for DlightBmodel) and
 the back end (before doing the lighting calculation)
 ===============
 */
-void R_TransformDlights(const int count, dlight_t* dl, const orientationr_t* ori) 
+void R_TransformDlights(const int count, dlight_t* dl, const orientationr_t* ori)
 {
 	int		i;
 	vec3_t	temp;
@@ -58,7 +58,7 @@ R_DlightBmodel
 Determine which dynamic lights may effect this bmodel
 =============
 */
-void R_DlightBmodel(bmodel_t* bmodel, trRefEntity_t* ent) 
+void R_DlightBmodel(bmodel_t* bmodel, trRefEntity_t* ent)
 {
 	int			i, j;
 	dlight_t* dl;
@@ -131,7 +131,7 @@ R_SetupEntityLightingGrid
 
 =================
 */
-static void R_SetupEntityLightingGrid(trRefEntity_t* ent, world_t* world) 
+static void R_SetupEntityLightingGrid(trRefEntity_t* ent, world_t* world)
 {
 	vec3_t	lightOrigin;
 	int		pos[3]{};

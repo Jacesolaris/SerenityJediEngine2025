@@ -1221,7 +1221,7 @@ void Q3_TaskIDClear(int* taskID)
 	*taskID = -1;
 }
 
-void G_DebugPrint(int printLevel, const char* format, ...)
+void G_DebugPrint(int level, const char* format, ...)
 {
 	va_list		argptr;
 	char		text[1024] = { 0 };
@@ -1234,7 +1234,7 @@ void G_DebugPrint(int printLevel, const char* format, ...)
 	va_end(argptr);
 
 	//Add the color formatting
-	switch (printLevel)
+	switch (level)
 	{
 	case WL_ERROR:
 		Com_Printf(S_COLOR_RED"ERROR: %s", text);

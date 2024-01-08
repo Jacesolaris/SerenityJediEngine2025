@@ -203,7 +203,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	speedIdle = p_veh->m_pVehicleInfo->speedIdle;
 	speedMin = p_veh->m_pVehicleInfo->speedMin;
 
-	if (parent_ps->speed ||	p_veh->m_ucmd.forwardmove || p_veh->m_ucmd.upmove > 0 || parent_ps->groundEntityNum == ENTITYNUM_NONE)
+	if (parent_ps->speed || p_veh->m_ucmd.forwardmove || p_veh->m_ucmd.upmove > 0 || parent_ps->groundEntityNum == ENTITYNUM_NONE)
 	{
 		if (p_veh->m_ucmd.forwardmove > 0 && speedInc)
 		{

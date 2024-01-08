@@ -19457,12 +19457,12 @@ stillDoSaber:
 							legs.origin,
 							rootAngles,
 							NULL);
-			}
-		}
+					}
+				}
 #else
 				vectoangles(legs.axis[0], root_angles);
 #endif
-	}
+			}
 
 			while (k < ci->saber[l].numBlades)
 			{
@@ -19496,8 +19496,8 @@ stillDoSaber:
 			}
 
 			l++;
+		}
 	}
-}
 
 	if (cent->currentState.saberInFlight && !cent->currentState.saberEntityNum)
 	{

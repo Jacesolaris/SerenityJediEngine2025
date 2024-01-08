@@ -66,7 +66,7 @@ void* Hunk_AllocateTempMemory(const int size)
 	return ri->Hunk_AllocateTempMemory(size);
 }
 
-void Hunk_FreeTempMemory(void* buf) 
+void Hunk_FreeTempMemory(void* buf)
 {
 	ri->Hunk_FreeTempMemory(buf);
 }
@@ -92,7 +92,7 @@ void Z_Free(void* pvAddress)
 	ri->Z_Free(pvAddress);
 }
 
-int Z_MemSize(const memtag_t eTag) 
+int Z_MemSize(const memtag_t eTag)
 {
 	return ri->Z_MemSize(eTag);
 }

@@ -49,21 +49,21 @@ PNG_FUNCTION(void, PNGAPI
 			{
 				/* Strip "#nnnn " from beginning of error message. */
 				int offset;
-					for (offset = 1; offset < 15; offset++)
-						if (error_message[offset] == ' ')
-							break;
+				for (offset = 1; offset < 15; offset++)
+					if (error_message[offset] == ' ')
+						break;
 
-					if ((png_ptr->flags & PNG_FLAG_STRIP_ERROR_TEXT) != 0)
-					{
-						int i;
-						for (i = 0; i < offset - 1; i++)
-							msg[i] = error_message[i + 1];
-						msg[i - 1] = '\0';
-						error_message = msg;
-					}
+						if ((png_ptr->flags & PNG_FLAG_STRIP_ERROR_TEXT) != 0)
+						{
+							int i;
+							for (i = 0; i < offset - 1; i++)
+								msg[i] = error_message[i + 1];
+							msg[i - 1] = '\0';
+							error_message = msg;
+						}
 
-					else
-						error_message += offset;
+						else
+							error_message += offset;
 			}
 
 			else

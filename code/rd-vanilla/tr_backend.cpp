@@ -125,7 +125,7 @@ void GL_SelectTexture(const int unit)
 /*
 ** GL_Cull
 */
-void GL_Cull(int cullType) 
+void GL_Cull(int cullType)
 {
 	if (glState.faceCulling == cullType) {
 		return;
@@ -1492,7 +1492,7 @@ RB_SwapBuffers
 =============
 */
 extern void RB_RenderWorldEffects();
-static const void* RB_SwapBuffers(const void* data) 
+static const void* RB_SwapBuffers(const void* data)
 {
 	// finish any 2D drawing if needed
 	if (tess.numIndexes) {

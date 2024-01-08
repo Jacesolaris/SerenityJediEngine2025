@@ -630,7 +630,7 @@ static mnode_t* R_PointInLeaf(const vec3_t p) {
 R_ClusterPVS
 ==============
 */
-static const byte* R_ClusterPVS(const int cluster) 
+static const byte* R_ClusterPVS(const int cluster)
 {
 	if (!tr.world || !tr.world->vis || cluster < 0 || cluster >= tr.world->numClusters)
 	{
@@ -646,7 +646,7 @@ R_inPVS
 =================
 */
 
-qboolean R_inPVS(const vec3_t p1, const vec3_t p2) 
+qboolean R_inPVS(const vec3_t p1, const vec3_t p2)
 {
 	const mnode_t* leaf = R_PointInLeaf(p1);
 	const byte* vis = ri.CM_ClusterPVS(leaf->cluster);

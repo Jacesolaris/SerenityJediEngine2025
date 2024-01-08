@@ -28,7 +28,6 @@ inline static void Q_CastShort2Float(float* f, const short* s)
 	*f = ((float)*s);
 }
 
-
 /*
 =================
 R_CullTriSurf
@@ -106,7 +105,6 @@ static qboolean	R_CullGrid(const srfGridMesh_t* cv) {
 
 	return qfalse;
 }
-
 
 /*
 ================
@@ -276,7 +274,7 @@ static int R_DlightFace(srfSurfaceFace_t* face, int dlightBits)
 	return dlightBits;
 }
 
-static int R_DlightGrid(srfGridMesh_t* grid, int dlightBits) 
+static int R_DlightGrid(srfGridMesh_t* grid, int dlightBits)
 {
 	for (int i = 0; i < tr.refdef.num_dlights; i++)
 	{
@@ -367,8 +365,6 @@ static int R_DlightSurface(msurface_t* surf, int dlightBits)
 
 	return dlightBits;
 }
-
-
 
 #ifdef _ALT_AUTOMAP_METHOD
 static bool tr_drawingAutoMap = false;
@@ -867,7 +863,6 @@ static qboolean R_WriteWireframeMapToFile(void)
 		return qfalse;
 	}
 
-
 	f = ri->FS_FOpenFileWrite("blahblah.bla", qtrue);
 	if (!f)
 	{ //can't create?
@@ -1083,7 +1078,6 @@ const void* R_DrawWireframeAutomap(const void* data)
 	//pop back the viewmatrix
 	qglPopMatrix();
 
-
 	//set the mode to line draw
 	if (r_autoMap->integer == 2)
 	{ //line mode
@@ -1231,7 +1225,6 @@ const void* R_DrawWireframeAutomap(const void* data)
 	return (const void*)(cmd + 1);
 }
 
-
 /*
 ================
 R_RecursiveWorldNode
@@ -1306,7 +1299,6 @@ static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlightBits)
 					planeBits &= ~8;			// all descendants will also be in front
 				}
 			}
-
 		}
 
 		if (node->contents != -1) {
@@ -1355,8 +1347,7 @@ static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlightBits)
 		// tail recurse
 		node = node->children[1];
 		dlightBits = newDlights[1];
-	}
-	while (true);
+	} while (true);
 	{
 		// leaf node, so add mark surfaces
 		int			c;
@@ -1396,7 +1387,6 @@ static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlightBits)
 			mark++;
 		}
 	}
-
 }
 
 /*
@@ -1522,7 +1512,7 @@ static void R_MarkLeaves(void) {
 
 	vis = R_ClusterPVS(tr.viewCluster);
 
-	for (i = 0, leaf = tr.world->nodes; i < tr.world->numnodes; i++, leaf++) 
+	for (i = 0, leaf = tr.world->nodes; i < tr.world->numnodes; i++, leaf++)
 	{
 		cluster = leaf->cluster;
 		if (cluster < 0 || cluster >= tr.world->numClusters) {
@@ -1556,7 +1546,7 @@ R_AddWorldSurfaces
 */
 void R_AddWorldSurfaces(void)
 {
-	if (!r_drawworld->integer) 
+	if (!r_drawworld->integer)
 	{
 		return;
 	}
@@ -1575,7 +1565,7 @@ void R_AddWorldSurfaces(void)
 	ClearBounds(tr.viewParms.visBounds[0], tr.viewParms.visBounds[1]);
 
 	// perform frustum culling and add all the potentially visible surfaces
-	if (tr.refdef.num_dlights > 32) 
+	if (tr.refdef.num_dlights > 32)
 	{
 		tr.refdef.num_dlights = 32;
 	}
