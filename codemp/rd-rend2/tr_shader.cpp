@@ -2690,8 +2690,6 @@ static qboolean ParseShader(const char** text)
 			token = COM_ParseExt(text, qfalse);
 			tr.autoExposureMinMax[1] = atof(token);
 
-			tr.explicitToneMap = true;
-
 			SkipRestOfLine(text);
 			continue;
 		}

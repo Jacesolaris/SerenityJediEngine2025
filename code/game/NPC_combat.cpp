@@ -532,6 +532,7 @@ void G_SetEnemy(gentity_t* self, gentity_t* enemy)
 		//FIXME: Have to do this to prevent alert cascading
 		G_ClearEnemy(self);
 		self->enemy = enemy;
+		
 		if (self->client && self->client->NPC_class == CLASS_SABOTEUR)
 		{
 			Saboteur_Cloak(NPC); // Cloak
