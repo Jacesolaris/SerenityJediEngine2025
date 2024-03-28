@@ -573,11 +573,6 @@ void MoveClientToIntermission(gentity_t* ent);
 void DeathmatchScoreboardMessage(const gentity_t* ent);
 
 //
-// g_cmds.c
-//
-void G_SayTo(gentity_t* ent, gentity_t* other, int mode, int color, const char* name, const char* message);
-
-//
 // g_pweapon.c
 //
 
@@ -589,7 +584,6 @@ void NORETURN QDECL G_Error(const char* fmt, ...);
 void SetInUse(const gentity_t* ent);
 void ClearInUse(const gentity_t* ent);
 qboolean PInUse(unsigned int entNum);
-qboolean PInUse2(gentity_t* ent);
 void WriteInUseBits();
 void ReadInUseBits();
 
@@ -597,13 +591,6 @@ void ReadInUseBits();
 // g_nav.cpp
 //
 void Svcmd_Nav_f();
-
-//
-// g_squad.cpp
-//
-void Svcmd_Comm_f();
-void Svcmd_Hail_f();
-void Svcmd_Form_f();
 
 //
 // g_utils.cpp

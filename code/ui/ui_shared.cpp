@@ -2766,26 +2766,6 @@ static qboolean Script_StopVoice(itemDef_t* item, const char** args)
 
 /*
 =================
-Script_playLooped
-=================
-*/
-/*
-qboolean Script_playLooped(itemDef_t *item, const char **args)
-{
-	const char *val;
-	if (String_Parse(args, &val))
-	{
-		// FIXME BOB - is this needed?
-		DC->stopBackgroundTrack();
-		DC->startBackgroundTrack(val, val);
-	}
-
-	return qtrue;
-}
-*/
-
-/*
-=================
 Script_Orbit
 =================
 */
@@ -2938,12 +2918,47 @@ static qboolean ItemParse_name(itemDef_t* item)
 	return qtrue;
 }
 
+static int MenuFontToReal(int menuFontIndex)
+{
+	static int fonthandle_aurabesh;
+	static int fonthandle_ergoec;
+	static int fonthandle_anewhope;
+	static int fonthandle_arialnb;
+
+	static qboolean fontsRegistered = qfalse;
+
+	if (!fontsRegistered)
+	{ // Only try registering the fonts once
+		fonthandle_aurabesh = UI_RegisterFont("aurabesh");
+		fonthandle_ergoec = UI_RegisterFont("ergoec");
+		fonthandle_anewhope = UI_RegisterFont("anewhope");
+		fonthandle_arialnb = UI_RegisterFont("arialnb");
+
+		fontsRegistered = qtrue;
+	}
+
+	// Default fonts from a clean installation
+	switch (menuFontIndex) {
+	case 1: return fonthandle_aurabesh;
+	case 2: return fonthandle_ergoec;
+	case 3: return fonthandle_anewhope;
+	case 4: return fonthandle_arialnb;
+
+	default:
+		return DC->Assets.qhMediumFont;
+	}
+}
+
 static qboolean ItemParse_font(itemDef_t* item)
 {
 	if (PC_ParseInt(&item->font))
 	{
 		return qfalse;
 	}
+
+	// Translate to real font
+	item->font = MenuFontToReal(item->font);
+
 	return qtrue;
 }
 
@@ -8269,7 +8284,7 @@ static qboolean Item_Paint(itemDef_t* item, const qboolean bDraw)
 				while (true)
 				{
 					// FIXME - add some type of parameter in the menu file like descfont to specify the font for the descriptions for this menu.
-					const int textWidth = DC->textWidth(textPtr, fDescScale, 4); //  item->font);
+					const int textWidth = DC->textWidth(textPtr, fDescScale, MenuFontToReal(4)); //  item->font);
 
 					if (parent->descAlignment == ITEM_ALIGN_RIGHT)
 					{
@@ -8307,8 +8322,7 @@ static qboolean Item_Paint(itemDef_t* item, const qboolean bDraw)
 					}
 
 					// FIXME - add some type of parameter in the menu file like descfont to specify the font for the descriptions for this menu.
-					DC->drawText(xPos, parent->descY + iYadj, fDescScale, parent->descColor, textPtr, 0,
-						parent->descTextStyle, 4); //item->font);
+					DC->drawText(xPos, parent->descY + iYadj, fDescScale, parent->descColor, textPtr, 0, parent->descTextStyle, MenuFontToReal(4));	//item->font);
 					break;
 				}
 			}
@@ -8642,11 +8656,9 @@ void Item_Text_AutoWrapped_Paint(itemDef_t* item)
 		return;
 	}
 	Item_TextColor(item, &color);
-	//Item_SetTextExtents(item, &width, &height, textPtr);
 	if (item->value == 0)
 	{
-		item->value = static_cast<int>(0.5 + static_cast<float>(DC->textWidth(textPtr, item->textscale, item->font)) /
-			item->window.rect.w);
+		item->value = static_cast<int>(0.5 + static_cast<float>(DC->textWidth(textPtr, item->textscale, item->font)) /	item->window.rect.w);
 	}
 	const int height = DC->textHeight(textPtr, item->textscale, item->font);
 	item->special = 0;
@@ -8658,7 +8670,7 @@ void Item_Text_AutoWrapped_Paint(itemDef_t* item)
 	int newLineWidth = 0;
 	const char* p = textPtr;
 	int line = 1;
-	while (true) //findmeste (this will break widechar languages)!
+	while (true) 
 	{
 		if (*p == ' ' || *p == '\t' || *p == '\n' || *p == '\0')
 		{

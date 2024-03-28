@@ -319,10 +319,13 @@ static void RE_AddDynamicLightToScene(const vec3_t org, const float intensity, c
 	{
 		return;
 	}
-	if (intensity <= 0) {
+	if (intensity <= 0)
+	{
 		return;
 	}
+
 	dlight_t* dl = &backEndData->dlights[r_numdlights++];
+
 	VectorCopy(org, dl->origin);
 	dl->radius = intensity;
 	dl->color[0] = r;
