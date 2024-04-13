@@ -42,8 +42,6 @@ void RB_ShadowFinish(void)
 		return;
 	}
 
-	GL_Cull(CT_TWO_SIDED);
-
 	GL_BindToTMU(tr.whiteImage, TB_COLORMAP);
 
 	GL_State(GLS_STENCILTEST_ENABLE | GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ZERO);
@@ -55,7 +53,7 @@ void RB_ShadowFinish(void)
 
 	GL_Cull(CT_TWO_SIDED);
 	GLSL_BindProgram(&tr.textureColorShader);
-	vec4_t color;
+	vec4_t color{};
 	VectorSet4(color, 0.6f, 0.6f, 0.6f, 1.0f);
 	GLSL_SetUniformVec4(&tr.textureColorShader, UNIFORM_COLOR, color);
 	GLSL_SetUniformMatrix4x4(&tr.textureColorShader, UNIFORM_MODELVIEWPROJECTIONMATRIX, projection);
