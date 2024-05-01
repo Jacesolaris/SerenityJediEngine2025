@@ -65,6 +65,7 @@ cvar_t* com_homepath;
 cvar_t* g_newgameplusJKA;
 cvar_t* g_newgameplusJKO;
 cvar_t* g_spskill;
+cvar_t* r_cubeMapping;
 #ifndef _WIN32
 cvar_t* com_ansiColor = nullptr;
 #endif
@@ -1165,6 +1166,9 @@ void Com_Init(char* commandLine)
 		g_Weather = Cvar_Get("r_weather", "0", CVAR_ARCHIVE);
 
 		com_outcast = Cvar_Get("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
+
+		r_cubeMapping = Cvar_Get("r_cubeMapping", "0", CVAR_ARCHIVE | CVAR_LATCH);
+
 		com_logfile = Cvar_Get("logfile", "0", CVAR_TEMP);
 		com_speedslog = Cvar_Get("speedslog", "0", CVAR_TEMP);
 		g_spskill = Cvar_Get("g_spskill", "2", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);

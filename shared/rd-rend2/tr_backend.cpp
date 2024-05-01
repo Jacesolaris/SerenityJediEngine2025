@@ -1160,10 +1160,8 @@ void RB_AddDrawItem(Pass* pass, uint32_t sortKey, const DrawItem& drawItem)
 	{
 		if (pass->numDrawItems >= pass->maxDrawItems)
 		{
-#ifdef _DEBUG
 			assert(!"Ran out of space for pass");
 			return;
-#endif// _DEBUG
 		}
 
 		pass->sortKeys[pass->numDrawItems] = sortKey;
