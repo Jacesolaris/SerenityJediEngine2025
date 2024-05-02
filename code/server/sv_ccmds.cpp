@@ -486,6 +486,11 @@ static bool SV_Map_(const ForceReload_e eForceReload)
 		Cvar_Set("r_weather", "0");
 	}
 
+	if (debugNPCFreeze->integer >= 0)
+	{
+		Cvar_Set("d_npcfreeze", "0");
+	}
+
 	if (r_ratiofix.integer >= 0)
 	{
 		Cvar_Set("r_ratiofix", "0");

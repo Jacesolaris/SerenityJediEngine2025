@@ -630,6 +630,7 @@ extern cvar_t* g_newgameplusJKA;
 extern cvar_t* g_newgameplusJKO;
 extern cvar_t* g_spskill;
 extern cvar_t* r_cubeMapping;
+extern cvar_t* debugNPCFreeze;
 #ifndef _WIN32
 extern	cvar_t* com_ansiColor;
 #endif
