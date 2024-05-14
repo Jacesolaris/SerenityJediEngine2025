@@ -1769,8 +1769,8 @@ static void R_InitBackEndFrameData()
 	GLuint timerQueries[MAX_GPU_TIMERS * MAX_FRAMES];
 	qglGenQueries(MAX_GPU_TIMERS * MAX_FRAMES, timerQueries);
 
-	GLuint ubos[MAX_FRAMES];
-	qglGenBuffers(MAX_FRAMES, ubos);
+	GLuint ubos[MAX_FRAMES * MAX_SCENES];
+	qglGenBuffers(MAX_FRAMES * MAX_SCENES, ubos);
 
 	for (int i = 0; i < MAX_FRAMES; i++)
 	{

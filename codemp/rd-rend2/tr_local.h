@@ -3589,7 +3589,9 @@ struct screenshotReadback_t
 	char filename[MAX_QPATH];
 };
 
-#define MAX_GPU_TIMERS (512)
+constexpr auto MAX_GPU_TIMERS = (512);
+constexpr auto MAX_SCENES = (3);
+
 struct gpuFrame_t
 {
 	GLsync sync;

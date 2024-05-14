@@ -2814,9 +2814,12 @@ image_t* R_BuildSDRSpecGlossImage(shaderStage_t* stage, const char* specImageNam
 		sdrSpecPic[i + 2] = FloatToByte(currentColor[2] * ratio);
 		sdrSpecPic[i + 3] = specPic[i + 3];
 	}
-	ri->Hunk_FreeTempMemory(specPic);
+	Hunk_FreeTempMemory(specPic);
 
-	return R_CreateImage(sdrName, sdrSpecPic, specWidth, specHeight, IMGTYPE_COLORALPHA, flags & ~IMGFLAG_SRGB, 0);
+	image_t* outImage = R_CreateImage(sdrName, sdrSpecPic, specWidth, specHeight, IMGTYPE_COLORALPHA, flags & ~IMGFLAG_SRGB, 0);
+	Hunk_FreeTempMemory(sdrSpecPic);
+
+	return outImage;
 }
 
 static void R_CreateNormalMap(const char* name, byte* pic, int width, int height, int flags)
@@ -2842,7 +2845,7 @@ static void R_CreateNormalMap(const char* name, byte* pic, int width, int height
 
 		normalWidth = width;
 		normalHeight = height;
-		normalPic = (byte*)Z_Malloc(width * height * 4, TAG_GENERAL);
+		normalPic = (byte*)Z_Malloc(width * height * 4, TAG_TEMP_WORKSPACE);
 		RGBAtoNormal(pic, normalPic, width, height, (qboolean)(flags & IMGFLAG_CLAMPTOEDGE));
 
 #if 1

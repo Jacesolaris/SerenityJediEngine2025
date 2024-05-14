@@ -3343,11 +3343,20 @@ static qboolean CollapseStagesToGLSL(void)
 			if (pStage->bundle[0].tcGen >= TCGEN_LIGHTMAP && pStage->bundle[0].tcGen <= TCGEN_LIGHTMAP3)
 				continue;
 
+			if (i > 0)
+			{
+				int blendBits = pStage->stateBits & (GLS_DSTBLEND_BITS | GLS_SRCBLEND_BITS);
+				if (blendBits == (GLS_DSTBLEND_SRC_COLOR | GLS_SRCBLEND_ZERO) ||
+					blendBits == (GLS_DSTBLEND_ZERO | GLS_SRCBLEND_DST_COLOR))
+					continue;
+			}
+
 			diffuse = pStage;
 			parallax = qfalse;
 			lightmap = NULL;
+			vertexlit = qfalse;
 
-			// we have a diffuse map, find matching lightmap
+			// we have a diffuse map, find matching lightmap or vertex lit stage
 			for (j = i + 1; j < MAX_SHADER_STAGES; j++)
 			{
 				shaderStage_t* pStage2 = &stages[j];
@@ -3366,6 +3375,16 @@ static qboolean CollapseStagesToGLSL(void)
 					lightmap = pStage2;
 					lightmaps[j] = NULL;
 					break;
+				}
+
+				if (pStage2->bundle[0].isLightmap &&
+					pStage2->bundle[0].image[0] == tr.whiteImage &&
+					pStage2->rgbGen == CGEN_EXACT_VERTEX)
+				{
+					int blendBits = pStage2->stateBits & (GLS_DSTBLEND_BITS | GLS_SRCBLEND_BITS);
+					if (blendBits == (GLS_DSTBLEND_SRC_COLOR | GLS_SRCBLEND_ZERO) ||
+						blendBits == (GLS_DSTBLEND_ZERO | GLS_SRCBLEND_DST_COLOR))
+						vertexlit = qtrue;
 				}
 			}
 
@@ -3770,7 +3789,7 @@ static shader_t* GeneratePermanentShader(void) {
 	}
 
 	RB_AddShaderToShaderInstanceUBO(newShader);
-	newShader->spriteUbo = -1;
+	newShader->spriteUbo = 0;
 
 	SortNewShader();
 
